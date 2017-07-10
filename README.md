@@ -1,10 +1,13 @@
-# byu-news
+# BYU News Component
 
-This is a simple Web Component using the BYU Web Community web component
-tools.
+> A BYU web component to consume the [BYU News API](https://news-components.byu.edu/api).
 
-# Getting Started
+# How To Contribute
+## Fork the Repo
+Unless you have write access to the [byu-theme-components](https://github.com/byuweb/byu-theme-components) repository or are on the Unicomm Web Developers team, you will need to fork this repository to contribute to it. Pull requests can be submitted the same way as if you had write access, just do it from your forked repo.
 
+## Development Environment
+You need to be sure you have npm installed to develop this component. We recommend downloading v6.11.0 LTS of [nodeJS](https://nodejs.org/en/). Once you've done that, clone the repo and in the project folder, run
 ```
 npm install
 ```
