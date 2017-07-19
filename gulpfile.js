@@ -26,13 +26,13 @@ gulp.task('build', ['wc:build'], function () {
 });
 
 initWcBuild(gulp, {
-  componentName: 'byu-news',
+  componentName: 'byu-news-components',
   js: {
-    input: './byu-news.js',
+    input: './components/byu-news-components.js',
     polyfillUrl: 'https://cdn.byu.edu/web-component-polyfills/latest/web-component-polyfills.min.js'
   },
   css: {
-    input: './byu-news.scss'
+    input: './components/byu-news-components.scss'
   }
 });
 
@@ -45,7 +45,7 @@ gulp.task('watch', ['build'], function (done) {
     notify: false
   }, done);
 
-  gulp.watch(['demo.html', './byu-news/**'], ['build']);
+  gulp.watch(['demo.html', './components/**'], ['build']);
 });
 
 gulp.task('default', ['watch']);

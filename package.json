@@ -1,12 +1,12 @@
 {
-  "name": "byu-news",
+  "name": "byu-news-components",
   "version": "0.1.0",
   "private": true,
   "engines": {
     "node": ">=6.10.0"
   },
-  "description": "byu-news",
-  "main": "byu-news.js",
+  "description": "byu-news-components",
+  "main": "components/byu-news-components.js",
   "scripts": {
     "build": "gulp build",
     "start": "gulp watch",

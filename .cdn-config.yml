@@ -1,12 +1,12 @@
 ---
-name: byu-news
-description: byu-news
+name: byu-news-components
+description: byu-news-components
 resources:
   - src: dist/**
     dest: ./
 entrypoints:
-  "byu-news.js": 'Examines browser support and downloads the appropriate component bundle'
-  "byu-news.min.js": 'Minified - Examines browser support and downloads the appropriate component bundle'
-  "byu-news.css": 'Main CSS file'
-  "byu-news.min.css": 'Main CSS file'
-docs: https://github.com/byuweb/byu-news
+  "byu-news-components.js": 'Examines browser support and downloads the appropriate component bundle'
+  "byu-news-components.min.js": 'Minified - Examines browser support and downloads the appropriate component bundle'
+  "byu-news-components.css": 'Main CSS file'
+  "byu-news-components.min.css": 'Main CSS file'
+docs: https://github.com/byuweb/byu-news-components
