@@ -15,7 +15,8 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "byu-web-component-utils": "^0.4.2"
+    "byu-web-component-utils": "^0.4.2",
+    "whatwg-fetch": "^2.0.3"
   },
   "devDependencies": {
     "browser-sync": "^2.18.12",
