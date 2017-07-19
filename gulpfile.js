@@ -18,7 +18,6 @@
 
 const browserSync = require('browser-sync').create();
 const gulp = require('gulp');
-const rename = require('gulp-rename');
 const initWcBuild = require('byu-web-component-build').gulp;
 
 gulp.task('build', ['wc:build'], function () {
