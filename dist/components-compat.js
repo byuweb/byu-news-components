@@ -92,12 +92,35 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
   /******/__webpack_require__.p = "";
   /******/
   /******/ // Load entry module and return exports
-  /******/return __webpack_require__(__webpack_require__.s = 2);
+  /******/return __webpack_require__(__webpack_require__.s = 5);
   /******/
 })(
 /************************************************************************/
 /******/[
 /* 0 */
+/***/function (module, __webpack_exports__, __webpack_require__) {
+
+  "use strict";
+  /* harmony import */
+  var __WEBPACK_IMPORTED_MODULE_0__lib_templating__ = __webpack_require__(8);
+  /* harmony import */var __WEBPACK_IMPORTED_MODULE_1__lib_matchesSelector__ = __webpack_require__(1);
+  /* harmony import */var __WEBPACK_IMPORTED_MODULE_2__lib_querySelectorSlot__ = __webpack_require__(7);
+  /* harmony import */var __WEBPACK_IMPORTED_MODULE_3__lib_createEvent__ = __webpack_require__(6);
+  /* harmony reexport (binding) */__webpack_require__.d(__webpack_exports__, "a", function () {
+    return __WEBPACK_IMPORTED_MODULE_0__lib_templating__["a"];
+  });
+  /* unused harmony reexport matchesSelector */
+  /* harmony reexport (binding) */__webpack_require__.d(__webpack_exports__, "b", function () {
+    return __WEBPACK_IMPORTED_MODULE_2__lib_querySelectorSlot__["a"];
+  });
+  /* unused harmony reexport createEvent */
+  /**
+   * Created by ThatJoeMoore on 2/14/17
+   */
+
+  /***/
+},
+/* 1 */
 /***/function (module, __webpack_exports__, __webpack_require__) {
 
   "use strict";
@@ -132,14 +155,68 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
   /***/
 },
-/* 1 */
+/* 2 */
+/***/function (module, exports) {
+
+  /*
+  	MIT License http://www.opensource.org/licenses/mit-license.php
+  	Author Tobias Koppers @sokra
+  */
+  // css base code, injected by the css-loader
+  module.exports = function () {
+    var list = [];
+
+    // return the list of modules as css string
+    list.toString = function toString() {
+      var result = [];
+      for (var i = 0; i < this.length; i++) {
+        var item = this[i];
+        if (item[2]) {
+          result.push("@media " + item[2] + "{" + item[1] + "}");
+        } else {
+          result.push(item[1]);
+        }
+      }
+      return result.join("");
+    };
+
+    // import a list of modules into the list
+    list.i = function (modules, mediaQuery) {
+      if (typeof modules === "string") modules = [[null, modules, ""]];
+      var alreadyImportedModules = {};
+      for (var i = 0; i < this.length; i++) {
+        var id = this[i][0];
+        if (typeof id === "number") alreadyImportedModules[id] = true;
+      }
+      for (i = 0; i < modules.length; i++) {
+        var item = modules[i];
+        // skip already imported module
+        // this implementation is not 100% perfect for weird media query combinations
+        //  when a module is imported multiple times with different media queries.
+        //  I hope this will never occur (Hey this way we have smaller bundles)
+        if (typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
+          if (mediaQuery && !item[2]) {
+            item[2] = mediaQuery;
+          } else if (mediaQuery) {
+            item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
+          }
+          list.push(item);
+        }
+      }
+    };
+    return list;
+  };
+
+  /***/
+},
+/* 3 */
 /***/function (module, __webpack_exports__, __webpack_require__) {
 
   "use strict";
   /* harmony import */
-  var __WEBPACK_IMPORTED_MODULE_0__byu_news_html__ = __webpack_require__(10);
+  var __WEBPACK_IMPORTED_MODULE_0__byu_news_html__ = __webpack_require__(12);
   /* harmony import */var __WEBPACK_IMPORTED_MODULE_0__byu_news_html___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__byu_news_html__);
-  /* harmony import */var __WEBPACK_IMPORTED_MODULE_1_byu_web_component_utils__ = __webpack_require__(3);
+  /* harmony import */var __WEBPACK_IMPORTED_MODULE_1_byu_web_component_utils__ = __webpack_require__(0);
   /**
    *  @license
    *    Copyright 2017 Brigham Young University
@@ -315,13 +392,162 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
   /***/
 },
-/* 2 */
+/* 4 */
+/***/function (module, __webpack_exports__, __webpack_require__) {
+
+  "use strict";
+  /* harmony import */
+  var __WEBPACK_IMPORTED_MODULE_0__byu_story_html__ = __webpack_require__(13);
+  /* harmony import */var __WEBPACK_IMPORTED_MODULE_0__byu_story_html___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__byu_story_html__);
+  /* harmony import */var __WEBPACK_IMPORTED_MODULE_1_byu_web_component_utils__ = __webpack_require__(0);
+  /**
+   *  @license
+   *    Copyright 2017 Brigham Young University
+   *
+   *    Licensed under the Apache License, Version 2.0 (the "License");
+   *    you may not use this file except in compliance with the License.
+   *    You may obtain a copy of the License at
+   *
+   *        http://www.apache.org/licenses/LICENSE-2.0
+   *
+   *    Unless required by applicable law or agreed to in writing, software
+   *    distributed under the License is distributed on an "AS IS" BASIS,
+   *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   *    See the License for the specific language governing permissions and
+   *    limitations under the License.
+   **/
+
+  var ATTR_FANCY = 'fancy';
+
+  var DEFAULT_FANCY = 1;
+
+  var ByuStory = function (_HTMLElement2) {
+    _inherits(ByuStory, _HTMLElement2);
+
+    function ByuStory() {
+      _classCallCheck(this, ByuStory);
+
+      var _this3 = _possibleConstructorReturn(this, (ByuStory.__proto__ || Object.getPrototypeOf(ByuStory)).call(this));
+
+      _this3.attachShadow({ mode: 'open' });
+      return _this3;
+    }
+
+    _createClass(ByuStory, [{
+      key: 'connectedCallback',
+      value: function connectedCallback() {
+        var _this4 = this;
+
+        //This will stamp our template for us, then let us perform actions on the stamped DOM.
+        __WEBPACK_IMPORTED_MODULE_1_byu_web_component_utils__["a" /* applyTemplate */](this, 'byu-story', __WEBPACK_IMPORTED_MODULE_0__byu_story_html___default.a, function () {
+          setupButtonListeners(_this4);
+          applyFancy(_this4);
+
+          setupSlotListeners(_this4);
+        });
+      }
+    }, {
+      key: 'disconnectedCallback',
+      value: function disconnectedCallback() {
+        teardownButtonListeners(this);
+      }
+    }, {
+      key: 'attributeChangedCallback',
+      value: function attributeChangedCallback(attr, oldValue, newValue) {
+        switch (attr) {
+          case ATTR_FANCY:
+            applyFancy(this);
+            break;
+        }
+      }
+    }, {
+      key: 'fancy',
+      set: function set(value) {
+        this.setAttribute(ATTR_FANCY, value);
+      },
+      get: function get() {
+        if (this.hasAttribute(ATTR_FANCY)) {
+          return Number(this.getAttribute(ATTR_FANCY));
+        }
+        return DEFAULT_FANCY;
+      }
+    }], [{
+      key: 'observedAttributes',
+      get: function get() {
+        return [ATTR_FANCY];
+      }
+    }]);
+
+    return ByuStory;
+  }(HTMLElement);
+
+  window.customElements.define('byu-story', ByuStory);
+  window.ByuStory = ByuStory;
+
+  // -------------------- Helper Functions --------------------
+
+  function applyFancy(component) {
+    var output = component.shadowRoot.querySelector('.output');
+
+    var count = component.fancy;
+
+    //Remove all current children
+    while (output.firstChild) {
+      output.removeChild(output.firstChild);
+    }
+
+    if (count === 0) return;
+
+    var slot = component.shadowRoot.querySelector('#fancy-template');
+
+    var template = __WEBPACK_IMPORTED_MODULE_1_byu_web_component_utils__["b" /* querySelectorSlot */](slot, 'template');
+
+    if (!template) {
+      throw new Error('No template was specified!');
+    }
+
+    for (var i = 0; i < count; i++) {
+      var element = document.importNode(template.content, true);
+      output.appendChild(element);
+    }
+  }
+
+  function setupButtonListeners(component) {
+    var button = component.shadowRoot.querySelector('.fancy-button');
+
+    var callback = component.__buttonListener = function (event) {
+      component.fancy = component.fancy + 1;
+    };
+
+    button.addEventListener('click', callback, false);
+  }
+
+  //We generally want to be good neighbors and clean up after ourselves when we're done with things.
+  function teardownButtonListeners(component) {
+    var button = component.shadowRoot.querySelector('.fancy-button');
+
+    button.removeEventListener('click', component.__buttonListener, false);
+  }
+
+  function setupSlotListeners(component) {
+    var slot = component.shadowRoot.querySelector('#fancy-template');
+
+    //this will listen to changes to the contents of our <slot>, so we can take appropriate action
+    slot.addEventListener('slotchange', function () {
+      applyFancy(component);
+    }, false);
+  }
+
+  /***/
+},
+/* 5 */
 /***/function (module, __webpack_exports__, __webpack_require__) {
 
   "use strict";
 
   Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-  /* harmony import */var __WEBPACK_IMPORTED_MODULE_0__byu_news_byu_news_js__ = __webpack_require__(1);
+  /* harmony import */var __WEBPACK_IMPORTED_MODULE_0__byu_news_byu_news_js__ = __webpack_require__(3);
+  /* harmony import */var __WEBPACK_IMPORTED_MODULE_1__byu_story_byu_story_js__ = __webpack_require__(4);
   /**
    *  @license
    *    Copyright 2017 Brigham Young University
@@ -341,30 +567,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
   /***/
 },
-/* 3 */
-/***/function (module, __webpack_exports__, __webpack_require__) {
-
-  "use strict";
-  /* harmony import */
-  var __WEBPACK_IMPORTED_MODULE_0__lib_templating__ = __webpack_require__(6);
-  /* harmony import */var __WEBPACK_IMPORTED_MODULE_1__lib_matchesSelector__ = __webpack_require__(0);
-  /* harmony import */var __WEBPACK_IMPORTED_MODULE_2__lib_querySelectorSlot__ = __webpack_require__(5);
-  /* harmony import */var __WEBPACK_IMPORTED_MODULE_3__lib_createEvent__ = __webpack_require__(4);
-  /* harmony reexport (binding) */__webpack_require__.d(__webpack_exports__, "a", function () {
-    return __WEBPACK_IMPORTED_MODULE_0__lib_templating__["a"];
-  });
-  /* unused harmony reexport matchesSelector */
-  /* harmony reexport (binding) */__webpack_require__.d(__webpack_exports__, "b", function () {
-    return __WEBPACK_IMPORTED_MODULE_2__lib_querySelectorSlot__["a"];
-  });
-  /* unused harmony reexport createEvent */
-  /**
-   * Created by ThatJoeMoore on 2/14/17
-   */
-
-  /***/
-},
-/* 4 */
+/* 6 */
 /***/function (module, __webpack_exports__, __webpack_require__) {
 
   "use strict";
@@ -397,13 +600,13 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
   /***/
 },
-/* 5 */
+/* 7 */
 /***/function (module, __webpack_exports__, __webpack_require__) {
 
   "use strict";
   /* harmony export (immutable) */
   __webpack_exports__["a"] = querySelectorSlot;
-  /* harmony import */var __WEBPACK_IMPORTED_MODULE_0__matchesSelector_js__ = __webpack_require__(0);
+  /* harmony import */var __WEBPACK_IMPORTED_MODULE_0__matchesSelector_js__ = __webpack_require__(1);
   /*
    *  @license
    *    Copyright 2017 Brigham Young University
@@ -441,13 +644,13 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
   /***/
 },
-/* 6 */
+/* 8 */
 /***/function (module, __webpack_exports__, __webpack_require__) {
 
   "use strict";
   /* harmony export (immutable) */
   __webpack_exports__["a"] = applyTemplate;
-  /* harmony import */var __WEBPACK_IMPORTED_MODULE_0_hash_sum__ = __webpack_require__(9);
+  /* harmony import */var __WEBPACK_IMPORTED_MODULE_0_hash_sum__ = __webpack_require__(11);
   /* harmony import */var __WEBPACK_IMPORTED_MODULE_0_hash_sum___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_hash_sum__);
   /*
    *  @license
@@ -529,10 +732,10 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
   /***/
 },
-/* 7 */
+/* 9 */
 /***/function (module, exports, __webpack_require__) {
 
-  exports = module.exports = __webpack_require__(8)();
+  exports = module.exports = __webpack_require__(2)();
   // imports
 
 
@@ -544,61 +747,22 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
   /***/
 },
-/* 8 */
-/***/function (module, exports) {
+/* 10 */
+/***/function (module, exports, __webpack_require__) {
 
-  /*
-  	MIT License http://www.opensource.org/licenses/mit-license.php
-  	Author Tobias Koppers @sokra
-  */
-  // css base code, injected by the css-loader
-  module.exports = function () {
-    var list = [];
+  exports = module.exports = __webpack_require__(2)();
+  // imports
 
-    // return the list of modules as css string
-    list.toString = function toString() {
-      var result = [];
-      for (var i = 0; i < this.length; i++) {
-        var item = this[i];
-        if (item[2]) {
-          result.push("@media " + item[2] + "{" + item[1] + "}");
-        } else {
-          result.push(item[1]);
-        }
-      }
-      return result.join("");
-    };
 
-    // import a list of modules into the list
-    list.i = function (modules, mediaQuery) {
-      if (typeof modules === "string") modules = [[null, modules, ""]];
-      var alreadyImportedModules = {};
-      for (var i = 0; i < this.length; i++) {
-        var id = this[i][0];
-        if (typeof id === "number") alreadyImportedModules[id] = true;
-      }
-      for (i = 0; i < modules.length; i++) {
-        var item = modules[i];
-        // skip already imported module
-        // this implementation is not 100% perfect for weird media query combinations
-        //  when a module is imported multiple times with different media queries.
-        //  I hope this will never occur (Hey this way we have smaller bundles)
-        if (typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
-          if (mediaQuery && !item[2]) {
-            item[2] = mediaQuery;
-          } else if (mediaQuery) {
-            item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
-          }
-          list.push(item);
-        }
-      }
-    };
-    return list;
-  };
+  // module
+  exports.push([module.i, "/*!\n *  @license\n *    Copyright 2017 Brigham Young University\n *\n *    Licensed under the Apache License, Version 2.0 (the \"License\");\n *    you may not use this file except in compliance with the License.\n *    You may obtain a copy of the License at\n *\n *        http://www.apache.org/licenses/LICENSE-2.0\n *\n *    Unless required by applicable law or agreed to in writing, software\n *    distributed under the License is distributed on an \"AS IS\" BASIS,\n *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n *    See the License for the specific language governing permissions and\n *    limitations under the License.\n */\n/*!\n *  @license\n *    Copyright 2017 Brigham Young University\n *\n *    Licensed under the Apache License, Version 2.0 (the \"License\");\n *    you may not use this file except in compliance with the License.\n *    You may obtain a copy of the License at\n *\n *        http://www.apache.org/licenses/LICENSE-2.0\n *\n *    Unless required by applicable law or agreed to in writing, software\n *    distributed under the License is distributed on an \"AS IS\" BASIS,\n *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n *    See the License for the specific language governing permissions and\n *    limitations under the License.\n */", ""]);
+
+  // exports
+
 
   /***/
 },
-/* 9 */
+/* 11 */
 /***/function (module, exports, __webpack_require__) {
 
   "use strict";
@@ -662,15 +826,21 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
   /***/
 },
-/* 10 */
+/* 12 */
 /***/function (module, exports, __webpack_require__) {
 
-  module.exports = "<style>" + __webpack_require__(7) + "</style> <div class=\"root\"> <div class=\"output\"></div> <div class=\"news-template-wrapper slot-container\"> <slot id=\"news-template\"> <template> <span>🎩</span> </template> </slot> </div> </div>";
+  module.exports = "<style>" + __webpack_require__(9) + "</style> <div class=\"root\"> <div class=\"output\"></div> <div class=\"news-template-wrapper slot-container\"> <slot id=\"news-template\"> <template> <span>🎩</span> </template> </slot> </div> </div>";
+
+  /***/
+},
+/* 13 */
+/***/function (module, exports, __webpack_require__) {
+
+  module.exports = "<style>" + __webpack_require__(10) + "</style> <div class=\"root\"> <div class=\"output\"></div> <div class=\"button-wrapper\"> <button class=\"fancy-button\">Make It Fancy!</button> </div> <div class=\"fancy-template-wrapper slot-container\"> <slot id=\"fancy-template\"> <template> <span>🎩</span> </template> </slot> </div> </div>";
 
   /***/
 }]
 /******/);
-//# sourceMappingURL=components.js.map
 }());
 
 //# sourceMappingURL=components-compat.js.map
