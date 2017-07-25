@@ -24,11 +24,13 @@
   <div class="news-template-wrapper slot-container">
     <!-- This is our default news template. If the consumer doesn't specify anything, we'll use this -->
     <slot id="story-template">
-      <byu-story>
-        <img src="" slot="story-image" class="story-image">
-        <h2 slot="story-title" class="story-title"></h2>
-        <p slot="story-teaser" class="story-teaser"></p>
-      </byu-story>
+      <template>
+        <byu-story>
+          <img src="" slot="story-image" class="story-image">
+          <h2 slot="story-title" class="story-title"></h2>
+          <p slot="story-teaser" class="story-teaser"></p>
+        </byu-story>
+      </template>
     </slot>
   </div>
 </div>

@@ -18,7 +18,7 @@
 
 import template from './byu-news.html';
 import * as util from 'byu-web-component-utils';
-import 'watchwg-fetch';
+import 'whatwg-fetch';
 
 const ATTR_CATEGORIES = 'categories';
 const ATTR_TAGS = 'tags';
@@ -140,7 +140,7 @@ function applyNews(component) {
   }
 
   let slot = component.shadowRoot.querySelector('#story-template');
-  let template = util.querySelectorSlot(slot, 'byu-story');
+  let template = util.querySelectorSlot(slot, 'template');
 
   if (!template) {
     throw new Error('No template was specified!');
@@ -172,12 +172,12 @@ function applyNews(component) {
 }
 
 function setupSlotListeners(component) {
-  /* let slot = component.shadowRoot.querySelector('#news-template');
+  let slot = component.shadowRoot.querySelector('#story-template');
 
   //this will listen to changes to the contents of our <slot>, so we can take appropriate action
   slot.addEventListener('slotchange', () => {
     applyNews(component);
-  }, false); */
+  }, false);
 }
 
 function getStoriesData(component) {
