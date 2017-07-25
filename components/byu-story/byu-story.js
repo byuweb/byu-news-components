@@ -19,6 +19,8 @@
 import template from './byu-story.html';
 import * as util from 'byu-web-component-utils';
 
+// TODO: Add ATTR_STORY_ID
+
 class ByuStory extends HTMLElement {
   constructor() {
     super();

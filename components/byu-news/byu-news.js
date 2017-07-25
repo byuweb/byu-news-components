@@ -18,6 +18,7 @@
 
 import template from './byu-news.html';
 import * as util from 'byu-web-component-utils';
+import 'watchwg-fetch';
 
 const ATTR_CATEGORIES = 'categories';
 const ATTR_TAGS = 'tags';
@@ -51,7 +52,7 @@ class ByuNews extends HTMLElement {
   }
 
   static get observedAttributes() {
-    return [ATTR_CATEGORIES, ATTR_TAGS, ATTR_MIN_DATE, ATTR_MAX_DATE];
+    return [ATTR_CATEGORIES, ATTR_TAGS, ATTR_MIN_DATE, ATTR_MAX_DATE, ATTR_STORY_LIMIT];
   }
 
   attributeChangedCallback(attr, oldValue, newValue) {
@@ -60,6 +61,7 @@ class ByuNews extends HTMLElement {
       case ATTR_TAGS:
       case ATTR_MIN_DATE:
       case ATTR_MAX_DATE:
+      case ATTR_STORY_LIMIT:
         applyNews(this);
         break;
     }
@@ -178,7 +180,7 @@ function setupSlotListeners(component) {
   }, false); */
 }
 
-function getStoriesData() {
+function getStoriesData(component) {
   let data = {
     title: component.title,
     categories: component.categories,
