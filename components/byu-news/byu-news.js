@@ -21,12 +21,15 @@ import * as util from 'byu-web-component-utils';
 
 const ATTR_CATEGORIES = 'categories';
 const ATTR_TAGS = 'tags';
-const ATTR_DEPARTMENTS = 'departments';
-// TODO: Add display modes
+const ATTR_MIN_DATE = 'min-date';
+const ATTR_MAX_DATE = 'max-date';
+const ATTR_STORY_LIMIT = 'story-limit';
 
 const DEFAULT_CATEGORIES = 'all';
 const DEFAULT_TAGS = 'all';
-const DEFAULT_DEPARTMENTS = 'all';
+const DEFAULT_STORY_LIMIT = '-1'; // -1 for infinite
+
+const ENDPOINT = 'https://news-dev.byu.edu/api/';
 
 class ByuNews extends HTMLElement {
   constructor() {
@@ -37,7 +40,7 @@ class ByuNews extends HTMLElement {
   connectedCallback() {
     //This will stamp our template for us, then let us perform actions on the stamped DOM.
     util.applyTemplate(this, 'byu-news', template, () => {
-      getStoriesData(this);
+      applyNews(this);
 
       setupSlotListeners(this);
     });
@@ -48,15 +51,16 @@ class ByuNews extends HTMLElement {
   }
 
   static get observedAttributes() {
-    return [ATTR_CATEGORIES, ATTR_DEPARTMENTS, ATTR_TAGS];
+    return [ATTR_CATEGORIES, ATTR_TAGS, ATTR_MIN_DATE, ATTR_MAX_DATE];
   }
 
   attributeChangedCallback(attr, oldValue, newValue) {
     switch(attr) {
       case ATTR_CATEGORIES:
       case ATTR_TAGS:
-      case ATTR_DEPARTMENTS:
-        getStoriesData(this);
+      case ATTR_MIN_DATE:
+      case ATTR_MAX_DATE:
+        applyNews(this);
         break;
     }
   }
@@ -85,15 +89,35 @@ class ByuNews extends HTMLElement {
     return DEFAULT_TAGS;
   }
 
-  set departments(value) {
-    this.setAttribute(ATTR_DEPARTMENTS, value);
+  set minDate(value) {
+    this.setAttribute(ATTR_MIN_DATE, value);
   }
 
-  get departments() {
-    if (this.hasAttribute(ATTR_DEPARTMENTS)) {
-      return this.getAttribute(ATTR_DEPARTMENTS);
+  get minDate() {
+    if (this.hasAttribute(ATTR_MIN_DATE)) {
+      return this.getAttribute(ATTR_MIN_DATE);
     }
-    return DEFAULT_DEPARTMENTS;
+  }
+
+  set maxDate(value) {
+    this.setAttribute(ATTR_MAX_DATE, value);
+  }
+
+  get maxDate() {
+    if (this.hasAttribute(ATTR_MAX_DATE)) {
+      return this.getAttribute(ATTR_MAX_DATE);
+    }
+  }
+
+  set storyLimit(value) {
+    this.setAttribute(ATTR_STORY_LIMIT, value);
+  }
+
+  get storyLimit() {
+    if (this.hasAttribute(ATTR_STORY_LIMIT)) {
+      return this.getAttribute(ATTR_STORY_LIMIT);
+    }
+    return DEFAULT_STORY_LIMIT;
   }
 
   // END ATTRIBUTES
@@ -108,24 +132,38 @@ window.ByuNews = ByuNews;
 function applyNews(component) {
   let output = component.shadowRoot.querySelector('.output');
 
-  let count = component.fancy;
-
   //Remove all current children
   while(output.firstChild) {
     output.removeChild(output.firstChild);
   }
 
-  if (count === 0) return;
-
-  let slot = component.shadowRoot.querySelector('#news-template');
-
-  let template = util.querySelectorSlot(slot, 'template');
+  let slot = component.shadowRoot.querySelector('#story-template');
+  let template = util.querySelectorSlot(slot, 'byu-story');
 
   if (!template) {
     throw new Error('No template was specified!');
   }
 
-  for (let i = 0; i < count; i++) {
+  let stories = getStoriesData(this);
+  let count = -1;
+  if (component.storyLimit === '-1') {
+    count = stories.length;
+  }
+  else {
+    count = Number(component.storyLimit);
+  }
+
+  for (let i = 0; i < count; ++i) {
+    template.getElementsByTagName('img').forEach(function(image) {
+      // TODO: Get alt text
+      image.setAttribute('src', stories[i].FeaturedImgUrl);
+    });
+    template.getElementsByTagName('h2').forEach(function(title) {
+      title.innerHTML = stories[i].Title;
+    });
+    template.getElementsByTagName('p').forEach(function(teaser) {
+      teaser.innerHTML = stories[i].Summary;
+    });
     let element = document.importNode(template.content, true);
     output.appendChild(element);
   }
@@ -141,22 +179,29 @@ function setupSlotListeners(component) {
 }
 
 function getStoriesData() {
-  // TODO: Limit the number of stories returned
   let data = {
     title: component.title,
     categories: component.categories,
     tags: component.tags,
-    departments: component.departments
+    minDate: component.minDate,
+    maxDate: component.maxDate,
   };
   console.log(data);
 
-  let xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function () {
-    if (xhttp.readyState === 4 && xhttp.status === 200) {
-      component.shadowRoot.getElementById('news-root').innerHTML = xhttp.responseText;
+  let url = ENDPOINT + 'Stories.json?categories=' + data.categories + '&tags=' + data.tags;
+  if (data['minDate']) {
+    url += 'update[min]=' + data.minDate;
+  }
+  if (data['maxDate']) {
+    url += 'update[max]=' + data.maxDate;
+  }
+
+  fetch(url).then(function(response) {
+    if (!response.ok) {
+      return "Error fetching the stories.";
     }
-  };
-  // TODO: Create news widget
-  xhttp.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
-  xhttp.send(JSON.stringify(data));
+    else {
+      return response.json();
+    }
+  });
 }
