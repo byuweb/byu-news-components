@@ -134,8 +134,12 @@ window.ByuNews = ByuNews;
 function applyNews(component) {
   let output = component.shadowRoot.querySelector('.output');
 
-  //Remove all current children
-  while(output.firstChild) {
+  let count = Number(component.storyLimit);
+
+  if (count === 0) return;
+
+  //Remove all current children (if there are any)
+  while(output !== null && output.firstChild) {
     output.removeChild(output.firstChild);
   }
 
@@ -147,12 +151,8 @@ function applyNews(component) {
   }
 
   let stories = getStoriesData(this);
-  let count = -1;
-  if (component.storyLimit === '-1') {
+  if (count === -1) {
     count = stories.length;
-  }
-  else {
-    count = Number(component.storyLimit);
   }
 
   for (let i = 0; i < count; ++i) {

@@ -336,8 +336,12 @@ window.ByuNews = ByuNews;
 function applyNews(component) {
   let output = component.shadowRoot.querySelector('.output');
 
-  //Remove all current children
-  while(output.firstChild) {
+  let count = Number(component.storyLimit);
+
+  if (count === 0) return;
+
+  //Remove all current children (if there are any)
+  while(output !== null && output.firstChild) {
     output.removeChild(output.firstChild);
   }
 
@@ -349,12 +353,8 @@ function applyNews(component) {
   }
 
   let stories = getStoriesData(this);
-  let count = -1;
-  if (component.storyLimit === '-1') {
+  if (count === -1) {
     count = stories.length;
-  }
-  else {
-    count = Number(component.storyLimit);
   }
 
   for (let i = 0; i < count; ++i) {
@@ -769,7 +769,7 @@ module.exports = sum;
 /* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = "<style>" + __webpack_require__(9) + "</style> <div class=\"root\"> <div class=\"output\"></div> <div class=\"news-template-wrapper slot-container\"> <slot id=\"story-template\"> <template> <byu-story> <img src=\"xxxHTMLLINKxxx0.80541293670359890.8238598251771216xxx\" slot=\"story-image\" class=\"story-image\"> <h2 slot=\"story-title\" class=\"story-title\"></h2> <p slot=\"story-teaser\" class=\"story-teaser\"></p> </byu-story> </template> </slot> </div> </div>";
+module.exports = "<style>" + __webpack_require__(9) + "</style> <div class=\"root\"> <div class=\"output\"></div> <div class=\"story-template-wrapper slot-container\"> <slot id=\"story-template\"> <template> <byu-story> <img src=\"//cdn.byu.edu/shared-icons/latest/logos/monogram-black.svg\" slot=\"story-image\" class=\"story-image\" alt=\"Story Image\"> <h2 slot=\"story-title\" class=\"story-title\">News Story</h2> <p slot=\"story-teaser\" class=\"story-teaser\">Story Teaser</p> </byu-story> </template> </slot> </div> </div>";
 
 /***/ }),
 /* 13 */
