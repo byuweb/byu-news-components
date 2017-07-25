@@ -35,12 +35,14 @@ const ENDPOINT = 'https://news-dev.byu.edu/api/';
 class ByuNews extends HTMLElement {
   constructor() {
     super();
+    this._initialized = false;
     this.attachShadow({mode: 'open'});
   }
 
   connectedCallback() {
     //This will stamp our template for us, then let us perform actions on the stamped DOM.
     util.applyTemplate(this, 'byu-news', template, () => {
+      this._initialized = true;
       applyNews(this);
 
       setupSlotListeners(this);
@@ -132,6 +134,8 @@ window.ByuNews = ByuNews;
 // -------------------- Helper Functions --------------------
 
 function applyNews(component) {
+  if (!component._initialized) return;
+
   let output = component.shadowRoot.querySelector('.output');
 
   let count = Number(component.storyLimit);
@@ -143,7 +147,7 @@ function applyNews(component) {
     output.removeChild(output.firstChild);
   }
 
-  let slot = component.shadowRoot.querySelector('#story-template');
+  let slot = component.shadowRoot.querySelector('slot');
   let template = util.querySelectorSlot(slot, 'template');
 
   if (!template) {
