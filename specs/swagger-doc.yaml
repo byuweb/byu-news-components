@@ -1,0 +1,330 @@
+swagger: '2.0'
+info:
+  description: This is an API to get stories from the BYU News site.
+  version: "1.1.0"
+  title: BYU News API
+  # put the contact info for your development or API team
+  contact:
+    email: web2@byu.edu
+
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+
+# tags are used for organizing operations
+tags:
+- name: Stories
+  description: Return complete stories.
+- name: Categories
+  description: Return category information.
+- name: Tags
+  description: Return tag information.
+  
+paths:
+  /Stories:
+    get:
+      tags:
+      - Stories
+      summary: lists story data
+      operationId: stories
+      description: By passing in the appropriate options, filter the stories to get the one's you need.
+      produces:
+      - application/json
+      parameters:
+      - in: query
+        name: categories
+        description: A list of the category ID's, separated by a '+' (e.g. 2975+2996+2997). Specify "all" to include all categories.
+        required: true
+        type: string
+      - in: query
+        name: tags
+        description: A list of the tag ID's, separated by a '+' (e.g. 37+99+354). Specify "all" to include all tags.
+        required: true
+        type: string
+      - in: query
+        name: updated[min]
+        description: The starting date of the time period (in the format yyyy-mm-dd).
+        type: string
+        format: date
+      - in: query
+        name: updated[max]
+        description: The ending date of the time period (in the format yyyy-mm-dd).
+        type: string
+        format: date
+      responses:
+        200:
+          description: search results matching criteria
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Stories'
+        400:
+          description: bad input parameter
+  /Story:
+    get:
+      tags:
+      - Stories
+      summary: returns a single story
+      operationId: singleStory
+      description: By passing in the appropriate options, filter the stories to get the one's you need.
+      produces:
+      - application/json
+      parameters:
+      - in: query
+        name: id
+        description: The story's ID. This can be found from the catagories API.
+        required: false
+        type: integer
+      responses:
+        200:
+          description: search results matching criteria
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Story'
+        400:
+          description: bad input parameter
+  /CategoryCounts:
+    get:
+      tags:
+      - Categories
+      summary: Returns the number of story in each category.
+      operationId: categoryCounts
+      description: Lists the categories and the nubmer of stories in each category for a specified date range.
+      produces: 
+      - application/json
+      parameters: 
+      - in: query
+        name: updated[min]
+        description: The starting date of the time period (in the format yyyy-mm-dd).
+        type: string
+        format: date
+      - in: query
+        name: updated[max]
+        description: The ending date of the time period (in the format yyyy-mm-dd).
+        type: string
+        format: date
+      responses:
+        200:
+          description: search results matching criteria
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/CategoryCounts'
+        400:
+          description: bad input parameter
+  /Categories:
+    get:
+      tags:
+      - Categories
+      summary: Returns the each category and it's URL.
+      operationId: categories
+      description: Lists the categories and their URL.
+      produces: 
+      - application/json
+      responses:
+        200:
+          description: search results matching criteria
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Categories'
+        400:
+          description: bad input parameter
+  /TagCounts:
+    get:
+      tags:
+      - Tags
+      summary: Returns the number of story in each tag.
+      operationId: tagCounts
+      description: Lists the tags and the nubmer of stories in each tag for a specified date range.
+      produces: 
+      - application/json
+      parameters: 
+      - in: query
+        name: updated[min]
+        description: The starting date of the time period (in the format yyyy-mm-dd).
+        type: string
+        format: date
+      - in: query
+        name: updated[max]
+        description: The ending date of the time period (in the format yyyy-mm-dd).
+        type: string
+        format: date
+      responses:
+        200:
+          description: search results matching criteria
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/TagCounts'
+        400:
+          description: bad input parameter
+  /Tags:
+    get:
+      tags:
+      - Tags
+      summary: Returns the each tag and it's URL.
+      operationId: tags
+      description: Lists the tag and their URL.
+      produces: 
+      - application/json
+      responses:
+        200:
+          description: search results matching criteria
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Tags'
+        400:
+          description: bad input parameter
+definitions:
+  Stories:
+    type: object
+    properties:
+      StoryId:
+        type: string
+        example: 11417
+      Title:
+        type: string
+        example: To type of not to type? That isn't really the question.
+      FullUrl:
+        type: string
+        example: https://news-components.byu.edu/news/type-or-not-type-isn%E2%80%99t-really-question
+      MediaContact: 
+        type: string
+        example: Andrea Christensen
+      WriterName:
+        type: string
+        example: Andrea Christensen
+      DatePublished:
+        type: string
+        example: May-29-2017
+      LastUpdated:
+        type: string
+        example: Jun 15-2017
+      IsFeatured:
+        type: string
+        example: False
+      FeaturedImgUrl:
+        type: string
+        example: https://news-components.byu.edu/sites/default/files/feature_image/kimmons%20thumbnail.jpg
+      Photos:
+        type: string
+        example:
+          - https://news-components.byu.edu/sites/default/files/photos/1705-39%20011%20copy.jpg
+          - https://news-components.byu.edu/sites/default/files/photos/1705-39%20032%20copy.jpg
+      Tags:
+        type: string
+        example: BYU elementary education majors, chromebooks, Education, texting
+      TagIds:
+        type: string
+        example: 4420, 4486, 649, 1092
+      Categories:
+        type: string
+        example: Intellect
+      CategoryIds:
+        type: string
+        example: 2975
+  Story:
+    type: object
+    properties:
+      StoryId:
+        type: string
+        example: 11417
+      Title:
+        type: string
+        example: To type of not to type? That isn't really the question.
+      FullUrl:
+        type: string
+        example: https://news-components.byu.edu/news/type-or-not-type-isn%E2%80%99t-really-question
+      MediaContact: 
+        type: string
+        example: Andrea Christensen
+      WriterName:
+        type: string
+        example: Andrea Christensen
+      DatePublished:
+        type: string
+        example: May-29-2017
+      LastUpdated:
+        type: string
+        example: Jun 15-2017
+      IsFeatured:
+        type: string
+        example: False
+      FeaturedImgUrl:
+        type: string
+        example: https://news-components.byu.edu/sites/default/files/feature_image/kimmons%20thumbnail.jpg
+      Photos:
+        type: string
+        example:
+          - https://news-components.byu.edu/sites/default/files/photos/1705-39%20011%20copy.jpg
+          - https://news-components.byu.edu/sites/default/files/photos/1705-39%20032%20copy.jpg
+      Tags:
+        type: string
+        example: BYU elementary education majors, chromebooks, Education, texting
+      TagIds:
+        type: string
+        example: 4420, 4486, 649, 1092
+      Categories:
+        type: string
+        example: Intellect
+      CategoryIds:
+        type: string
+        example: 2975
+      Body:
+        type: string
+        example: This will return a plain-text version of the story's body.
+  CategoryCounts:
+    type: object
+    properties:
+      ID:
+        type: string
+        example: 2974
+      Category:
+        type: string
+        example: Faith
+      Count:
+        type: string
+        example: 99
+  Categories:
+    type: object
+    properties:
+      ID:
+        type: string
+        example: 2974
+      Category:
+        type: string
+        example: Faith
+      FullUrl:
+        type: string
+        example: https://news-components.byu.edu/category/Faith
+  TagCounts:
+    type: object
+    properties:
+      ID:
+        type: string
+        example: 519
+      Tag:
+        type: string
+        example: tabernacle
+      Count:
+        type: string
+        example: 0
+  Tags:
+    type: object
+    properties:
+      ID:
+        type: string
+        example: 519
+      Tag:
+        type: string
+        example: tabernacle
+      FullUrl:
+        type: string
+        example: https://news-components.byu.edu/category/tabernacle
+schemes:
+ - https
+host: news-dev.byu.edu
+basePath: /api
