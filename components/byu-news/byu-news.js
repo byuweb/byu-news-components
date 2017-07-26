@@ -40,7 +40,7 @@ class ByuNews extends HTMLElement {
   }
 
   connectedCallback() {
-    //This will stamp our template for us, then let us perform actions on the stamped DOM.
+    // This will stamp our template for us, then let us perform actions on the stamped DOM.
     util.applyTemplate(this, 'byu-news', template, () => {
       this._initialized = true;
       applyNews(this);
@@ -50,7 +50,7 @@ class ByuNews extends HTMLElement {
   }
 
   disconnectedCallback() {
-
+    // Just in case we need to cleanup
   }
 
   static get observedAttributes() {
@@ -143,36 +143,58 @@ function applyNews(component) {
   if (count === 0) return;
 
   //Remove all current children (if there are any)
-  while(output !== null && output.firstChild) {
+  while(output.firstChild) {
     output.removeChild(output.firstChild);
   }
 
-  let slot = component.shadowRoot.querySelector('slot');
+  let slot = component.shadowRoot.querySelector('#story-template');
   let template = util.querySelectorSlot(slot, 'template');
 
   if (!template) {
     throw new Error('No template was specified!');
   }
 
-  let stories = getStoriesData(this);
-  if (count === -1) {
-    count = stories.length;
+  let data = {
+    title: component.title,
+    categories: component.categories,
+    tags: component.tags,
+    minDate: component.minDate,
+    maxDate: component.maxDate,
+  };
+
+  let url = ENDPOINT + 'Stories.json?categories=' + data.categories + '&tags=' + data.tags + '&';
+  if (data['minDate']) {
+    url += 'published[min]=' + data.minDate + '&';
+  }
+  if (data['maxDate']) {
+    url += 'published[max]=' + data.maxDate;
   }
 
-  for (let i = 0; i < count; ++i) {
-    template.getElementsByTagName('img').forEach(function(image) {
-      // TODO: Get alt text
-      image.setAttribute('src', stories[i].FeaturedImgUrl);
-    });
-    template.getElementsByTagName('h2').forEach(function(title) {
-      title.innerHTML = stories[i].Title;
-    });
-    template.getElementsByTagName('p').forEach(function(teaser) {
-      teaser.innerHTML = stories[i].Summary;
-    });
-    let element = document.importNode(template.content, true);
-    output.appendChild(element);
-  }
+  fetch(url).then(response => {
+    if (response.ok) {
+      return response.json();
+    }
+    throw new Error('Network response was not OK.')
+  }).then(stories => {
+    if(stories === -1) {
+      count = stories.length;
+    }
+    for (let i = 0; i < count; ++i) {
+      let element = document.importNode(template.content, true);
+      element.querySelector('.story-image')
+        .setAttribute('src', stories[i].FeaturedImgUrl);
+      element.querySelector('.story-title')
+        .innerHTML = stories[i].Title;
+      let summary = stories[i].Summary;
+      if (summary) {
+        element.querySelector('.story-teaser')
+          .innerHTML = summary;
+      }
+      output.appendChild(element);
+    }
+  }).catch(error => {
+    console.error('There was a fetchin\' problem...' + error.message);
+  });
 }
 
 function setupSlotListeners(component) {
@@ -182,32 +204,4 @@ function setupSlotListeners(component) {
   slot.addEventListener('slotchange', () => {
     applyNews(component);
   }, false);
-}
-
-function getStoriesData(component) {
-  let data = {
-    title: component.title,
-    categories: component.categories,
-    tags: component.tags,
-    minDate: component.minDate,
-    maxDate: component.maxDate,
-  };
-  console.log(data);
-
-  let url = ENDPOINT + 'Stories.json?categories=' + data.categories + '&tags=' + data.tags;
-  if (data['minDate']) {
-    url += 'update[min]=' + data.minDate;
-  }
-  if (data['maxDate']) {
-    url += 'update[max]=' + data.maxDate;
-  }
-
-  fetch(url).then(function(response) {
-    if (!response.ok) {
-      return "Error fetching the stories.";
-    }
-    else {
-      return response.json();
-    }
-  });
 }

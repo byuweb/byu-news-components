@@ -41,10 +41,5 @@ window.ByuStory = ByuStory;
 // -------------------- Helper Functions --------------------
 
 function setupSlotListeners(component) {
-  let slot = component.shadowRoot.querySelector('#fancy-template');
-
-  //this will listen to changes to the contents of our <slot>, so we can take appropriate action
-  slot.addEventListener('slotchange', () => {
-    // Do something if need be
-  }, false);
+  // Saving just in case
 }

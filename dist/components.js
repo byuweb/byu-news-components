@@ -237,12 +237,14 @@ const ENDPOINT = 'https://news-dev.byu.edu/api/';
 class ByuNews extends HTMLElement {
   constructor() {
     super();
+    this._initialized = false;
     this.attachShadow({mode: 'open'});
   }
 
   connectedCallback() {
-    //This will stamp our template for us, then let us perform actions on the stamped DOM.
+    // This will stamp our template for us, then let us perform actions on the stamped DOM.
     __WEBPACK_IMPORTED_MODULE_1_byu_web_component_utils__["a" /* applyTemplate */](this, 'byu-news', __WEBPACK_IMPORTED_MODULE_0__byu_news_html___default.a, () => {
+      this._initialized = true;
       applyNews(this);
 
       setupSlotListeners(this);
@@ -250,7 +252,7 @@ class ByuNews extends HTMLElement {
   }
 
   disconnectedCallback() {
-
+    // Just in case we need to cleanup
   }
 
   static get observedAttributes() {
@@ -334,6 +336,8 @@ window.ByuNews = ByuNews;
 // -------------------- Helper Functions --------------------
 
 function applyNews(component) {
+  if (!component._initialized) return;
+
   let output = component.shadowRoot.querySelector('.output');
 
   let count = Number(component.storyLimit);
@@ -341,7 +345,7 @@ function applyNews(component) {
   if (count === 0) return;
 
   //Remove all current children (if there are any)
-  while(output !== null && output.firstChild) {
+  while(output.firstChild) {
     output.removeChild(output.firstChild);
   }
 
@@ -352,25 +356,47 @@ function applyNews(component) {
     throw new Error('No template was specified!');
   }
 
-  let stories = getStoriesData(this);
-  if (count === -1) {
-    count = stories.length;
+  let data = {
+    title: component.title,
+    categories: component.categories,
+    tags: component.tags,
+    minDate: component.minDate,
+    maxDate: component.maxDate,
+  };
+
+  let url = ENDPOINT + 'Stories.json?categories=' + data.categories + '&tags=' + data.tags + '&';
+  if (data['minDate']) {
+    url += 'published[min]=' + data.minDate + '&';
+  }
+  if (data['maxDate']) {
+    url += 'published[max]=' + data.maxDate;
   }
 
-  for (let i = 0; i < count; ++i) {
-    template.getElementsByTagName('img').forEach(function(image) {
-      // TODO: Get alt text
-      image.setAttribute('src', stories[i].FeaturedImgUrl);
-    });
-    template.getElementsByTagName('h2').forEach(function(title) {
-      title.innerHTML = stories[i].Title;
-    });
-    template.getElementsByTagName('p').forEach(function(teaser) {
-      teaser.innerHTML = stories[i].Summary;
-    });
-    let element = document.importNode(template.content, true);
-    output.appendChild(element);
-  }
+  fetch(url).then(response => {
+    if (response.ok) {
+      return response.json();
+    }
+    throw new Error('Network response was not OK.')
+  }).then(stories => {
+    if(stories === -1) {
+      count = stories.length;
+    }
+    for (let i = 0; i < count; ++i) {
+      let element = document.importNode(template.content, true);
+      element.querySelector('.story-image')
+        .setAttribute('src', stories[i].FeaturedImgUrl);
+      element.querySelector('.story-title')
+        .innerHTML = stories[i].Title;
+      let summary = stories[i].Summary;
+      if (summary) {
+        element.querySelector('.story-teaser')
+          .innerHTML = summary;
+      }
+      output.appendChild(element);
+    }
+  }).catch(error => {
+    console.error('There was a fetchin\' problem...' + error.message);
+  });
 }
 
 function setupSlotListeners(component) {
@@ -380,34 +406,6 @@ function setupSlotListeners(component) {
   slot.addEventListener('slotchange', () => {
     applyNews(component);
   }, false);
-}
-
-function getStoriesData(component) {
-  let data = {
-    title: component.title,
-    categories: component.categories,
-    tags: component.tags,
-    minDate: component.minDate,
-    maxDate: component.maxDate,
-  };
-  console.log(data);
-
-  let url = ENDPOINT + 'Stories.json?categories=' + data.categories + '&tags=' + data.tags;
-  if (data['minDate']) {
-    url += 'update[min]=' + data.minDate;
-  }
-  if (data['maxDate']) {
-    url += 'update[max]=' + data.maxDate;
-  }
-
-  fetch(url).then(function(response) {
-    if (!response.ok) {
-      return "Error fetching the stories.";
-    }
-    else {
-      return response.json();
-    }
-  });
 }
 
 
@@ -462,12 +460,7 @@ window.ByuStory = ByuStory;
 // -------------------- Helper Functions --------------------
 
 function setupSlotListeners(component) {
-  let slot = component.shadowRoot.querySelector('#fancy-template');
-
-  //this will listen to changes to the contents of our <slot>, so we can take appropriate action
-  slot.addEventListener('slotchange', () => {
-    // Do something if need be
-  }, false);
+  // Saving just in case
 }
 
 
@@ -769,7 +762,7 @@ module.exports = sum;
 /* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = "<style>" + __webpack_require__(9) + "</style> <div class=\"root\"> <div class=\"output\"></div> <div class=\"story-template-wrapper slot-container\"> <slot id=\"story-template\"> <template> <byu-story> <img src=\"//cdn.byu.edu/shared-icons/latest/logos/monogram-black.svg\" slot=\"story-image\" class=\"story-image\" alt=\"Story Image\"> <h2 slot=\"story-title\" class=\"story-title\">News Story</h2> <p slot=\"story-teaser\" class=\"story-teaser\">Story Teaser</p> </byu-story> </template> </slot> </div> </div>";
+module.exports = "<style>" + __webpack_require__(9) + "</style> <div class=\"root\"> <div class=\"output\"></div> <div class=\"story-template-wrapper slot-container\"> <slot id=\"story-template\"> <template> <byu-story> <img src=\"//cdn.byu.edu/shared-icons/latest/logos/monogram-black.svg\" slot=\"story-image\" class=\"story-image\" alt=\"Story Image\"> <h2 slot=\"story-title\" class=\"story-title\"></h2> <p slot=\"story-teaser\" class=\"story-teaser\"></p> </byu-story> </template> </slot> </div> </div>";
 
 /***/ }),
 /* 13 */

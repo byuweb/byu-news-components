@@ -256,6 +256,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
       var _this = _possibleConstructorReturn(this, (ByuNews.__proto__ || Object.getPrototypeOf(ByuNews)).call(this));
 
+      _this._initialized = false;
       _this.attachShadow({ mode: 'open' });
       return _this;
     }
@@ -265,8 +266,9 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
       value: function connectedCallback() {
         var _this2 = this;
 
-        //This will stamp our template for us, then let us perform actions on the stamped DOM.
+        // This will stamp our template for us, then let us perform actions on the stamped DOM.
         __WEBPACK_IMPORTED_MODULE_1_byu_web_component_utils__["a" /* applyTemplate */](this, 'byu-news', __WEBPACK_IMPORTED_MODULE_0__byu_news_html___default.a, function () {
+          _this2._initialized = true;
           applyNews(_this2);
 
           setupSlotListeners(_this2);
@@ -274,7 +276,9 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
       }
     }, {
       key: 'disconnectedCallback',
-      value: function disconnectedCallback() {}
+      value: function disconnectedCallback() {
+        // Just in case we need to cleanup
+      }
     }, {
       key: 'attributeChangedCallback',
       value: function attributeChangedCallback(attr, oldValue, newValue) {
@@ -363,6 +367,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
   // -------------------- Helper Functions --------------------
 
   function applyNews(component) {
+    if (!component._initialized) return;
+
     var output = component.shadowRoot.querySelector('.output');
 
     var count = Number(component.storyLimit);
@@ -370,7 +376,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
     if (count === 0) return;
 
     //Remove all current children (if there are any)
-    while (output !== null && output.firstChild) {
+    while (output.firstChild) {
       output.removeChild(output.firstChild);
     }
 
@@ -381,29 +387,44 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
       throw new Error('No template was specified!');
     }
 
-    var stories = getStoriesData(this);
-    if (count === -1) {
-      count = stories.length;
-    }
-
-    var _loop = function _loop(i) {
-      template.getElementsByTagName('img').forEach(function (image) {
-        // TODO: Get alt text
-        image.setAttribute('src', stories[i].FeaturedImgUrl);
-      });
-      template.getElementsByTagName('h2').forEach(function (title) {
-        title.innerHTML = stories[i].Title;
-      });
-      template.getElementsByTagName('p').forEach(function (teaser) {
-        teaser.innerHTML = stories[i].Summary;
-      });
-      var element = document.importNode(template.content, true);
-      output.appendChild(element);
+    var data = {
+      title: component.title,
+      categories: component.categories,
+      tags: component.tags,
+      minDate: component.minDate,
+      maxDate: component.maxDate
     };
 
-    for (var i = 0; i < count; ++i) {
-      _loop(i);
+    var url = ENDPOINT + 'Stories.json?categories=' + data.categories + '&tags=' + data.tags + '&';
+    if (data['minDate']) {
+      url += 'published[min]=' + data.minDate + '&';
     }
+    if (data['maxDate']) {
+      url += 'published[max]=' + data.maxDate;
+    }
+
+    fetch(url).then(function (response) {
+      if (response.ok) {
+        return response.json();
+      }
+      throw new Error('Network response was not OK.');
+    }).then(function (stories) {
+      if (stories === -1) {
+        count = stories.length;
+      }
+      for (var i = 0; i < count; ++i) {
+        var element = document.importNode(template.content, true);
+        element.querySelector('.story-image').setAttribute('src', stories[i].FeaturedImgUrl);
+        element.querySelector('.story-title').innerHTML = stories[i].Title;
+        var summary = stories[i].Summary;
+        if (summary) {
+          element.querySelector('.story-teaser').innerHTML = summary;
+        }
+        output.appendChild(element);
+      }
+    }).catch(function (error) {
+      console.error('There was a fetchin\' problem...' + error.message);
+    });
   }
 
   function setupSlotListeners(component) {
@@ -413,33 +434,6 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
     slot.addEventListener('slotchange', function () {
       applyNews(component);
     }, false);
-  }
-
-  function getStoriesData(component) {
-    var data = {
-      title: component.title,
-      categories: component.categories,
-      tags: component.tags,
-      minDate: component.minDate,
-      maxDate: component.maxDate
-    };
-    console.log(data);
-
-    var url = ENDPOINT + 'Stories.json?categories=' + data.categories + '&tags=' + data.tags;
-    if (data['minDate']) {
-      url += 'update[min]=' + data.minDate;
-    }
-    if (data['maxDate']) {
-      url += 'update[max]=' + data.maxDate;
-    }
-
-    fetch(url).then(function (response) {
-      if (!response.ok) {
-        return "Error fetching the stories.";
-      } else {
-        return response.json();
-      }
-    });
   }
 
   /***/
@@ -503,14 +497,9 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
   // -------------------- Helper Functions --------------------
 
-  function setupSlotListeners(component) {
-    var slot = component.shadowRoot.querySelector('#fancy-template');
+  function setupSlotListeners(component) {}
+  // Saving just in case
 
-    //this will listen to changes to the contents of our <slot>, so we can take appropriate action
-    slot.addEventListener('slotchange', function () {
-      // Do something if need be
-    }, false);
-  }
 
   /***/
 },
@@ -803,7 +792,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 /* 12 */
 /***/function (module, exports, __webpack_require__) {
 
-  module.exports = "<style>" + __webpack_require__(9) + "</style> <div class=\"root\"> <div class=\"output\"></div> <div class=\"story-template-wrapper slot-container\"> <slot id=\"story-template\"> <template> <byu-story> <img src=\"//cdn.byu.edu/shared-icons/latest/logos/monogram-black.svg\" slot=\"story-image\" class=\"story-image\" alt=\"Story Image\"> <h2 slot=\"story-title\" class=\"story-title\">News Story</h2> <p slot=\"story-teaser\" class=\"story-teaser\">Story Teaser</p> </byu-story> </template> </slot> </div> </div>";
+  module.exports = "<style>" + __webpack_require__(9) + "</style> <div class=\"root\"> <div class=\"output\"></div> <div class=\"story-template-wrapper slot-container\"> <slot id=\"story-template\"> <template> <byu-story> <img src=\"//cdn.byu.edu/shared-icons/latest/logos/monogram-black.svg\" slot=\"story-image\" class=\"story-image\" alt=\"Story Image\"> <h2 slot=\"story-title\" class=\"story-title\"></h2> <p slot=\"story-teaser\" class=\"story-teaser\"></p> </byu-story> </template> </slot> </div> </div>";
 
   /***/
 },
