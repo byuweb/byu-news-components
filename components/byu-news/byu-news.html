@@ -21,11 +21,15 @@
 
 <div class="root">
   <div class="output"></div>
-  <div class="news-template-wrapper slot-container">
+  <div class="story-template-wrapper slot-container">
     <!-- This is our default news template. If the consumer doesn't specify anything, we'll use this -->
-    <slot id="news-template">
+    <slot id="story-template">
       <template>
-        <span>🎩</span>
+        <byu-story>
+          <img src="//cdn.byu.edu/shared-icons/latest/logos/monogram-black.svg" slot="story-image" class="story-image" alt="Story Image">
+          <h2 slot="story-title" class="story-title"></h2>
+          <p slot="story-teaser" class="story-teaser"></p>
+        </byu-story>
       </template>
     </slot>
   </div>

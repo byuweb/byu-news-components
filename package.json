@@ -15,10 +15,11 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "byu-web-component-utils": "^0.4.2"
+    "byu-web-component-utils": "^0.4.2",
+    "whatwg-fetch": "^2.0.3"
   },
   "devDependencies": {
-    "browser-sync": "^2.18.12",
+    "browser-sync": "^2.18.13",
     "byu-web-component-build": "^0.2.3",
     "gulp": "^3.9.1"
   }

@@ -198,6 +198,8 @@ module.exports = function() {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__byu_news_html__ = __webpack_require__(12);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__byu_news_html___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__byu_news_html__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_byu_web_component_utils__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_whatwg_fetch__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_whatwg_fetch___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_whatwg_fetch__);
 /**
  *  @license
  *    Copyright 2017 Brigham Young University
@@ -219,44 +221,52 @@ module.exports = function() {
 
 
 
+
 const ATTR_CATEGORIES = 'categories';
 const ATTR_TAGS = 'tags';
-const ATTR_DEPARTMENTS = 'departments';
-// TODO: Add display modes
+const ATTR_MIN_DATE = 'min-date';
+const ATTR_MAX_DATE = 'max-date';
+const ATTR_STORY_LIMIT = 'story-limit';
 
 const DEFAULT_CATEGORIES = 'all';
 const DEFAULT_TAGS = 'all';
-const DEFAULT_DEPARTMENTS = 'all';
+const DEFAULT_STORY_LIMIT = '-1'; // -1 for infinite
+
+const ENDPOINT = 'https://news-dev.byu.edu/api/';
 
 class ByuNews extends HTMLElement {
   constructor() {
     super();
+    this._initialized = false;
     this.attachShadow({mode: 'open'});
   }
 
   connectedCallback() {
-    //This will stamp our template for us, then let us perform actions on the stamped DOM.
+    // This will stamp our template for us, then let us perform actions on the stamped DOM.
     __WEBPACK_IMPORTED_MODULE_1_byu_web_component_utils__["a" /* applyTemplate */](this, 'byu-news', __WEBPACK_IMPORTED_MODULE_0__byu_news_html___default.a, () => {
-      getStoriesData(this);
+      this._initialized = true;
+      applyNews(this);
 
       setupSlotListeners(this);
     });
   }
 
   disconnectedCallback() {
-
+    // Just in case we need to cleanup
   }
 
   static get observedAttributes() {
-    return [ATTR_CATEGORIES, ATTR_DEPARTMENTS, ATTR_TAGS];
+    return [ATTR_CATEGORIES, ATTR_TAGS, ATTR_MIN_DATE, ATTR_MAX_DATE, ATTR_STORY_LIMIT];
   }
 
   attributeChangedCallback(attr, oldValue, newValue) {
     switch(attr) {
       case ATTR_CATEGORIES:
       case ATTR_TAGS:
-      case ATTR_DEPARTMENTS:
-        getStoriesData(this);
+      case ATTR_MIN_DATE:
+      case ATTR_MAX_DATE:
+      case ATTR_STORY_LIMIT:
+        applyNews(this);
         break;
     }
   }
@@ -285,15 +295,35 @@ class ByuNews extends HTMLElement {
     return DEFAULT_TAGS;
   }
 
-  set departments(value) {
-    this.setAttribute(ATTR_DEPARTMENTS, value);
+  set minDate(value) {
+    this.setAttribute(ATTR_MIN_DATE, value);
   }
 
-  get departments() {
-    if (this.hasAttribute(ATTR_DEPARTMENTS)) {
-      return this.getAttribute(ATTR_DEPARTMENTS);
+  get minDate() {
+    if (this.hasAttribute(ATTR_MIN_DATE)) {
+      return this.getAttribute(ATTR_MIN_DATE);
     }
-    return DEFAULT_DEPARTMENTS;
+  }
+
+  set maxDate(value) {
+    this.setAttribute(ATTR_MAX_DATE, value);
+  }
+
+  get maxDate() {
+    if (this.hasAttribute(ATTR_MAX_DATE)) {
+      return this.getAttribute(ATTR_MAX_DATE);
+    }
+  }
+
+  set storyLimit(value) {
+    this.setAttribute(ATTR_STORY_LIMIT, value);
+  }
+
+  get storyLimit() {
+    if (this.hasAttribute(ATTR_STORY_LIMIT)) {
+      return this.getAttribute(ATTR_STORY_LIMIT);
+    }
+    return DEFAULT_STORY_LIMIT;
   }
 
   // END ATTRIBUTES
@@ -306,59 +336,76 @@ window.ByuNews = ByuNews;
 // -------------------- Helper Functions --------------------
 
 function applyNews(component) {
+  if (!component._initialized) return;
+
   let output = component.shadowRoot.querySelector('.output');
 
-  let count = component.fancy;
+  let count = Number(component.storyLimit);
 
-  //Remove all current children
+  if (count === 0) return;
+
+  //Remove all current children (if there are any)
   while(output.firstChild) {
     output.removeChild(output.firstChild);
   }
 
-  if (count === 0) return;
-
-  let slot = component.shadowRoot.querySelector('#news-template');
-
+  let slot = component.shadowRoot.querySelector('#story-template');
   let template = __WEBPACK_IMPORTED_MODULE_1_byu_web_component_utils__["b" /* querySelectorSlot */](slot, 'template');
 
   if (!template) {
     throw new Error('No template was specified!');
   }
 
-  for (let i = 0; i < count; i++) {
-    let element = document.importNode(template.content, true);
-    output.appendChild(element);
-  }
-}
-
-function setupSlotListeners(component) {
-  /* let slot = component.shadowRoot.querySelector('#news-template');
-
-  //this will listen to changes to the contents of our <slot>, so we can take appropriate action
-  slot.addEventListener('slotchange', () => {
-    applyNews(component);
-  }, false); */
-}
-
-function getStoriesData() {
-  // TODO: Limit the number of stories returned
   let data = {
     title: component.title,
     categories: component.categories,
     tags: component.tags,
-    departments: component.departments
+    minDate: component.minDate,
+    maxDate: component.maxDate,
   };
-  console.log(data);
 
-  let xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function () {
-    if (xhttp.readyState === 4 && xhttp.status === 200) {
-      component.shadowRoot.getElementById('news-root').innerHTML = xhttp.responseText;
+  let url = ENDPOINT + 'Stories.json?categories=' + data.categories + '&tags=' + data.tags + '&';
+  if (data['minDate']) {
+    url += 'published[min]=' + data.minDate + '&';
+  }
+  if (data['maxDate']) {
+    url += 'published[max]=' + data.maxDate;
+  }
+
+  fetch(url).then(response => {
+    if (response.ok) {
+      return response.json();
     }
-  };
-  // TODO: Create news widget
-  xhttp.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
-  xhttp.send(JSON.stringify(data));
+    throw new Error('Network response was not OK.')
+  }).then(stories => {
+    if(stories === -1) {
+      count = stories.length;
+    }
+    for (let i = 0; i < count; ++i) {
+      let element = document.importNode(template.content, true);
+      element.querySelector('.story-image')
+        .setAttribute('src', stories[i].FeaturedImgUrl);
+      element.querySelector('.story-title')
+        .innerHTML = stories[i].Title;
+      let summary = stories[i].Summary;
+      if (summary) {
+        element.querySelector('.story-teaser')
+          .innerHTML = summary;
+      }
+      output.appendChild(element);
+    }
+  }).catch(error => {
+    console.error('There was a fetchin\' problem...' + error.message);
+  });
+}
+
+function setupSlotListeners(component) {
+  let slot = component.shadowRoot.querySelector('#story-template');
+
+  //this will listen to changes to the contents of our <slot>, so we can take appropriate action
+  slot.addEventListener('slotchange', () => {
+    applyNews(component);
+  }, false);
 }
 
 
@@ -391,9 +438,7 @@ function getStoriesData() {
 
 
 
-const ATTR_FANCY = 'fancy';
-
-const DEFAULT_FANCY = 1;
+// TODO: Add ATTR_STORY_ID
 
 class ByuStory extends HTMLElement {
   constructor() {
@@ -404,40 +449,9 @@ class ByuStory extends HTMLElement {
   connectedCallback() {
     //This will stamp our template for us, then let us perform actions on the stamped DOM.
     __WEBPACK_IMPORTED_MODULE_1_byu_web_component_utils__["a" /* applyTemplate */](this, 'byu-story', __WEBPACK_IMPORTED_MODULE_0__byu_story_html___default.a, () => {
-      setupButtonListeners(this);
-      applyFancy(this);
-
       setupSlotListeners(this);
     });
   }
-
-  disconnectedCallback() {
-    teardownButtonListeners(this);
-  }
-
-  static get observedAttributes() {
-    return [ATTR_FANCY];
-  }
-
-  attributeChangedCallback(attr, oldValue, newValue) {
-    switch(attr) {
-      case ATTR_FANCY:
-        applyFancy(this);
-        break;
-    }
-  }
-
-  set fancy(value) {
-    this.setAttribute(ATTR_FANCY, value);
-  }
-
-  get fancy() {
-    if (this.hasAttribute(ATTR_FANCY)) {
-      return Number(this.getAttribute(ATTR_FANCY));
-    }
-    return DEFAULT_FANCY;
-  }
-
 }
 
 window.customElements.define('byu-story', ByuStory);
@@ -445,56 +459,8 @@ window.ByuStory = ByuStory;
 
 // -------------------- Helper Functions --------------------
 
-function applyFancy(component) {
-  let output = component.shadowRoot.querySelector('.output');
-
-  let count = component.fancy;
-
-  //Remove all current children
-  while(output.firstChild) {
-    output.removeChild(output.firstChild);
-  }
-
-  if (count === 0) return;
-
-  let slot = component.shadowRoot.querySelector('#fancy-template');
-
-  let template = __WEBPACK_IMPORTED_MODULE_1_byu_web_component_utils__["b" /* querySelectorSlot */](slot, 'template');
-
-  if (!template) {
-    throw new Error('No template was specified!');
-  }
-
-  for (let i = 0; i < count; i++) {
-    let element = document.importNode(template.content, true);
-    output.appendChild(element);
-  }
-}
-
-function setupButtonListeners(component) {
-  let button = component.shadowRoot.querySelector('.fancy-button');
-
-  let callback = component.__buttonListener = function(event) {
-    component.fancy = component.fancy + 1;
-  };
-
-  button.addEventListener('click', callback, false);
-}
-
-//We generally want to be good neighbors and clean up after ourselves when we're done with things.
-function teardownButtonListeners(component) {
-  let button = component.shadowRoot.querySelector('.fancy-button');
-
-  button.removeEventListener('click', component.__buttonListener, false);
-}
-
 function setupSlotListeners(component) {
-  let slot = component.shadowRoot.querySelector('#fancy-template');
-
-  //this will listen to changes to the contents of our <slot>, so we can take appropriate action
-  slot.addEventListener('slotchange', () => {
-    applyFancy(component);
-  }, false);
+  // Saving just in case
 }
 
 
@@ -796,13 +762,480 @@ module.exports = sum;
 /* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = "<style>" + __webpack_require__(9) + "</style> <div class=\"root\"> <div class=\"output\"></div> <div class=\"news-template-wrapper slot-container\"> <slot id=\"news-template\"> <template> <span>🎩</span> </template> </slot> </div> </div>";
+module.exports = "<style>" + __webpack_require__(9) + "</style> <div class=\"root\"> <div class=\"output\"></div> <div class=\"story-template-wrapper slot-container\"> <slot id=\"story-template\"> <template> <byu-story> <img src=\"//cdn.byu.edu/shared-icons/latest/logos/monogram-black.svg\" slot=\"story-image\" class=\"story-image\" alt=\"Story Image\"> <h2 slot=\"story-title\" class=\"story-title\"></h2> <p slot=\"story-teaser\" class=\"story-teaser\"></p> </byu-story> </template> </slot> </div> </div>";
 
 /***/ }),
 /* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = "<style>" + __webpack_require__(10) + "</style> <div class=\"root\"> <div class=\"output\"></div> <div class=\"button-wrapper\"> <button class=\"fancy-button\">Make It Fancy!</button> </div> <div class=\"fancy-template-wrapper slot-container\"> <slot id=\"fancy-template\"> <template> <span>🎩</span> </template> </slot> </div> </div>";
+module.exports = "<style>" + __webpack_require__(10) + "</style> <div class=\"root\"> <div id=\"image-slot-wrapper\"> <slot name=\"story-image\"></slot> </div> <div id=\"title-slot-wrapper\"> <slot name=\"story-title\"></slot> </div> <div id=\"description-slot-wrapper\"> <slot name=\"story-teaser\"></slot> </div> </div>";
+
+/***/ }),
+/* 14 */
+/***/ (function(module, exports) {
+
+(function(self) {
+  'use strict';
+
+  if (self.fetch) {
+    return
+  }
+
+  var support = {
+    searchParams: 'URLSearchParams' in self,
+    iterable: 'Symbol' in self && 'iterator' in Symbol,
+    blob: 'FileReader' in self && 'Blob' in self && (function() {
+      try {
+        new Blob()
+        return true
+      } catch(e) {
+        return false
+      }
+    })(),
+    formData: 'FormData' in self,
+    arrayBuffer: 'ArrayBuffer' in self
+  }
+
+  if (support.arrayBuffer) {
+    var viewClasses = [
+      '[object Int8Array]',
+      '[object Uint8Array]',
+      '[object Uint8ClampedArray]',
+      '[object Int16Array]',
+      '[object Uint16Array]',
+      '[object Int32Array]',
+      '[object Uint32Array]',
+      '[object Float32Array]',
+      '[object Float64Array]'
+    ]
+
+    var isDataView = function(obj) {
+      return obj && DataView.prototype.isPrototypeOf(obj)
+    }
+
+    var isArrayBufferView = ArrayBuffer.isView || function(obj) {
+      return obj && viewClasses.indexOf(Object.prototype.toString.call(obj)) > -1
+    }
+  }
+
+  function normalizeName(name) {
+    if (typeof name !== 'string') {
+      name = String(name)
+    }
+    if (/[^a-z0-9\-#$%&'*+.\^_`|~]/i.test(name)) {
+      throw new TypeError('Invalid character in header field name')
+    }
+    return name.toLowerCase()
+  }
+
+  function normalizeValue(value) {
+    if (typeof value !== 'string') {
+      value = String(value)
+    }
+    return value
+  }
+
+  // Build a destructive iterator for the value list
+  function iteratorFor(items) {
+    var iterator = {
+      next: function() {
+        var value = items.shift()
+        return {done: value === undefined, value: value}
+      }
+    }
+
+    if (support.iterable) {
+      iterator[Symbol.iterator] = function() {
+        return iterator
+      }
+    }
+
+    return iterator
+  }
+
+  function Headers(headers) {
+    this.map = {}
+
+    if (headers instanceof Headers) {
+      headers.forEach(function(value, name) {
+        this.append(name, value)
+      }, this)
+    } else if (Array.isArray(headers)) {
+      headers.forEach(function(header) {
+        this.append(header[0], header[1])
+      }, this)
+    } else if (headers) {
+      Object.getOwnPropertyNames(headers).forEach(function(name) {
+        this.append(name, headers[name])
+      }, this)
+    }
+  }
+
+  Headers.prototype.append = function(name, value) {
+    name = normalizeName(name)
+    value = normalizeValue(value)
+    var oldValue = this.map[name]
+    this.map[name] = oldValue ? oldValue+','+value : value
+  }
+
+  Headers.prototype['delete'] = function(name) {
+    delete this.map[normalizeName(name)]
+  }
+
+  Headers.prototype.get = function(name) {
+    name = normalizeName(name)
+    return this.has(name) ? this.map[name] : null
+  }
+
+  Headers.prototype.has = function(name) {
+    return this.map.hasOwnProperty(normalizeName(name))
+  }
+
+  Headers.prototype.set = function(name, value) {
+    this.map[normalizeName(name)] = normalizeValue(value)
+  }
+
+  Headers.prototype.forEach = function(callback, thisArg) {
+    for (var name in this.map) {
+      if (this.map.hasOwnProperty(name)) {
+        callback.call(thisArg, this.map[name], name, this)
+      }
+    }
+  }
+
+  Headers.prototype.keys = function() {
+    var items = []
+    this.forEach(function(value, name) { items.push(name) })
+    return iteratorFor(items)
+  }
+
+  Headers.prototype.values = function() {
+    var items = []
+    this.forEach(function(value) { items.push(value) })
+    return iteratorFor(items)
+  }
+
+  Headers.prototype.entries = function() {
+    var items = []
+    this.forEach(function(value, name) { items.push([name, value]) })
+    return iteratorFor(items)
+  }
+
+  if (support.iterable) {
+    Headers.prototype[Symbol.iterator] = Headers.prototype.entries
+  }
+
+  function consumed(body) {
+    if (body.bodyUsed) {
+      return Promise.reject(new TypeError('Already read'))
+    }
+    body.bodyUsed = true
+  }
+
+  function fileReaderReady(reader) {
+    return new Promise(function(resolve, reject) {
+      reader.onload = function() {
+        resolve(reader.result)
+      }
+      reader.onerror = function() {
+        reject(reader.error)
+      }
+    })
+  }
+
+  function readBlobAsArrayBuffer(blob) {
+    var reader = new FileReader()
+    var promise = fileReaderReady(reader)
+    reader.readAsArrayBuffer(blob)
+    return promise
+  }
+
+  function readBlobAsText(blob) {
+    var reader = new FileReader()
+    var promise = fileReaderReady(reader)
+    reader.readAsText(blob)
+    return promise
+  }
+
+  function readArrayBufferAsText(buf) {
+    var view = new Uint8Array(buf)
+    var chars = new Array(view.length)
+
+    for (var i = 0; i < view.length; i++) {
+      chars[i] = String.fromCharCode(view[i])
+    }
+    return chars.join('')
+  }
+
+  function bufferClone(buf) {
+    if (buf.slice) {
+      return buf.slice(0)
+    } else {
+      var view = new Uint8Array(buf.byteLength)
+      view.set(new Uint8Array(buf))
+      return view.buffer
+    }
+  }
+
+  function Body() {
+    this.bodyUsed = false
+
+    this._initBody = function(body) {
+      this._bodyInit = body
+      if (!body) {
+        this._bodyText = ''
+      } else if (typeof body === 'string') {
+        this._bodyText = body
+      } else if (support.blob && Blob.prototype.isPrototypeOf(body)) {
+        this._bodyBlob = body
+      } else if (support.formData && FormData.prototype.isPrototypeOf(body)) {
+        this._bodyFormData = body
+      } else if (support.searchParams && URLSearchParams.prototype.isPrototypeOf(body)) {
+        this._bodyText = body.toString()
+      } else if (support.arrayBuffer && support.blob && isDataView(body)) {
+        this._bodyArrayBuffer = bufferClone(body.buffer)
+        // IE 10-11 can't handle a DataView body.
+        this._bodyInit = new Blob([this._bodyArrayBuffer])
+      } else if (support.arrayBuffer && (ArrayBuffer.prototype.isPrototypeOf(body) || isArrayBufferView(body))) {
+        this._bodyArrayBuffer = bufferClone(body)
+      } else {
+        throw new Error('unsupported BodyInit type')
+      }
+
+      if (!this.headers.get('content-type')) {
+        if (typeof body === 'string') {
+          this.headers.set('content-type', 'text/plain;charset=UTF-8')
+        } else if (this._bodyBlob && this._bodyBlob.type) {
+          this.headers.set('content-type', this._bodyBlob.type)
+        } else if (support.searchParams && URLSearchParams.prototype.isPrototypeOf(body)) {
+          this.headers.set('content-type', 'application/x-www-form-urlencoded;charset=UTF-8')
+        }
+      }
+    }
+
+    if (support.blob) {
+      this.blob = function() {
+        var rejected = consumed(this)
+        if (rejected) {
+          return rejected
+        }
+
+        if (this._bodyBlob) {
+          return Promise.resolve(this._bodyBlob)
+        } else if (this._bodyArrayBuffer) {
+          return Promise.resolve(new Blob([this._bodyArrayBuffer]))
+        } else if (this._bodyFormData) {
+          throw new Error('could not read FormData body as blob')
+        } else {
+          return Promise.resolve(new Blob([this._bodyText]))
+        }
+      }
+
+      this.arrayBuffer = function() {
+        if (this._bodyArrayBuffer) {
+          return consumed(this) || Promise.resolve(this._bodyArrayBuffer)
+        } else {
+          return this.blob().then(readBlobAsArrayBuffer)
+        }
+      }
+    }
+
+    this.text = function() {
+      var rejected = consumed(this)
+      if (rejected) {
+        return rejected
+      }
+
+      if (this._bodyBlob) {
+        return readBlobAsText(this._bodyBlob)
+      } else if (this._bodyArrayBuffer) {
+        return Promise.resolve(readArrayBufferAsText(this._bodyArrayBuffer))
+      } else if (this._bodyFormData) {
+        throw new Error('could not read FormData body as text')
+      } else {
+        return Promise.resolve(this._bodyText)
+      }
+    }
+
+    if (support.formData) {
+      this.formData = function() {
+        return this.text().then(decode)
+      }
+    }
+
+    this.json = function() {
+      return this.text().then(JSON.parse)
+    }
+
+    return this
+  }
+
+  // HTTP methods whose capitalization should be normalized
+  var methods = ['DELETE', 'GET', 'HEAD', 'OPTIONS', 'POST', 'PUT']
+
+  function normalizeMethod(method) {
+    var upcased = method.toUpperCase()
+    return (methods.indexOf(upcased) > -1) ? upcased : method
+  }
+
+  function Request(input, options) {
+    options = options || {}
+    var body = options.body
+
+    if (input instanceof Request) {
+      if (input.bodyUsed) {
+        throw new TypeError('Already read')
+      }
+      this.url = input.url
+      this.credentials = input.credentials
+      if (!options.headers) {
+        this.headers = new Headers(input.headers)
+      }
+      this.method = input.method
+      this.mode = input.mode
+      if (!body && input._bodyInit != null) {
+        body = input._bodyInit
+        input.bodyUsed = true
+      }
+    } else {
+      this.url = String(input)
+    }
+
+    this.credentials = options.credentials || this.credentials || 'omit'
+    if (options.headers || !this.headers) {
+      this.headers = new Headers(options.headers)
+    }
+    this.method = normalizeMethod(options.method || this.method || 'GET')
+    this.mode = options.mode || this.mode || null
+    this.referrer = null
+
+    if ((this.method === 'GET' || this.method === 'HEAD') && body) {
+      throw new TypeError('Body not allowed for GET or HEAD requests')
+    }
+    this._initBody(body)
+  }
+
+  Request.prototype.clone = function() {
+    return new Request(this, { body: this._bodyInit })
+  }
+
+  function decode(body) {
+    var form = new FormData()
+    body.trim().split('&').forEach(function(bytes) {
+      if (bytes) {
+        var split = bytes.split('=')
+        var name = split.shift().replace(/\+/g, ' ')
+        var value = split.join('=').replace(/\+/g, ' ')
+        form.append(decodeURIComponent(name), decodeURIComponent(value))
+      }
+    })
+    return form
+  }
+
+  function parseHeaders(rawHeaders) {
+    var headers = new Headers()
+    rawHeaders.split(/\r?\n/).forEach(function(line) {
+      var parts = line.split(':')
+      var key = parts.shift().trim()
+      if (key) {
+        var value = parts.join(':').trim()
+        headers.append(key, value)
+      }
+    })
+    return headers
+  }
+
+  Body.call(Request.prototype)
+
+  function Response(bodyInit, options) {
+    if (!options) {
+      options = {}
+    }
+
+    this.type = 'default'
+    this.status = 'status' in options ? options.status : 200
+    this.ok = this.status >= 200 && this.status < 300
+    this.statusText = 'statusText' in options ? options.statusText : 'OK'
+    this.headers = new Headers(options.headers)
+    this.url = options.url || ''
+    this._initBody(bodyInit)
+  }
+
+  Body.call(Response.prototype)
+
+  Response.prototype.clone = function() {
+    return new Response(this._bodyInit, {
+      status: this.status,
+      statusText: this.statusText,
+      headers: new Headers(this.headers),
+      url: this.url
+    })
+  }
+
+  Response.error = function() {
+    var response = new Response(null, {status: 0, statusText: ''})
+    response.type = 'error'
+    return response
+  }
+
+  var redirectStatuses = [301, 302, 303, 307, 308]
+
+  Response.redirect = function(url, status) {
+    if (redirectStatuses.indexOf(status) === -1) {
+      throw new RangeError('Invalid status code')
+    }
+
+    return new Response(null, {status: status, headers: {location: url}})
+  }
+
+  self.Headers = Headers
+  self.Request = Request
+  self.Response = Response
+
+  self.fetch = function(input, init) {
+    return new Promise(function(resolve, reject) {
+      var request = new Request(input, init)
+      var xhr = new XMLHttpRequest()
+
+      xhr.onload = function() {
+        var options = {
+          status: xhr.status,
+          statusText: xhr.statusText,
+          headers: parseHeaders(xhr.getAllResponseHeaders() || '')
+        }
+        options.url = 'responseURL' in xhr ? xhr.responseURL : options.headers.get('X-Request-URL')
+        var body = 'response' in xhr ? xhr.response : xhr.responseText
+        resolve(new Response(body, options))
+      }
+
+      xhr.onerror = function() {
+        reject(new TypeError('Network request failed'))
+      }
+
+      xhr.ontimeout = function() {
+        reject(new TypeError('Network request failed'))
+      }
+
+      xhr.open(request.method, request.url, true)
+
+      if (request.credentials === 'include') {
+        xhr.withCredentials = true
+      }
+
+      if ('responseType' in xhr && support.blob) {
+        xhr.responseType = 'blob'
+      }
+
+      request.headers.forEach(function(value, name) {
+        xhr.setRequestHeader(name, value)
+      })
+
+      xhr.send(typeof request._bodyInit === 'undefined' ? null : request._bodyInit)
+    })
+  }
+  self.fetch.polyfill = true
+})(typeof self !== 'undefined' ? self : this);
+
 
 /***/ })
 /******/ ]);

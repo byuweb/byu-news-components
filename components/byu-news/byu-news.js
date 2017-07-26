@@ -18,45 +18,53 @@
 
 import template from './byu-news.html';
 import * as util from 'byu-web-component-utils';
+import 'whatwg-fetch';
 
 const ATTR_CATEGORIES = 'categories';
 const ATTR_TAGS = 'tags';
-const ATTR_DEPARTMENTS = 'departments';
-// TODO: Add display modes
+const ATTR_MIN_DATE = 'min-date';
+const ATTR_MAX_DATE = 'max-date';
+const ATTR_STORY_LIMIT = 'story-limit';
 
 const DEFAULT_CATEGORIES = 'all';
 const DEFAULT_TAGS = 'all';
-const DEFAULT_DEPARTMENTS = 'all';
+const DEFAULT_STORY_LIMIT = '-1'; // -1 for infinite
+
+const ENDPOINT = 'https://news-dev.byu.edu/api/';
 
 class ByuNews extends HTMLElement {
   constructor() {
     super();
+    this._initialized = false;
     this.attachShadow({mode: 'open'});
   }
 
   connectedCallback() {
-    //This will stamp our template for us, then let us perform actions on the stamped DOM.
+    // This will stamp our template for us, then let us perform actions on the stamped DOM.
     util.applyTemplate(this, 'byu-news', template, () => {
-      getStoriesData(this);
+      this._initialized = true;
+      applyNews(this);
 
       setupSlotListeners(this);
     });
   }
 
   disconnectedCallback() {
-
+    // Just in case we need to cleanup
   }
 
   static get observedAttributes() {
-    return [ATTR_CATEGORIES, ATTR_DEPARTMENTS, ATTR_TAGS];
+    return [ATTR_CATEGORIES, ATTR_TAGS, ATTR_MIN_DATE, ATTR_MAX_DATE, ATTR_STORY_LIMIT];
   }
 
   attributeChangedCallback(attr, oldValue, newValue) {
     switch(attr) {
       case ATTR_CATEGORIES:
       case ATTR_TAGS:
-      case ATTR_DEPARTMENTS:
-        getStoriesData(this);
+      case ATTR_MIN_DATE:
+      case ATTR_MAX_DATE:
+      case ATTR_STORY_LIMIT:
+        applyNews(this);
         break;
     }
   }
@@ -85,15 +93,35 @@ class ByuNews extends HTMLElement {
     return DEFAULT_TAGS;
   }
 
-  set departments(value) {
-    this.setAttribute(ATTR_DEPARTMENTS, value);
+  set minDate(value) {
+    this.setAttribute(ATTR_MIN_DATE, value);
   }
 
-  get departments() {
-    if (this.hasAttribute(ATTR_DEPARTMENTS)) {
-      return this.getAttribute(ATTR_DEPARTMENTS);
+  get minDate() {
+    if (this.hasAttribute(ATTR_MIN_DATE)) {
+      return this.getAttribute(ATTR_MIN_DATE);
     }
-    return DEFAULT_DEPARTMENTS;
+  }
+
+  set maxDate(value) {
+    this.setAttribute(ATTR_MAX_DATE, value);
+  }
+
+  get maxDate() {
+    if (this.hasAttribute(ATTR_MAX_DATE)) {
+      return this.getAttribute(ATTR_MAX_DATE);
+    }
+  }
+
+  set storyLimit(value) {
+    this.setAttribute(ATTR_STORY_LIMIT, value);
+  }
+
+  get storyLimit() {
+    if (this.hasAttribute(ATTR_STORY_LIMIT)) {
+      return this.getAttribute(ATTR_STORY_LIMIT);
+    }
+    return DEFAULT_STORY_LIMIT;
   }
 
   // END ATTRIBUTES
@@ -106,57 +134,74 @@ window.ByuNews = ByuNews;
 // -------------------- Helper Functions --------------------
 
 function applyNews(component) {
+  if (!component._initialized) return;
+
   let output = component.shadowRoot.querySelector('.output');
 
-  let count = component.fancy;
+  let count = Number(component.storyLimit);
 
-  //Remove all current children
+  if (count === 0) return;
+
+  //Remove all current children (if there are any)
   while(output.firstChild) {
     output.removeChild(output.firstChild);
   }
 
-  if (count === 0) return;
-
-  let slot = component.shadowRoot.querySelector('#news-template');
-
+  let slot = component.shadowRoot.querySelector('#story-template');
   let template = util.querySelectorSlot(slot, 'template');
 
   if (!template) {
     throw new Error('No template was specified!');
   }
 
-  for (let i = 0; i < count; i++) {
-    let element = document.importNode(template.content, true);
-    output.appendChild(element);
-  }
-}
-
-function setupSlotListeners(component) {
-  /* let slot = component.shadowRoot.querySelector('#news-template');
-
-  //this will listen to changes to the contents of our <slot>, so we can take appropriate action
-  slot.addEventListener('slotchange', () => {
-    applyNews(component);
-  }, false); */
-}
-
-function getStoriesData() {
-  // TODO: Limit the number of stories returned
   let data = {
     title: component.title,
     categories: component.categories,
     tags: component.tags,
-    departments: component.departments
+    minDate: component.minDate,
+    maxDate: component.maxDate,
   };
-  console.log(data);
 
-  let xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function () {
-    if (xhttp.readyState === 4 && xhttp.status === 200) {
-      component.shadowRoot.getElementById('news-root').innerHTML = xhttp.responseText;
+  let url = ENDPOINT + 'Stories.json?categories=' + data.categories + '&tags=' + data.tags + '&';
+  if (data['minDate']) {
+    url += 'published[min]=' + data.minDate + '&';
+  }
+  if (data['maxDate']) {
+    url += 'published[max]=' + data.maxDate;
+  }
+
+  fetch(url).then(response => {
+    if (response.ok) {
+      return response.json();
     }
-  };
-  // TODO: Create news widget
-  xhttp.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
-  xhttp.send(JSON.stringify(data));
+    throw new Error('Network response was not OK.')
+  }).then(stories => {
+    if(stories === -1) {
+      count = stories.length;
+    }
+    for (let i = 0; i < count; ++i) {
+      let element = document.importNode(template.content, true);
+      element.querySelector('.story-image')
+        .setAttribute('src', stories[i].FeaturedImgUrl);
+      element.querySelector('.story-title')
+        .innerHTML = stories[i].Title;
+      let summary = stories[i].Summary;
+      if (summary) {
+        element.querySelector('.story-teaser')
+          .innerHTML = summary;
+      }
+      output.appendChild(element);
+    }
+  }).catch(error => {
+    console.error('There was a fetchin\' problem...' + error.message);
+  });
+}
+
+function setupSlotListeners(component) {
+  let slot = component.shadowRoot.querySelector('#story-template');
+
+  //this will listen to changes to the contents of our <slot>, so we can take appropriate action
+  slot.addEventListener('slotchange', () => {
+    applyNews(component);
+  }, false);
 }

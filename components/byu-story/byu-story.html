@@ -20,17 +20,14 @@
 </style>
 
 <div class="root">
-  <div class="output"></div>
-  <div class="button-wrapper">
-    <button class="fancy-button">Make It Fancy!</button>
+  <div id="image-slot-wrapper">
+    <slot name="story-image"></slot>
   </div>
-  <div class="fancy-template-wrapper slot-container">
-    <!-- This is our default fancy template. If the consumer doesn't specify anything, we'll use this -->
-    <slot id="fancy-template">
-      <template>
-        <span>🎩</span>
-      </template>
-    </slot>
+  <div id="title-slot-wrapper">
+    <slot name="story-title"></slot>
+  </div>
+  <div id="description-slot-wrapper">
+    <slot name="story-teaser"></slot>
   </div>
 </div>
 

@@ -22,70 +22,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>byu-news Demo</title>
 
-  <link rel="stylesheet" href="dist/byu-news.min.css">
-  <script defer src="dist/byu-news.min.js"></script>
-
-  <style>
-    #fancy-selector {
-      font-size: 2em;
-    }
-
-    #basic-fancy {
-      font-size: 3em;
-    }
-
-    #fancy-range {
-      width: 400px;
-    }
-  </style>
+  <link rel="stylesheet" href="dist/byu-news-components.min.css">
+  <script defer src="dist/byu-news-components.min.js"></script>
 </head>
 <body>
 
-<h1>Default Fanciness</h1>
-<byu-news id="basic-fancy"></byu-news>
+<h1>BYU News Components</h1>
 
-<h2>How Fancy?</h2>
-<input type="range" min="0" max="20" value="1" id="fancy-range" list="fancyscale"/>
+<h2>Full BYU New Component</h2>
 
-<datalist id="fancyscale">
-  <option value="0" label="Boring"></option>
-  <option value="5" label="Still Boring"></option>
-  <option value="10" label="Less Boring"></option>
-  <option value="15" label="Getting Better"></option>
-  <option value="20" label="Super Fancy!"></option>
-</datalist>
+<byu-news categories="2996" tags="all" min-date="2017-04-01" max-date="2017-07-24" story-limit="3"></byu-news>
 
-<h2>Customize your fanciness</h2>
-
-<select id="fancy-selector">
-  <option selected>🎩</option>
-  <option>👑</option>
-  <option>👸</option>
-  <option>🤴</option>
-  <option>👗</option>
-  <option>🤵</option>
-  <option>👰</option>
-  <option>🏆</option>
-  <option>🐩</option>
-  <option>🖋️</option>
-</select>
-
-<script>
-  (function () {
-    let range = document.getElementById('fancy-range');
-    let fancy = document.getElementById('basic-fancy');
-
-    range.addEventListener('input', e => {
-      fancy.fancy = range.value;
-    }, false);
-
-    let selector = document.getElementById('fancy-selector');
-
-    selector.addEventListener('change', evt => {
-      fancy.innerHTML = `<template><span>${selector.value}</span></template>`;
-    });
-  })();
-</script>
+<h2>Only the BYU Story Component</h2>
+<!-- TODO: Fetch single story with ID.
+<byu-story story-id="12345"></byu-story> -->
 
 </body>
 </html>
