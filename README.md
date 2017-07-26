@@ -1,6 +1,31 @@
-# BYU News Component
+# BYU News Components
 
-> A BYU web component to consume the [BYU News API](https://news-components.byu.edu/api).
+> A web component to consume the BYU News API.
+
+# Components
+## BYU News
+This is the component to use when you want to pull in a stream of stories and display them in a pretty list. 
+
+```html
+<byu-news categories="all" tags="all" max-date="2017-07-01" min-date="2017-04-01" story-limit="3"></byu-news>
+```
+### Attributes
+- Categories: **Reqired**. The category ID's you want to consume, separated by '+'. If you want all categories, use the value `all`.
+- Tags: **Required**. The tag ID's you want to consume, seperated by '+'. If you want all tags, use the value `all`.
+- Max Date: The latest date a story should have been published.
+- Min Date: The earlies date a story should have been published.
+- Story Limit: The number of stories you want display.
+
+NB: If you want the latest stories, just leave out the `min-date` and `max-date` attributes.
+
+## BYU Story
+_Still in Development. Currently only a child for the `byu-news` component._
+
+This component takes a story's ID and displays that story on your site.
+
+```html
+<byu-story story-id="12345"></byu-story>
+```
 
 # How To Contribute
 ## Fork the Repo
