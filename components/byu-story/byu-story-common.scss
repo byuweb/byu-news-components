@@ -15,3 +15,94 @@
  *    limitations under the License.
  */
 
+@mixin storyRoot() {
+  display: flex;
+  margin: 20px 0;
+}
+
+@mixin imageWrapper() {
+  width: 270px;
+}
+
+@mixin slottedImg() {
+  width: 260px;
+  height: 160px;
+}
+
+@mixin regionRight() {
+  padding: 0 20px 20px 20px;
+}
+
+@mixin h3Slotted() {
+  margin-top: 0 !important;
+  line-height: 23px;
+}
+
+// ---------- TABLET ---------- //
+@mixin storyRootTablet() {
+  display: flex;
+  padding: 20px 0;
+  margin: 0;
+  border-top: 2px solid #e5e5e5;
+  max-height: 115px;
+}
+
+@mixin imageWrapperTablet() {
+  max-width: 150px;
+}
+
+@mixin slottedImgTablet() {
+  width: 150px;
+  height: auto;
+  margin: 0;
+}
+
+@mixin regionRightTablet() {
+  padding: 0 65px 0 20px;
+}
+
+@mixin h3SlottedTablet() {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+@mixin descriptionTablet() {
+  display: none;
+}
+
+// ---------- MOBILE ---------- //
+@mixin storyRootMobile() {
+  display: flex;
+  padding: 20px 0;
+  margin: 0;
+  border-top: 2px solid #e5e5e5;
+  max-height: 60px;
+}
+
+@mixin imageWrapperMobile() {
+  max-width: 130px;
+}
+
+@mixin slottedImgMobile() {
+  width: 90px;
+  height: auto;
+  margin: 0 17px;
+}
+
+@mixin regionRightMobile() {
+  padding: 0 20px 0 0;
+}
+
+@mixin h3SlottedMobile() {
+  line-height: 18px;
+  font-size: 75%;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+@mixin descriptionMobile() {
+  display: none;
+}

@@ -16,3 +16,7 @@
  */
 
 @import 'byu-news-common';
+
+:host :last-child {
+  @include bottomBorder();
+}

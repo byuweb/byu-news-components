@@ -16,3 +16,74 @@
  */
 
 @import 'byu-story-common';
+
+.story-root {
+ @include storyRoot();
+}
+
+#image-slot-wrapper {
+  @include imageWrapper();
+  ::slotted(img) {
+    @include slottedImg();
+  }
+}
+
+.region-right {
+  @include regionRight();
+}
+
+::slotted(h3) {
+  @include h3Slotted();
+}
+
+// ---------- TABLET ---------- //
+@media screen and (max-width: 768px) {
+  .story-root {
+    @include storyRootTablet();
+  }
+
+  #image-slot-wrapper {
+    @include imageWrapperTablet();
+    ::slotted(img) {
+      @include slottedImgTablet();
+    }
+  }
+
+  .region-right {
+    @include regionRightTablet();
+  }
+
+  ::slotted(h3) {
+    @include h3SlottedTablet();
+  }
+
+  #description-slot-wrapper {
+    @include descriptionTablet();
+  }
+}
+
+// ---------- MOBILE ---------- //
+@media screen and (max-width: 320px) {
+  .story-root {
+    @include storyRootMobile();
+  }
+
+  #image-slot-wrapper {
+    @include imageWrapperMobile();
+    ::slotted(img) {
+      @include slottedImgMobile();
+    }
+  }
+
+  .region-right {
+    @include regionRightMobile();
+  }
+
+  ::slotted(h3) {
+    @include h3SlottedMobile();
+  }
+
+  #description-slot-wrapper {
+    @include descriptionMobile();
+  }
+}

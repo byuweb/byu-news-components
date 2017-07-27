@@ -19,15 +19,17 @@
     ${require('./byu-story.scss')}
 </style>
 
-<div class="root">
+<div class="root story-root">
   <div id="image-slot-wrapper">
     <slot name="story-image"></slot>
   </div>
-  <div id="title-slot-wrapper">
-    <slot name="story-title"></slot>
-  </div>
-  <div id="description-slot-wrapper">
-    <slot name="story-teaser"></slot>
+  <div class="region-right">
+    <div id="title-slot-wrapper">
+      <slot name="story-title"></slot>
+    </div>
+    <div id="description-slot-wrapper">
+      <slot name="story-teaser"></slot>
+    </div>
   </div>
 </div>
 
