@@ -22,7 +22,6 @@
 }
 
 #image-slot-wrapper {
-  @include imageWrapper();
   ::slotted(img) {
     @include slottedImg();
   }
@@ -32,8 +31,20 @@
   @include regionRight();
 }
 
-::slotted(h3) {
-  @include h3Slotted();
+#title-slot-wrapper {
+  ::slotted(h3) {
+    @include h3Slotted();
+  }
+}
+
+#title-slot-wrapper {
+  ::slotted(h3):hover {
+    @include h3SlottedHover();
+  }
+}
+
+#description-slot-wrapper, p {
+  @include descriptionSlotted();
 }
 
 // ---------- TABLET ---------- //
@@ -84,6 +95,7 @@
   #title-slot-wrapper {
     ::slotted(h3) {
       @include h3SlottedMobile();
+
     }
   }
 
