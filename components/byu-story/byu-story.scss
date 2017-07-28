@@ -91,3 +91,12 @@
     @include descriptionMobile();
   }
 }
+
+// -------- VARIABLE CSS ------- //
+#title-slot-wrapper {
+  @include storyTitleStyle();
+}
+
+#description-slot-wrapper {
+  @include storyTeaserStyle();
+}

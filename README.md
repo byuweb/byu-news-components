@@ -1,6 +1,6 @@
 # BYU News Components
 
-> A web component to consume the BYU News API.
+> Web components to consume the BYU News API.
 
 # Components
 ## BYU News
@@ -17,6 +17,21 @@ This is the component to use when you want to pull in a stream of stories and di
 - Story Limit: The number of stories you want display.
 
 NB: If you want the latest stories, just leave out the `min-date` and `max-date` attributes.
+
+### Customize Children
+Customize the `byu-story` children of `byu-news` by using variable CSS. For example:
+
+```css
+body {
+  --story-title-color: black;
+  --story-title-font-family: "Sentinel A", "Sentinel B", serif;
+  --story-teaser-font-family: "Roboto", sans-serif;
+}
+```
+
+- `--story-title-color`: Changes the color of the story title. Default value is `#002E5D` (BYU Navy).
+- `--story-title-font-family`: Changes the font-family of the title. Default value is `"Gotham A", "Gotham B", Helvetica, sans-serif"`.
+- `--story-teaser-font-family`: Changes the font-family of the teaser. Default value is the same as `--story-title-font-family`.
 
 ## BYU Story
 _Still in Development. Currently only a child for the `byu-news` component._
