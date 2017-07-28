@@ -40,7 +40,7 @@
   @include h3SlottedHover();
 }
 
-#description-slot-wrapper {
+#description-slot-wrapper, p {
   @include descriptionSlotted();
 }
 
@@ -92,6 +92,7 @@
     #title-slot-wrapper {
       ::slotted(h3) {
         @include h3SlottedMobile();
+
       }
     }
 
