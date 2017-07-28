@@ -195,7 +195,7 @@ function applyNews(component) {
       output.appendChild(element);
     }
   }).catch(error => {
-    console.error('There was a problem; ' + error.message);
+    console.error('There was a problem: ' + error.message);
   });
 }
 

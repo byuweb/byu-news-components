@@ -35,11 +35,15 @@
   ::slotted(h3) {
     @include h3Slotted();
   }
+
+  a {
+    @include linkDefault();
+  }
 }
 
 #title-slot-wrapper {
-  ::slotted(h3):hover {
-    @include h3SlottedHover();
+  a:hover {
+    @include linkHover();
   }
 }
 

@@ -40,7 +40,12 @@
   font-size: 20px;
 }
 
-@mixin h3SlottedHover() {
+@mixin linkDefault() {
+  color: #002e5d;
+  text-decoration: none;
+}
+
+@mixin linkHover() {
   color: #003da5;
 }
 
