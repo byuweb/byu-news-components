@@ -36,67 +36,75 @@
   @include h3Slotted();
 }
 
-// ---------- TABLET ---------- //
-@media screen and (max-width: 768px) and (min-width: 321px) {
-  .story-root {
-    @include storyRootTablet();
-  }
-
-  #image-slot-wrapper {
-    @include imageWrapperTablet();
-    ::slotted(img) {
-      @include slottedImgTablet();
-    }
-  }
-
-  .region-right {
-    @include regionRightTablet();
-  }
-
-  #title-slot-wrapper {
-    ::slotted(h3) {
-      @include h3SlottedTablet();
-    }
-  }
-
-  #description-slot-wrapper {
-    @include descriptionTablet();
-  }
-}
-
-// ---------- MOBILE ---------- //
-@media screen and (max-width: 320px) {
-  .story-root {
-    @include storyRootMobile();
-  }
-
-  #image-slot-wrapper {
-    @include imageWrapperMobile();
-    ::slotted(img) {
-      @include slottedImgMobile();
-    }
-  }
-
-  .region-right {
-    @include regionRightMobile();
-  }
-
-  #title-slot-wrapper {
-    ::slotted(h3) {
-      @include h3SlottedMobile();
-    }
-  }
-
-  #description-slot-wrapper {
-    @include descriptionMobile();
-  }
-}
-
-// -------- VARIABLE CSS ------- //
-#title-slot-wrapper {
-  @include storyTitleStyle();
+::slotted(h3):hover {
+  @include h3SlottedHover();
 }
 
 #description-slot-wrapper {
-  @include storyTeaserStyle();
+  @include descriptionSlotted();
 }
+
+  // ---------- TABLET ---------- //
+  @media screen and (max-width: 768px) and (min-width: 321px) {
+    .story-root {
+      @include storyRootTablet();
+    }
+
+    #image-slot-wrapper {
+      @include imageWrapperTablet();
+      ::slotted(img) {
+        @include slottedImgTablet();
+      }
+    }
+
+    .region-right {
+      @include regionRightTablet();
+    }
+
+    #title-slot-wrapper {
+      ::slotted(h3) {
+        @include h3SlottedTablet();
+      }
+    }
+
+    #description-slot-wrapper {
+      @include descriptionTablet();
+    }
+  }
+
+  // ---------- MOBILE ---------- //
+  @media screen and (max-width: 320px) {
+    .story-root {
+      @include storyRootMobile();
+    }
+
+    #image-slot-wrapper {
+      @include imageWrapperMobile();
+      ::slotted(img) {
+        @include slottedImgMobile();
+      }
+    }
+
+    .region-right {
+      @include regionRightMobile();
+    }
+
+    #title-slot-wrapper {
+      ::slotted(h3) {
+        @include h3SlottedMobile();
+      }
+    }
+
+    #description-slot-wrapper {
+      @include descriptionMobile();
+    }
+  }
+
+  // -------- VARIABLE CSS ------- //
+  #title-slot-wrapper {
+    @include storyTitleStyle();
+  }
+
+  #description-slot-wrapper {
+    @include storyTeaserStyle();
+  }

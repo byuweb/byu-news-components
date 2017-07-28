@@ -17,7 +17,7 @@
 
 @mixin storyRoot() {
   display: flex;
-  margin: 20px 0;
+  margin: 10px 0;
 }
 
 @mixin imageWrapper() {
@@ -35,8 +35,21 @@
 
 @mixin h3Slotted() {
   margin-top: 0 !important;
+  margin-bottom: 0 !important;
   line-height: 23px;
   font-weight: 500;
+  font-size: 20px;
+}
+
+@mixin h3SlottedHover() {
+  color: #003da5;
+}
+
+@mixin descriptionSlotted() {
+  font-weight: 400;
+  font-size: 16px;
+  max-height: 55px;
+  overflow: hidden;
 }
 
 // ---------- TABLET ---------- //
@@ -99,7 +112,7 @@
 
 @mixin h3SlottedMobile() {
   line-height: 18px;
-  font-size: 75%;
+  font-size: 16px;
   overflow: hidden;
   max-height: 55px;
   margin: 0;
@@ -120,4 +133,5 @@
 @mixin storyTeaserStyle() {
   font-family: var(--story-teaser-font-family,
       ("Gotham A", "Gotham B", Helvetica, sans-serif));
+  color: var(--story-teaser-color, #002e5d);
 }
