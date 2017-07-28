@@ -21,10 +21,6 @@
   max-height: 200px;
 }
 
-@mixin imageWrapper() {
-  width: 270px;
-}
-
 @mixin slottedImg() {
   width: 260px;
   height: 160px;
