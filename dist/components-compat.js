@@ -414,6 +414,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
       }
       for (var i = 0; i < count; ++i) {
         var element = document.importNode(template.content, true);
+        element.querySelector('.news-child').setAttribute('story-id', stories[i].StoryId);
         element.querySelector('.story-image').setAttribute('src', stories[i].FeaturedImgUrl);
         element.querySelector('.story-title').innerHTML = stories[i].Title;
         var summary = stories[i].Summary;
@@ -423,7 +424,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
         output.appendChild(element);
       }
     }).catch(function (error) {
-      console.error('There was a fetchin\' problem...' + error.message);
+      console.error('There was a problem: ' + error.message);
     });
   }
 
@@ -463,7 +464,10 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
    *    limitations under the License.
    **/
 
-  // TODO: Add ATTR_STORY_ID
+  var ATTR_STORY_ID = 'story-id';
+  var ATTR_TEASER = 'teaser';
+
+  var NEWS_SITE = 'https://news-dev.byu.edu/node/';
 
   var ByuStory = function (_HTMLElement2) {
     _inherits(ByuStory, _HTMLElement2);
@@ -484,8 +488,39 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
         //This will stamp our template for us, then let us perform actions on the stamped DOM.
         __WEBPACK_IMPORTED_MODULE_1_byu_web_component_utils__["a" /* applyTemplate */](this, 'byu-story', __WEBPACK_IMPORTED_MODULE_0__byu_story_html___default.a, function () {
+          getStoryData(_this4);
           setupSlotListeners(_this4);
         });
+      }
+    }, {
+      key: 'attributeChangedCallback',
+      value: function attributeChangedCallback(attr, oldValue, newValue) {
+        switch (attr) {
+          case ATTR_STORY_ID:
+          case ATTR_TEASER:
+            getStoryData(this);
+            break;
+        }
+      }
+    }, {
+      key: 'storyId',
+      get: function get() {
+        if (this.hasAttribute(ATTR_STORY_ID)) {
+          return this.getAttribute(ATTR_STORY_ID);
+        }
+      },
+      set: function set(value) {
+        this.setAttribute(ATTR_STORY_ID, value);
+      }
+    }, {
+      key: 'teaser',
+      get: function get() {
+        return this.hasAttribute(ATTR_TEASER);
+      }
+    }], [{
+      key: 'observedAttribute',
+      get: function get() {
+        return [ATTR_STORY_ID, ATTR_TEASER];
       }
     }]);
 
@@ -497,9 +532,24 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
   // -------------------- Helper Functions --------------------
 
-  function setupSlotListeners(component) {}
-  // Saving just in case
+  function setupSlotListeners(component) {
+    // Saving just in case
+  }
 
+  function getStoryData(component) {
+    if (component.teaser) {
+      if (component.classList.contains('news-child')) {
+        var links = component.shadowRoot.querySelectorAll('.story-link');
+        for (var i = 0; i < links.length; i++) {
+          links[i].setAttribute('href', NEWS_SITE + component.storyId);
+        }
+      } else {
+        // TODO: Get story teaser if not a news child
+      }
+    } else {
+        // TODO: Get full story data
+      }
+  }
 
   /***/
 },
@@ -703,7 +753,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 
   // module
-  exports.push([module.i, "/*!\r\n *  @license\r\n *    Copyright 2017 Brigham Young University\r\n *\r\n *    Licensed under the Apache License, Version 2.0 (the \"License\");\r\n *    you may not use this file except in compliance with the License.\r\n *    You may obtain a copy of the License at\r\n *\r\n *        http://www.apache.org/licenses/LICENSE-2.0\r\n *\r\n *    Unless required by applicable law or agreed to in writing, software\r\n *    distributed under the License is distributed on an \"AS IS\" BASIS,\r\n *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\r\n *    See the License for the specific language governing permissions and\r\n *    limitations under the License.\r\n */\n/*!\r\n *  @license\r\n *    Copyright 2017 Brigham Young University\r\n *\r\n *    Licensed under the Apache License, Version 2.0 (the \"License\");\r\n *    you may not use this file except in compliance with the License.\r\n *    You may obtain a copy of the License at\r\n *\r\n *        http://www.apache.org/licenses/LICENSE-2.0\r\n *\r\n *    Unless required by applicable law or agreed to in writing, software\r\n *    distributed under the License is distributed on an \"AS IS\" BASIS,\r\n *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\r\n *    See the License for the specific language governing permissions and\r\n *    limitations under the License.\r\n */@media screen and (max-width:768px){:host>:last-child{border-bottom:1px solid #e5e5e5}}@media screen and (max-width:320px){:host>:last-child{border-bottom:1px solid #e5e5e5}}", ""]);
+  exports.push([module.i, "/*!\n *  @license\n *    Copyright 2017 Brigham Young University\n *\n *    Licensed under the Apache License, Version 2.0 (the \"License\");\n *    you may not use this file except in compliance with the License.\n *    You may obtain a copy of the License at\n *\n *        http://www.apache.org/licenses/LICENSE-2.0\n *\n *    Unless required by applicable law or agreed to in writing, software\n *    distributed under the License is distributed on an \"AS IS\" BASIS,\n *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n *    See the License for the specific language governing permissions and\n *    limitations under the License.\n */\n/*!\n *  @license\n *    Copyright 2017 Brigham Young University\n *\n *    Licensed under the Apache License, Version 2.0 (the \"License\");\n *    you may not use this file except in compliance with the License.\n *    You may obtain a copy of the License at\n *\n *        http://www.apache.org/licenses/LICENSE-2.0\n *\n *    Unless required by applicable law or agreed to in writing, software\n *    distributed under the License is distributed on an \"AS IS\" BASIS,\n *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n *    See the License for the specific language governing permissions and\n *    limitations under the License.\n */@media screen and (max-width:768px){:host>:last-child{border-bottom:1px solid #e5e5e5}}@media screen and (max-width:320px){:host>:last-child{border-bottom:1px solid #e5e5e5}}", ""]);
 
   // exports
 
@@ -718,7 +768,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 
   // module
-  exports.push([module.i, "/*!\r\n *  @license\r\n *    Copyright 2017 Brigham Young University\r\n *\r\n *    Licensed under the Apache License, Version 2.0 (the \"License\");\r\n *    you may not use this file except in compliance with the License.\r\n *    You may obtain a copy of the License at\r\n *\r\n *        http://www.apache.org/licenses/LICENSE-2.0\r\n *\r\n *    Unless required by applicable law or agreed to in writing, software\r\n *    distributed under the License is distributed on an \"AS IS\" BASIS,\r\n *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\r\n *    See the License for the specific language governing permissions and\r\n *    limitations under the License.\r\n */\n/*!\r\n *  @license\r\n *    Copyright 2017 Brigham Young University\r\n *\r\n *    Licensed under the Apache License, Version 2.0 (the \"License\");\r\n *    you may not use this file except in compliance with the License.\r\n *    You may obtain a copy of the License at\r\n *\r\n *        http://www.apache.org/licenses/LICENSE-2.0\r\n *\r\n *    Unless required by applicable law or agreed to in writing, software\r\n *    distributed under the License is distributed on an \"AS IS\" BASIS,\r\n *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\r\n *    See the License for the specific language governing permissions and\r\n *    limitations under the License.\r\n */.story-root{display:flex;margin:10px 0;max-height:200px}#image-slot-wrapper ::slotted(img){width:260px;height:160px}.region-right{margin:0 20px;padding:0;display:block}#title-slot-wrapper ::slotted(h3){margin-top:0!important;margin-bottom:0!important;line-height:23px;font-weight:500;font-size:20px}#title-slot-wrapper ::slotted(h3):hover{color:#003da5}#description-slot-wrapper,p{font-weight:400;font-size:16px;max-height:55px;overflow:hidden;margin:0!important}@media screen and (max-width:768px) and (min-width:321px){.story-root{display:flex;padding:20px 0;margin:0;border-top:2px solid #e5e5e5;max-height:115px}#image-slot-wrapper{max-width:150px}#image-slot-wrapper ::slotted(img){width:150px;height:auto;margin:0}.region-right{margin:0 65px 0 20px;padding:0}#title-slot-wrapper ::slotted(h3){overflow:hidden;max-height:115px;margin:0}#description-slot-wrapper{display:none}}@media screen and (max-width:320px){.story-root{display:flex;padding:20px 0;margin:0;border-top:2px solid #e5e5e5;max-height:60px}#image-slot-wrapper{max-width:130px}#image-slot-wrapper ::slotted(img){width:90px;height:auto;margin:0 17px}.region-right{margin:0 20px 0 0;padding:0}#title-slot-wrapper ::slotted(h3){line-height:18px;font-size:16px;overflow:hidden;max-height:55px;margin:0}#description-slot-wrapper{display:none}}#title-slot-wrapper{color:var(--story-title-color,#002e5d);font-family:var(--story-title-font-family,\"Gotham A\",\"Gotham B\",Helvetica,sans-serif)}#description-slot-wrapper{font-family:var(--story-teaser-font-family,\"Gotham A\",\"Gotham B\",Helvetica,sans-serif);color:var(--story-teaser-color,#002e5d)}", ""]);
+  exports.push([module.i, "/*!\n *  @license\n *    Copyright 2017 Brigham Young University\n *\n *    Licensed under the Apache License, Version 2.0 (the \"License\");\n *    you may not use this file except in compliance with the License.\n *    You may obtain a copy of the License at\n *\n *        http://www.apache.org/licenses/LICENSE-2.0\n *\n *    Unless required by applicable law or agreed to in writing, software\n *    distributed under the License is distributed on an \"AS IS\" BASIS,\n *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n *    See the License for the specific language governing permissions and\n *    limitations under the License.\n */\n/*!\n *  @license\n *    Copyright 2017 Brigham Young University\n *\n *    Licensed under the Apache License, Version 2.0 (the \"License\");\n *    you may not use this file except in compliance with the License.\n *    You may obtain a copy of the License at\n *\n *        http://www.apache.org/licenses/LICENSE-2.0\n *\n *    Unless required by applicable law or agreed to in writing, software\n *    distributed under the License is distributed on an \"AS IS\" BASIS,\n *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n *    See the License for the specific language governing permissions and\n *    limitations under the License.\n */.story-root{display:flex;margin:10px 0;max-height:200px}#image-slot-wrapper ::slotted(img){width:260px;height:160px}.region-right{margin:0 20px;padding:0;display:block}#title-slot-wrapper ::slotted(h3){margin-top:0!important;margin-bottom:0!important;line-height:23px;font-weight:500;font-size:20px}#title-slot-wrapper a{color:#002e5d;text-decoration:none}#title-slot-wrapper a:hover{color:#003da5}#description-slot-wrapper,p{font-weight:400;font-size:16px;max-height:55px;overflow:hidden;margin:0!important}@media screen and (max-width:768px) and (min-width:321px){.story-root{display:flex;padding:20px 0;margin:0;border-top:2px solid #e5e5e5;max-height:115px}#image-slot-wrapper{max-width:150px}#image-slot-wrapper ::slotted(img){width:150px;height:auto;margin:0}.region-right{margin:0 65px 0 20px;padding:0}#title-slot-wrapper ::slotted(h3){overflow:hidden;max-height:115px;margin:0}#description-slot-wrapper{display:none}}@media screen and (max-width:320px){.story-root{display:flex;padding:20px 0;margin:0;border-top:2px solid #e5e5e5;max-height:60px}#image-slot-wrapper{max-width:130px}#image-slot-wrapper ::slotted(img){width:90px;height:auto;margin:0 17px}.region-right{margin:0 20px 0 0;padding:0}#title-slot-wrapper ::slotted(h3){line-height:18px;font-size:16px;overflow:hidden;max-height:55px;margin:0}#description-slot-wrapper{display:none}}#title-slot-wrapper{color:var(--story-title-color,#002e5d);font-family:var(--story-title-font-family,\"Gotham A\",\"Gotham B\",Helvetica,sans-serif)}#description-slot-wrapper{font-family:var(--story-teaser-font-family,\"Gotham A\",\"Gotham B\",Helvetica,sans-serif);color:var(--story-teaser-color,#002e5d)}", ""]);
 
   // exports
 
@@ -792,14 +842,14 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 /* 12 */
 /***/function (module, exports, __webpack_require__) {
 
-  module.exports = "<style>" + __webpack_require__(9) + "</style> <div class=\"root\"> <div class=\"output\"></div> <div class=\"story-template-wrapper slot-container\"> <slot id=\"story-template\"> <template> <byu-story> <img src=\"//cdn.byu.edu/shared-icons/latest/logos/monogram-black.svg\" slot=\"story-image\" class=\"story-image\" alt=\"Story Image\"> <h3 slot=\"story-title\" class=\"story-title\"></h3> <p slot=\"story-teaser\" class=\"story-teaser\"></p> </byu-story> </template> </slot> </div> </div>";
+  module.exports = "<style>" + __webpack_require__(9) + "</style> <div class=\"root\"> <div class=\"output\"></div> <div class=\"story-template-wrapper slot-container\"> <slot id=\"story-template\"> <template> <byu-story story-id=\"\" class=\"news-child\" teaser> <img src=\"xxxHTMLLINKxxx0.00081259317164295020.18932508469491705xxx\" slot=\"story-image\" class=\"story-image\" alt=\"Story Image\"> <h3 slot=\"story-title\" class=\"story-title\"></h3> <p slot=\"story-teaser\" class=\"story-teaser\"></p> </byu-story> </template> </slot> </div> </div>";
 
   /***/
 },
 /* 13 */
 /***/function (module, exports, __webpack_require__) {
 
-  module.exports = "<style>" + __webpack_require__(10) + "</style> <div class=\"root story-root\"> <div id=\"image-slot-wrapper\"> <slot name=\"story-image\"></slot> </div> <div class=\"region-right\"> <div id=\"title-slot-wrapper\"> <slot name=\"story-title\"></slot> </div> <div id=\"description-slot-wrapper\"> <slot name=\"story-teaser\"></slot> </div> </div> </div>";
+  module.exports = "<style>" + __webpack_require__(10) + "</style> <div class=\"root story-root\"> <div id=\"image-slot-wrapper\"> <a class=\"story-link\" href=\"\"> <slot name=\"story-image\"></slot> </a> </div> <div class=\"region-right\"> <div id=\"title-slot-wrapper\"> <a class=\"story-link\" href=\"\"> <slot name=\"story-title\"></slot> </a> </div> <div id=\"description-slot-wrapper\"> <slot name=\"story-teaser\"></slot> </div> </div> </div>";
 
   /***/
 },
