@@ -36,6 +36,7 @@
 @mixin h3Slotted() {
   margin-top: 0 !important;
   line-height: 23px;
+  font-weight: 500;
 }
 
 // ---------- TABLET ---------- //
@@ -106,4 +107,17 @@
 
 @mixin descriptionMobile() {
   display: none;
+}
+
+// ------- VARIABLE CSS ------- //
+
+@mixin storyTitleStyle() {
+  color: var(--story-title-color, #002e5d);
+  font-family: var(--story-title-font-family,
+      ("Gotham A", "Gotham B", Helvetica, sans-serif));
+}
+
+@mixin storyTeaserStyle() {
+  font-family: var(--story-teaser-font-family,
+      ("Gotham A", "Gotham B", Helvetica, sans-serif));
 }
