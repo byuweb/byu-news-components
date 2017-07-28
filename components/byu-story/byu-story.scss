@@ -37,7 +37,7 @@
 }
 
 // ---------- TABLET ---------- //
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 768px) and (min-width: 321px) {
   .story-root {
     @include storyRootTablet();
   }
@@ -53,8 +53,10 @@
     @include regionRightTablet();
   }
 
-  ::slotted(h3) {
-    @include h3SlottedTablet();
+  #title-slot-wrapper {
+    ::slotted(h3) {
+      @include h3SlottedTablet();
+    }
   }
 
   #description-slot-wrapper {
@@ -79,8 +81,10 @@
     @include regionRightMobile();
   }
 
-  ::slotted(h3) {
-    @include h3SlottedMobile();
+  #title-slot-wrapper {
+    ::slotted(h3) {
+      @include h3SlottedMobile();
+    }
   }
 
   #description-slot-wrapper {

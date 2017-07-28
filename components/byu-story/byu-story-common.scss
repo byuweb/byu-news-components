@@ -58,13 +58,14 @@
 }
 
 @mixin regionRightTablet() {
-  padding: 0 65px 0 20px;
+  margin: 0 65px 0 20px;
+  padding: 0;
 }
 
 @mixin h3SlottedTablet() {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
+  overflow: hidden;
+  max-height: 115px;
+  margin: 0;
 }
 
 @mixin descriptionTablet() {
@@ -91,16 +92,16 @@
 }
 
 @mixin regionRightMobile() {
-  padding: 0 20px 0 0;
+  margin: 0 20px 0 0;
+  padding: 0;
 }
 
 @mixin h3SlottedMobile() {
   line-height: 18px;
   font-size: 75%;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
   overflow: hidden;
+  max-height: 55px;
+  margin: 0;
 }
 
 @mixin descriptionMobile() {
