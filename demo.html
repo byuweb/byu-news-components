@@ -16,26 +16,67 @@
   ~    limitations under the License.
   -->
 
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
   <meta charset="UTF-8">
+  <link type="text/css" rel="stylesheet" href="//cloud.typography.com/75214/6517752/css/fonts.css" media="all" />
+  <link rel="stylesheet" href="https://cdn.byu.edu/byu-theme-components/latest/byu-theme-components.min.css" />
+  <script async src="https://cdn.byu.edu/byu-theme-components/latest/byu-theme-components.min.js"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>byu-news Demo</title>
+  <title>BYU News Components Demo</title>
 
   <link rel="stylesheet" href="dist/byu-news-components.min.css">
   <script defer src="dist/byu-news-components.min.js"></script>
+
+  <style>
+    html {
+      height: 100%;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .page-content {
+      flex: 1;
+      margin: 0 auto;
+      max-width: 1200px;
+      width: 100%;
+      padding: 16px;
+      box-sizing: border-box;
+    }
+
+    a, p, span, h4, h5, h6 {
+      font-family: "Gotham A", "Gotham B", Helvetica, sans-serif;
+    }
+
+    h1, h2, h3 {
+      font-family: "Vitesse A", "Vitesse B", serif;
+      font-weight: 500;
+      color: #002e5d;
+    }
+  </style>
+
 </head>
 <body>
 
-<h1>BYU News Components</h1>
+<byu-header>
+  <span slot="site-title">News Components</span>
+</byu-header>
 
-<h2>Full BYU New Component</h2>
+<div class="page-content">
+  <h2>Full BYU New Component</h2>
+  <byu-news categories="2996" tags="all" min-date="2017-04-01" max-date="2017-07-24" story-limit="3"></byu-news>
 
-<byu-news categories="2996" tags="all" min-date="2017-04-01" max-date="2017-07-24" story-limit="3"></byu-news>
+  <h2>Only the BYU Story Component</h2>
+  <p>Still under development</p>
+  <!-- TODO: Fetch single story with ID.
+  <byu-story story-id="12345"></byu-story> -->
+</div>
 
-<h2>Only the BYU Story Component</h2>
-<!-- TODO: Fetch single story with ID.
-<byu-story story-id="12345"></byu-story> -->
+<byu-footer></byu-footer>
 
 </body>
 </html>

@@ -16,3 +16,15 @@
  */
 
 @import 'byu-news-common';
+
+@media screen and (max-width: 768px) {
+  :host > :last-child {
+    @include bottomBorder();
+  }
+}
+
+@media screen and (max-width: 320px) {
+  :host > :last-child {
+    @include bottomBorder();
+  }
+}
