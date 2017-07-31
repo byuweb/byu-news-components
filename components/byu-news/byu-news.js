@@ -181,6 +181,8 @@ function applyNews(component) {
     }
     for (let i = 0; i < count; ++i) {
       let element = document.importNode(template.content, true);
+      element.querySelector('.news-child')
+        .setAttribute('story-id', stories[i].StoryId);
       element.querySelector('.story-image')
         .setAttribute('src', stories[i].FeaturedImgUrl);
       element.querySelector('.story-title')
@@ -193,7 +195,7 @@ function applyNews(component) {
       output.appendChild(element);
     }
   }).catch(error => {
-    console.error('There was a fetchin\' problem...' + error.message);
+    console.error('There was a problem: ' + error.message);
   });
 }
 

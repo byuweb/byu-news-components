@@ -21,11 +21,15 @@
 
 <div class="root story-root">
   <div id="image-slot-wrapper">
-    <slot name="story-image"></slot>
+    <a class="story-link" href="">
+      <slot name="story-image"></slot>
+    </a>
   </div>
   <div class="region-right">
     <div id="title-slot-wrapper">
-      <slot name="story-title"></slot>
+      <a class="story-link" href="">
+        <slot name="story-title"></slot>
+      </a>
     </div>
     <div id="description-slot-wrapper">
       <slot name="story-teaser"></slot>
