@@ -21,7 +21,8 @@
  @include storyRoot();
 }
 
-#image-slot-wrapper {
+//#image-slot-wrapper {
+.story-link {
   ::slotted(img) {
     @include slottedImg();
   }
