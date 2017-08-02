@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 5);
+/******/ 	return __webpack_require__(__webpack_require__.s = 7);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -71,10 +71,10 @@
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_templating__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_templating__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_matchesSelector__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_querySelectorSlot__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__lib_createEvent__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_querySelectorSlot__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__lib_createEvent__ = __webpack_require__(8);
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_0__lib_templating__["a"]; });
 /* unused harmony reexport matchesSelector */
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return __WEBPACK_IMPORTED_MODULE_2__lib_querySelectorSlot__["a"]; });
@@ -192,636 +192,6 @@ module.exports = function() {
 
 /***/ }),
 /* 3 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__byu_news_html__ = __webpack_require__(12);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__byu_news_html___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__byu_news_html__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_byu_web_component_utils__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_whatwg_fetch__ = __webpack_require__(14);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_whatwg_fetch___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_whatwg_fetch__);
-/**
- *  @license
- *    Copyright 2017 Brigham Young University
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
- **/
-
-
-
-
-
-
-const ATTR_CATEGORIES = 'categories';
-const ATTR_TAGS = 'tags';
-const ATTR_MIN_DATE = 'min-date';
-const ATTR_MAX_DATE = 'max-date';
-const ATTR_STORY_LIMIT = 'story-limit';
-
-const DEFAULT_CATEGORIES = 'all';
-const DEFAULT_TAGS = 'all';
-const DEFAULT_STORY_LIMIT = '-1'; // -1 for infinite
-
-const ENDPOINT = 'https://news-dev.byu.edu/api/';
-
-class ByuNews extends HTMLElement {
-  constructor() {
-    super();
-    this._initialized = false;
-    this.attachShadow({mode: 'open'});
-  }
-
-  connectedCallback() {
-    // This will stamp our template for us, then let us perform actions on the stamped DOM.
-    __WEBPACK_IMPORTED_MODULE_1_byu_web_component_utils__["a" /* applyTemplate */](this, 'byu-news', __WEBPACK_IMPORTED_MODULE_0__byu_news_html___default.a, () => {
-      this._initialized = true;
-      applyNews(this);
-
-      setupSlotListeners(this);
-    });
-  }
-
-  disconnectedCallback() {
-    // Just in case we need to cleanup
-  }
-
-  static get observedAttributes() {
-    return [ATTR_CATEGORIES, ATTR_TAGS, ATTR_MIN_DATE, ATTR_MAX_DATE, ATTR_STORY_LIMIT];
-  }
-
-  attributeChangedCallback(attr, oldValue, newValue) {
-    switch(attr) {
-      case ATTR_CATEGORIES:
-      case ATTR_TAGS:
-      case ATTR_MIN_DATE:
-      case ATTR_MAX_DATE:
-      case ATTR_STORY_LIMIT:
-        applyNews(this);
-        break;
-    }
-  }
-
-  // ATTRIBUTES
-
-  set categories(value) {
-    this.setAttribute(ATTR_CATEGORIES, value);
-  }
-
-  get categories() {
-    if (this.hasAttribute(ATTR_CATEGORIES)) {
-      return this.getAttribute(ATTR_CATEGORIES);
-    }
-    return DEFAULT_CATEGORIES;
-  }
-
-  set tags(value) {
-    this.setAttribute(ATTR_TAGS, value);
-  }
-
-  get tags() {
-    if (this.hasAttribute(ATTR_TAGS)) {
-      return this.getAttribute(ATTR_TAGS);
-    }
-    return DEFAULT_TAGS;
-  }
-
-  set minDate(value) {
-    this.setAttribute(ATTR_MIN_DATE, value);
-  }
-
-  get minDate() {
-    if (this.hasAttribute(ATTR_MIN_DATE)) {
-      return this.getAttribute(ATTR_MIN_DATE);
-    }
-  }
-
-  set maxDate(value) {
-    this.setAttribute(ATTR_MAX_DATE, value);
-  }
-
-  get maxDate() {
-    if (this.hasAttribute(ATTR_MAX_DATE)) {
-      return this.getAttribute(ATTR_MAX_DATE);
-    }
-  }
-
-  set storyLimit(value) {
-    this.setAttribute(ATTR_STORY_LIMIT, value);
-  }
-
-  get storyLimit() {
-    if (this.hasAttribute(ATTR_STORY_LIMIT)) {
-      return this.getAttribute(ATTR_STORY_LIMIT);
-    }
-    return DEFAULT_STORY_LIMIT;
-  }
-
-  // END ATTRIBUTES
-
-}
-
-window.customElements.define('byu-news', ByuNews);
-window.ByuNews = ByuNews;
-
-// -------------------- Helper Functions --------------------
-
-function applyNews(component) {
-  if (!component._initialized) return;
-
-  let output = component.shadowRoot.querySelector('.output');
-
-  let count = Number(component.storyLimit);
-
-  if (count === 0) return;
-
-  //Remove all current children (if there are any)
-  while(output.firstChild) {
-    output.removeChild(output.firstChild);
-  }
-
-  let slot = component.shadowRoot.querySelector('#story-template');
-  let template = __WEBPACK_IMPORTED_MODULE_1_byu_web_component_utils__["b" /* querySelectorSlot */](slot, 'template');
-
-  if (!template) {
-    throw new Error('No template was specified!');
-  }
-
-  let data = {
-    title: component.title,
-    categories: component.categories,
-    tags: component.tags,
-    minDate: component.minDate,
-    maxDate: component.maxDate,
-  };
-
-  let url = ENDPOINT + 'Stories.json?categories=' + data.categories + '&tags=' + data.tags + '&';
-  if (data['minDate']) {
-    url += 'published[min]=' + data.minDate + '&';
-  }
-  if (data['maxDate']) {
-    url += 'published[max]=' + data.maxDate;
-  }
-
-  fetch(url).then(response => {
-    if (response.ok) {
-      return response.json();
-    }
-    throw new Error('Network response was not OK.')
-  }).then(stories => {
-    if(stories === -1) {
-      count = stories.length;
-    }
-    for (let i = 0; i < count; ++i) {
-      let element = document.importNode(template.content, true);
-      element.querySelector('.news-child')
-        .setAttribute('story-id', stories[i].StoryId);
-      element.querySelector('.story-image')
-        .setAttribute('src', stories[i].FeaturedImgUrl);
-      element.querySelector('.story-title')
-        .innerHTML = stories[i].Title;
-      let summary = stories[i].Summary;
-      if (summary) {
-        element.querySelector('.story-teaser')
-          .innerHTML = summary;
-      }
-      output.appendChild(element);
-    }
-  }).catch(error => {
-    console.error('There was a problem: ' + error.message);
-  });
-}
-
-function setupSlotListeners(component) {
-  let slot = component.shadowRoot.querySelector('#story-template');
-
-  //this will listen to changes to the contents of our <slot>, so we can take appropriate action
-  slot.addEventListener('slotchange', () => {
-    applyNews(component);
-  }, false);
-}
-
-
-/***/ }),
-/* 4 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__byu_story_html__ = __webpack_require__(13);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__byu_story_html___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__byu_story_html__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_byu_web_component_utils__ = __webpack_require__(0);
-/**
- *  @license
- *    Copyright 2017 Brigham Young University
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
- **/
-
-
-
-
-
-const ATTR_STORY_ID = 'story-id';
-const ATTR_TEASER = 'teaser';
-
-const NEWS_SITE = 'https://news-dev.byu.edu/node/';
-
-class ByuStory extends HTMLElement {
-  constructor() {
-    super();
-    this.attachShadow({mode: 'open'});
-  }
-
-  connectedCallback() {
-    //This will stamp our template for us, then let us perform actions on the stamped DOM.
-    __WEBPACK_IMPORTED_MODULE_1_byu_web_component_utils__["a" /* applyTemplate */](this, 'byu-story', __WEBPACK_IMPORTED_MODULE_0__byu_story_html___default.a, () => {
-      getStoryData(this);
-      setupSlotListeners(this);
-    });
-  }
-
-  static get observedAttribute() {
-    return [ATTR_STORY_ID, ATTR_TEASER];
-  }
-
-  attributeChangedCallback(attr, oldValue, newValue) {
-    switch (attr) {
-      case ATTR_STORY_ID:
-      case ATTR_TEASER:
-        getStoryData(this);
-        break;
-    }
-  }
-
-  get storyId() {
-    if (this.hasAttribute(ATTR_STORY_ID)) {
-      return this.getAttribute(ATTR_STORY_ID);
-    }
-  }
-
-  set storyId(value) {
-    this.setAttribute(ATTR_STORY_ID, value);
-  }
-
-  get teaser() {
-    return this.hasAttribute(ATTR_TEASER);
-  }
-}
-
-window.customElements.define('byu-story', ByuStory);
-window.ByuStory = ByuStory;
-
-// -------------------- Helper Functions --------------------
-
-function setupSlotListeners(component) {
-  // Saving just in case
-}
-
-function getStoryData(component) {
-  if (component.teaser) {
-    if (component.classList.contains('news-child')) {
-      let links = component.shadowRoot.querySelectorAll('.story-link');
-      for (let i = 0; i < links.length; i++) {
-        links[i].setAttribute('href', NEWS_SITE + component.storyId);
-      }
-    }
-    else {
-      // TODO: Get story teaser if not a news child
-    }
-  }
-  else {
-    // TODO: Get full story data
-  }
-}
-
-
-/***/ }),
-/* 5 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__byu_news_byu_news_js__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__byu_story_byu_story_js__ = __webpack_require__(4);
-/**
- *  @license
- *    Copyright 2017 Brigham Young University
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
- **/
-
-
-
-
-
-
-/***/ }),
-/* 6 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* unused harmony export default */
-/*
- *  @license
- *    Copyright 2017 Brigham Young University
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
- */
-
-
-function createEvent(name, detail) {
-    if (typeof window.CustomEvent === 'function') {
-        return new CustomEvent(name, {detail, cancelable: true, bubbles: true})
-    }
-    let evt = document.createEvent('CustomEvent');
-    evt.initCustomEvent(name, true, true, detail);
-    return evt;
-}
-
-
-/***/ }),
-/* 7 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (immutable) */ __webpack_exports__["a"] = querySelectorSlot;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__matchesSelector_js__ = __webpack_require__(1);
-/*
- *  @license
- *    Copyright 2017 Brigham Young University
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
- */
-
-
-
-
-function querySelectorSlot(slot, selector) {
-    let roots = slot.assignedNodes({flatten: true})
-        .filter(n => n.nodeType === Node.ELEMENT_NODE);
-
-    for (let i = 0, len = roots.length; i < len; i++) {
-        let each = roots[i];
-        if (__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__matchesSelector_js__["a" /* default */])(each, selector)) {
-            return each;
-        }
-        let child = each.querySelector(selector);
-        if (child) {
-            return child;
-        }
-    }
-    return null;
-}
-
-
-
-/***/ }),
-/* 8 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (immutable) */ __webpack_exports__["a"] = applyTemplate;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_hash_sum__ = __webpack_require__(11);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_hash_sum___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_hash_sum__);
-/*
- *  @license
- *    Copyright 2017 Brigham Young University
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
- */
-
-
-
-
-const TEMPLATE_RENDERED_CLASS = 'byu-component-rendered';
-
-function applyTemplate(element, elementName, template, callback) {
-    let sum = __WEBPACK_IMPORTED_MODULE_0_hash_sum___default()(template);
-
-    let elSettings = element.__byu_webCommunity_components = element.__byu_webCommunity_components || {};
-    if (elSettings.templateHash === sum) {
-        //Nothing has changed in the element.  Don't replace the DOM, don't fire the callback.
-        return;
-    }
-    elSettings.templateHash = sum;
-
-    if (window.ShadyCSS && !window.ShadyCSS.nativeShadow) {
-        applyTemplateShady(element, elementName, template, callback, sum);
-    } else {
-        applyTemplateNative(element, template, callback);
-    }
-}
-
-function applyTemplateShady(element, elementName, template, callback, sum) {
-    let templateId = '__byu-custom-element-template_' + elementName + '_' + sum;
-    let templateElement = document.head.querySelector('template#' + templateId);
-    if (!templateElement) {
-        templateElement = document.createElement('template');
-        templateElement.id = templateId;
-        templateElement.innerHTML = template;
-        document.head.appendChild(templateElement);
-        ShadyCSS.prepareTemplate(templateElement, elementName);
-    }
-    if (ShadyCSS.styleElement) {
-        ShadyCSS.styleElement(element);
-    } else if (ShadyCSS.applyStyle) {
-        ShadyCSS.applyStyle(element);
-    } else {
-        throw new Error('ShadyCSS is not properly defined: no styleElement or applyStyle!');
-    }
-    let imported = document.importNode(templateElement.content, true);
-    let shadow = element.shadowRoot;
-    //It'd be nice if we could just diff the DOM and replace what changed between templates, but that might lead to
-    // event listeners getting applied twice.  Easier to just clear out the shadow DOM and replace it.
-    while (shadow.firstChild) {
-        shadow.removeChild(shadow.firstChild);
-    }
-    shadow.appendChild(imported);
-    setTimeout(function() {
-        runAfterStamping(element, callback);
-    });
-}
-
-function applyTemplateNative(element, template, callback) {
-    element.shadowRoot.innerHTML = template;
-    runAfterStamping(element, callback);
-}
-
-function runAfterStamping(element, callback) {
-    element.classList.add(TEMPLATE_RENDERED_CLASS);
-    if (callback) {
-        callback();
-    }
-}
-
-
-
-/***/ }),
-/* 9 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(2)();
-// imports
-
-
-// module
-exports.push([module.i, "/*!\r\n *  @license\r\n *    Copyright 2017 Brigham Young University\r\n *\r\n *    Licensed under the Apache License, Version 2.0 (the \"License\");\r\n *    you may not use this file except in compliance with the License.\r\n *    You may obtain a copy of the License at\r\n *\r\n *        http://www.apache.org/licenses/LICENSE-2.0\r\n *\r\n *    Unless required by applicable law or agreed to in writing, software\r\n *    distributed under the License is distributed on an \"AS IS\" BASIS,\r\n *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\r\n *    See the License for the specific language governing permissions and\r\n *    limitations under the License.\r\n */\n/*!\r\n *  @license\r\n *    Copyright 2017 Brigham Young University\r\n *\r\n *    Licensed under the Apache License, Version 2.0 (the \"License\");\r\n *    you may not use this file except in compliance with the License.\r\n *    You may obtain a copy of the License at\r\n *\r\n *        http://www.apache.org/licenses/LICENSE-2.0\r\n *\r\n *    Unless required by applicable law or agreed to in writing, software\r\n *    distributed under the License is distributed on an \"AS IS\" BASIS,\r\n *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\r\n *    See the License for the specific language governing permissions and\r\n *    limitations under the License.\r\n */@media screen and (max-width:768px){:host>:last-child{border-bottom:1px solid #e5e5e5}}@media screen and (max-width:320px){:host>:last-child{border-bottom:1px solid #e5e5e5}}", ""]);
-
-// exports
-
-
-/***/ }),
-/* 10 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(2)();
-// imports
-
-
-// module
-exports.push([module.i, "/*!\r\n *  @license\r\n *    Copyright 2017 Brigham Young University\r\n *\r\n *    Licensed under the Apache License, Version 2.0 (the \"License\");\r\n *    you may not use this file except in compliance with the License.\r\n *    You may obtain a copy of the License at\r\n *\r\n *        http://www.apache.org/licenses/LICENSE-2.0\r\n *\r\n *    Unless required by applicable law or agreed to in writing, software\r\n *    distributed under the License is distributed on an \"AS IS\" BASIS,\r\n *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\r\n *    See the License for the specific language governing permissions and\r\n *    limitations under the License.\r\n */\n/*!\r\n *  @license\r\n *    Copyright 2017 Brigham Young University\r\n *\r\n *    Licensed under the Apache License, Version 2.0 (the \"License\");\r\n *    you may not use this file except in compliance with the License.\r\n *    You may obtain a copy of the License at\r\n *\r\n *        http://www.apache.org/licenses/LICENSE-2.0\r\n *\r\n *    Unless required by applicable law or agreed to in writing, software\r\n *    distributed under the License is distributed on an \"AS IS\" BASIS,\r\n *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\r\n *    See the License for the specific language governing permissions and\r\n *    limitations under the License.\r\n */.story-root{display:flex;margin:10px 0;max-height:200px}.story-link ::slotted(img){width:260px;height:160px}.region-right{margin:0 20px;padding:0;display:block}#title-slot-wrapper ::slotted(h3){margin-top:0!important;margin-bottom:0!important;line-height:23px;font-weight:500;font-size:20px}#title-slot-wrapper a{color:#002e5d;text-decoration:none}#title-slot-wrapper a:hover{color:#003da5}#description-slot-wrapper,p{font-weight:400;font-size:16px;max-height:55px;overflow:hidden;margin:0!important}@media screen and (max-width:768px) and (min-width:321px){.story-root{display:flex;padding:20px 0;margin:0;border-top:2px solid #e5e5e5;max-height:115px}#image-slot-wrapper{max-width:150px}#image-slot-wrapper ::slotted(img){width:150px;height:auto;margin:0}.region-right{margin:0 65px 0 20px;padding:0}#title-slot-wrapper ::slotted(h3){overflow:hidden;max-height:115px;margin:0}#description-slot-wrapper{display:none}}@media screen and (max-width:320px){.story-root{display:flex;padding:20px 0;margin:0;border-top:2px solid #e5e5e5;max-height:60px}#image-slot-wrapper{max-width:130px}#image-slot-wrapper ::slotted(img){width:90px;height:auto;margin:0 17px}.region-right{margin:0 20px 0 0;padding:0}#title-slot-wrapper ::slotted(h3){line-height:18px;font-size:16px;overflow:hidden;max-height:55px;margin:0}#description-slot-wrapper{display:none}}#title-slot-wrapper{color:var(--story-title-color,#002e5d);font-family:var(--story-title-font-family,\"Gotham A\",\"Gotham B\",Helvetica,sans-serif)}#description-slot-wrapper{font-family:var(--story-teaser-font-family,\"Gotham A\",\"Gotham B\",Helvetica,sans-serif);color:var(--story-teaser-color,#002e5d)}", ""]);
-
-// exports
-
-
-/***/ }),
-/* 11 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-function pad (hash, len) {
-  while (hash.length < len) {
-    hash = '0' + hash;
-  }
-  return hash;
-}
-
-function fold (hash, text) {
-  var i;
-  var chr;
-  var len;
-  if (text.length === 0) {
-    return hash;
-  }
-  for (i = 0, len = text.length; i < len; i++) {
-    chr = text.charCodeAt(i);
-    hash = ((hash << 5) - hash) + chr;
-    hash |= 0;
-  }
-  return hash < 0 ? hash * -2 : hash;
-}
-
-function foldObject (hash, o, seen) {
-  return Object.keys(o).sort().reduce(foldKey, hash);
-  function foldKey (hash, key) {
-    return foldValue(hash, o[key], key, seen);
-  }
-}
-
-function foldValue (input, value, key, seen) {
-  var hash = fold(fold(fold(input, key), toString(value)), typeof value);
-  if (value === null) {
-    return fold(hash, 'null');
-  }
-  if (value === undefined) {
-    return fold(hash, 'undefined');
-  }
-  if (typeof value === 'object') {
-    if (seen.indexOf(value) !== -1) {
-      return fold(hash, '[Circular]' + key);
-    }
-    seen.push(value);
-    return foldObject(hash, value, seen);
-  }
-  return fold(hash, value.toString());
-}
-
-function toString (o) {
-  return Object.prototype.toString.call(o);
-}
-
-function sum (o) {
-  return pad(foldValue(0, o, '', []).toString(16), 8);
-}
-
-module.exports = sum;
-
-
-/***/ }),
-/* 12 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = "<style>" + __webpack_require__(9) + "</style> <div class=\"root\"> <div class=\"output\"></div> <div class=\"story-template-wrapper slot-container\"> <slot id=\"story-template\"> <template> <byu-story story-id=\"\" class=\"news-child\" teaser> <img src=\"xxxHTMLLINKxxx0.078990640146480830.6033143534938687xxx\" slot=\"story-image\" class=\"story-image\" alt=\"Story Image\"> <h3 slot=\"story-title\" class=\"story-title\"></h3> <p slot=\"story-teaser\" class=\"story-teaser\"></p> </byu-story> </template> </slot> </div> </div>";
-
-/***/ }),
-/* 13 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = "<style>" + __webpack_require__(10) + "</style> <div class=\"root story-root\"> <div id=\"image-slot-wrapper\"> <a class=\"story-link\" href=\"\"> <slot name=\"story-image\"></slot> </a> </div> <div class=\"region-right\"> <div id=\"title-slot-wrapper\"> <a class=\"story-link\" href=\"\"> <slot name=\"story-title\"></slot> </a> </div> <div id=\"description-slot-wrapper\"> <slot name=\"story-teaser\"></slot> </div> </div> </div>";
-
-/***/ }),
-/* 14 */
 /***/ (function(module, exports) {
 
 (function(self) {
@@ -1286,6 +656,873 @@ module.exports = "<style>" + __webpack_require__(10) + "</style> <div class=\"ro
   self.fetch.polyfill = true
 })(typeof self !== 'undefined' ? self : this);
 
+
+/***/ }),
+/* 4 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__byu_news_hero_html__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__byu_news_hero_html___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__byu_news_hero_html__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_byu_web_component_utils__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_whatwg_fetch__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_whatwg_fetch___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_whatwg_fetch__);
+/**
+ *  @license
+ *    Copyright 2017 Brigham Young University
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ **/
+
+
+
+
+
+
+const ATTR_CATEGORIES = 'categories';
+const ATTR_TAGS = 'tags';
+const ATTR_MIN_DATE = 'min-date';
+const ATTR_MAX_DATE = 'max-date';
+const ATTR_STORY_LIMIT = 'story-limit';
+
+const DEFAULT_CATEGORIES = 'all';
+const DEFAULT_TAGS = 'all';
+const DEFAULT_STORY_LIMIT = '-1'; // -1 for infinite
+
+const ENDPOINT = 'https://news-dev.byu.edu/api/';
+
+const MAX_INTRO_TEXT_LENGTH = 100;
+
+const NEWS_SITE = 'https://news-dev.byu.edu/node/';
+
+class ByuNewsHero extends HTMLElement {
+  constructor() {
+    super();
+    this._initialized = false;
+    this.attachShadow({ mode: 'open' });
+  }
+
+  connectedCallback() {
+    // This will stamp our template for us, then let us perform actions on the stamped DOM.
+    __WEBPACK_IMPORTED_MODULE_1_byu_web_component_utils__["a" /* applyTemplate */](this, 'byu-news-hero', __WEBPACK_IMPORTED_MODULE_0__byu_news_hero_html___default.a, () => {
+      this._initialized = true;
+      applyNews(this);
+
+      setupSlotListeners(this);
+    });
+  }
+
+  disconnectedCallback() {
+    // Just in case we need to cleanup
+  }
+
+  static get observedAttributes() {
+    return [ATTR_CATEGORIES, ATTR_TAGS, ATTR_MIN_DATE, ATTR_MAX_DATE, ATTR_STORY_LIMIT];
+  }
+
+  attributeChangedCallback(attr, oldValue, newValue) {
+    switch (attr) {
+      case ATTR_CATEGORIES:
+      case ATTR_TAGS:
+      case ATTR_MIN_DATE:
+      case ATTR_MAX_DATE:
+      case ATTR_STORY_LIMIT:
+        applyNews(this);
+        break;
+    }
+  }
+
+  // ATTRIBUTES
+
+  set categories(value) {
+    this.setAttribute(ATTR_CATEGORIES, value);
+  }
+
+  get categories() {
+    if (this.hasAttribute(ATTR_CATEGORIES)) {
+      return this.getAttribute(ATTR_CATEGORIES);
+    }
+    return DEFAULT_CATEGORIES;
+  }
+
+  set tags(value) {
+    this.setAttribute(ATTR_TAGS, value);
+  }
+
+  get tags() {
+    if (this.hasAttribute(ATTR_TAGS)) {
+      return this.getAttribute(ATTR_TAGS);
+    }
+    return DEFAULT_TAGS;
+  }
+
+  set minDate(value) {
+    this.setAttribute(ATTR_MIN_DATE, value);
+  }
+
+  get minDate() {
+    if (this.hasAttribute(ATTR_MIN_DATE)) {
+      return this.getAttribute(ATTR_MIN_DATE);
+    }
+  }
+
+  set maxDate(value) {
+    this.setAttribute(ATTR_MAX_DATE, value);
+  }
+
+  get maxDate() {
+    if (this.hasAttribute(ATTR_MAX_DATE)) {
+      return this.getAttribute(ATTR_MAX_DATE);
+    }
+  }
+
+  set storyLimit(value) {
+    this.setAttribute(ATTR_STORY_LIMIT, value);
+  }
+
+  get storyLimit() {
+    if (this.hasAttribute(ATTR_STORY_LIMIT)) {
+      return this.getAttribute(ATTR_STORY_LIMIT);
+    }
+    return DEFAULT_STORY_LIMIT;
+  }
+
+  // END ATTRIBUTES
+
+}
+
+window.customElements.define('byu-news-hero', ByuNewsHero);
+window.ByuNewsHero = ByuNewsHero;
+
+// -------------------- Helper Functions --------------------
+
+function applyNews(component) {
+  if (!component._initialized) return;
+
+  let output = component.shadowRoot.querySelector('.output');
+
+  let count = Number(component.storyLimit);
+
+  if (count === 0) return;
+
+  //Remove all current children (if there are any)
+  while (output.firstChild) {
+    output.removeChild(output.firstChild);
+  }
+
+  let slot = component.shadowRoot.querySelector('#story-template');
+  let template = __WEBPACK_IMPORTED_MODULE_1_byu_web_component_utils__["b" /* querySelectorSlot */](slot, 'template');
+
+  if (!template) {
+    throw new Error('No template was specified!');
+  }
+
+  let data = {
+    title: component.title,
+    categories: component.categories,
+    tags: component.tags,
+    minDate: component.minDate,
+    maxDate: component.maxDate,
+  };
+
+  let url = ENDPOINT + 'Stories.json?categories=' + data.categories + '&tags=' + data.tags + '&';
+  if (data['minDate']) {
+    url += 'published[min]=' + data.minDate + '&';
+  }
+  if (data['maxDate']) {
+    url += 'published[max]=' + data.maxDate;
+  }
+  console.log(url);
+
+  fetch(url).then(response => {
+    if (response.ok) {
+      return response.json();
+    }
+    throw new Error('Network response was not OK.')
+  }).then(stories => {
+    if (stories === -1) {
+      return;
+    }
+    let story = stories[0];
+
+    let element = document.importNode(template.content, true);
+    element.querySelector('.read-more').setAttribute('href', NEWS_SITE + story.StoryId);
+    element.querySelector('#hero').setAttribute('image-source', story.FeaturedImgUrl);
+
+    element.querySelector('.headline')
+      .innerHTML = story.Title;
+
+    let summary = story.Summary;
+    if (summary) {
+      if (summary.length > MAX_INTRO_TEXT_LENGTH) {
+        summary = summary.substring(0, MAX_INTRO_TEXT_LENGTH) + "...";
+      }
+      element.querySelector('.intro-text')
+        .innerHTML = summary;
+    }
+    output.appendChild(element);
+
+  }).catch(error => {
+    console.error('There was a problem: ' + error.message);
+  });
+}
+
+function setupSlotListeners(component) {
+  let slot = component.shadowRoot.querySelector('#story-template');
+
+  //this will listen to changes to the contents of our <slot>, so we can take appropriate action
+  slot.addEventListener('slotchange', () => {
+    applyNews(component);
+  }, false);
+}
+
+
+/***/ }),
+/* 5 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__byu_news_html__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__byu_news_html___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__byu_news_html__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_byu_web_component_utils__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_whatwg_fetch__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_whatwg_fetch___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_whatwg_fetch__);
+/**
+ *  @license
+ *    Copyright 2017 Brigham Young University
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ **/
+
+
+
+
+
+
+const ATTR_CATEGORIES = 'categories';
+const ATTR_TAGS = 'tags';
+const ATTR_MIN_DATE = 'min-date';
+const ATTR_MAX_DATE = 'max-date';
+const ATTR_STORY_LIMIT = 'story-limit';
+
+const DEFAULT_CATEGORIES = 'all';
+const DEFAULT_TAGS = 'all';
+const DEFAULT_STORY_LIMIT = '-1'; // -1 for infinite
+
+const ENDPOINT = 'https://news-dev.byu.edu/api/';
+
+class ByuNews extends HTMLElement {
+  constructor() {
+    super();
+    this._initialized = false;
+    this.attachShadow({mode: 'open'});
+  }
+
+  connectedCallback() {
+    // This will stamp our template for us, then let us perform actions on the stamped DOM.
+    __WEBPACK_IMPORTED_MODULE_1_byu_web_component_utils__["a" /* applyTemplate */](this, 'byu-news', __WEBPACK_IMPORTED_MODULE_0__byu_news_html___default.a, () => {
+      this._initialized = true;
+      applyNews(this);
+
+      setupSlotListeners(this);
+    });
+  }
+
+  disconnectedCallback() {
+    // Just in case we need to cleanup
+  }
+
+  static get observedAttributes() {
+    return [ATTR_CATEGORIES, ATTR_TAGS, ATTR_MIN_DATE, ATTR_MAX_DATE, ATTR_STORY_LIMIT];
+  }
+
+  attributeChangedCallback(attr, oldValue, newValue) {
+    switch(attr) {
+      case ATTR_CATEGORIES:
+      case ATTR_TAGS:
+      case ATTR_MIN_DATE:
+      case ATTR_MAX_DATE:
+      case ATTR_STORY_LIMIT:
+        applyNews(this);
+        break;
+    }
+  }
+
+  // ATTRIBUTES
+
+  set categories(value) {
+    this.setAttribute(ATTR_CATEGORIES, value);
+  }
+
+  get categories() {
+    if (this.hasAttribute(ATTR_CATEGORIES)) {
+      return this.getAttribute(ATTR_CATEGORIES);
+    }
+    return DEFAULT_CATEGORIES;
+  }
+
+  set tags(value) {
+    this.setAttribute(ATTR_TAGS, value);
+  }
+
+  get tags() {
+    if (this.hasAttribute(ATTR_TAGS)) {
+      return this.getAttribute(ATTR_TAGS);
+    }
+    return DEFAULT_TAGS;
+  }
+
+  set minDate(value) {
+    this.setAttribute(ATTR_MIN_DATE, value);
+  }
+
+  get minDate() {
+    if (this.hasAttribute(ATTR_MIN_DATE)) {
+      return this.getAttribute(ATTR_MIN_DATE);
+    }
+  }
+
+  set maxDate(value) {
+    this.setAttribute(ATTR_MAX_DATE, value);
+  }
+
+  get maxDate() {
+    if (this.hasAttribute(ATTR_MAX_DATE)) {
+      return this.getAttribute(ATTR_MAX_DATE);
+    }
+  }
+
+  set storyLimit(value) {
+    this.setAttribute(ATTR_STORY_LIMIT, value);
+  }
+
+  get storyLimit() {
+    if (this.hasAttribute(ATTR_STORY_LIMIT)) {
+      return this.getAttribute(ATTR_STORY_LIMIT);
+    }
+    return DEFAULT_STORY_LIMIT;
+  }
+
+  // END ATTRIBUTES
+
+}
+
+window.customElements.define('byu-news', ByuNews);
+window.ByuNews = ByuNews;
+
+// -------------------- Helper Functions --------------------
+
+function applyNews(component) {
+  if (!component._initialized) return;
+
+  let output = component.shadowRoot.querySelector('.output');
+
+  let count = Number(component.storyLimit);
+
+  if (count === 0) return;
+
+  //Remove all current children (if there are any)
+  while(output.firstChild) {
+    output.removeChild(output.firstChild);
+  }
+
+  let slot = component.shadowRoot.querySelector('#story-template');
+  let template = __WEBPACK_IMPORTED_MODULE_1_byu_web_component_utils__["b" /* querySelectorSlot */](slot, 'template');
+
+  if (!template) {
+    throw new Error('No template was specified!');
+  }
+
+  let data = {
+    title: component.title,
+    categories: component.categories,
+    tags: component.tags,
+    minDate: component.minDate,
+    maxDate: component.maxDate,
+  };
+
+  let url = ENDPOINT + 'Stories.json?categories=' + data.categories + '&tags=' + data.tags + '&';
+  if (data['minDate']) {
+    url += 'published[min]=' + data.minDate + '&';
+  }
+  if (data['maxDate']) {
+    url += 'published[max]=' + data.maxDate;
+  }
+
+  fetch(url).then(response => {
+    if (response.ok) {
+      return response.json();
+    }
+    throw new Error('Network response was not OK.')
+  }).then(stories => {
+    if(stories === -1) {
+      count = stories.length;
+    }
+    for (let i = 0; i < count; ++i) {
+      let element = document.importNode(template.content, true);
+      element.querySelector('.news-child')
+        .setAttribute('story-id', stories[i].StoryId);
+      element.querySelector('.story-image')
+        .setAttribute('src', stories[i].FeaturedImgUrl);
+      element.querySelector('.story-title')
+        .innerHTML = stories[i].Title;
+      let summary = stories[i].Summary;
+      if (summary) {
+        element.querySelector('.story-teaser')
+          .innerHTML = summary;
+      }
+      output.appendChild(element);
+    }
+  }).catch(error => {
+    console.error('There was a problem: ' + error.message);
+  });
+}
+
+function setupSlotListeners(component) {
+  let slot = component.shadowRoot.querySelector('#story-template');
+
+  //this will listen to changes to the contents of our <slot>, so we can take appropriate action
+  slot.addEventListener('slotchange', () => {
+    applyNews(component);
+  }, false);
+}
+
+
+/***/ }),
+/* 6 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__byu_story_html__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__byu_story_html___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__byu_story_html__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_byu_web_component_utils__ = __webpack_require__(0);
+/**
+ *  @license
+ *    Copyright 2017 Brigham Young University
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ **/
+
+
+
+
+
+const ATTR_STORY_ID = 'story-id';
+const ATTR_TEASER = 'teaser';
+
+const NEWS_SITE = 'https://news-dev.byu.edu/node/';
+
+class ByuStory extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({mode: 'open'});
+  }
+
+  connectedCallback() {
+    //This will stamp our template for us, then let us perform actions on the stamped DOM.
+    __WEBPACK_IMPORTED_MODULE_1_byu_web_component_utils__["a" /* applyTemplate */](this, 'byu-story', __WEBPACK_IMPORTED_MODULE_0__byu_story_html___default.a, () => {
+      getStoryData(this);
+      setupSlotListeners(this);
+    });
+  }
+
+  static get observedAttribute() {
+    return [ATTR_STORY_ID, ATTR_TEASER];
+  }
+
+  attributeChangedCallback(attr, oldValue, newValue) {
+    switch (attr) {
+      case ATTR_STORY_ID:
+      case ATTR_TEASER:
+        getStoryData(this);
+        break;
+    }
+  }
+
+  get storyId() {
+    if (this.hasAttribute(ATTR_STORY_ID)) {
+      return this.getAttribute(ATTR_STORY_ID);
+    }
+  }
+
+  set storyId(value) {
+    this.setAttribute(ATTR_STORY_ID, value);
+  }
+
+  get teaser() {
+    return this.hasAttribute(ATTR_TEASER);
+  }
+}
+
+window.customElements.define('byu-story', ByuStory);
+window.ByuStory = ByuStory;
+
+// -------------------- Helper Functions --------------------
+
+function setupSlotListeners(component) {
+  // Saving just in case
+}
+
+function getStoryData(component) {
+  if (component.teaser) {
+    if (component.classList.contains('news-child')) {
+      let links = component.shadowRoot.querySelectorAll('.story-link');
+      for (let i = 0; i < links.length; i++) {
+        links[i].setAttribute('href', NEWS_SITE + component.storyId);
+      }
+    }
+    else {
+      // TODO: Get story teaser if not a news child
+    }
+  }
+  else {
+    // TODO: Get full story data
+  }
+}
+
+
+/***/ }),
+/* 7 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__byu_news_byu_news_js__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__byu_story_byu_story_js__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__byu_news_hero_byu_news_hero_js__ = __webpack_require__(4);
+/**
+ *  @license
+ *    Copyright 2017 Brigham Young University
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ **/
+
+
+
+
+
+
+/***/ }),
+/* 8 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* unused harmony export default */
+/*
+ *  @license
+ *    Copyright 2017 Brigham Young University
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+
+
+function createEvent(name, detail) {
+    if (typeof window.CustomEvent === 'function') {
+        return new CustomEvent(name, {detail, cancelable: true, bubbles: true})
+    }
+    let evt = document.createEvent('CustomEvent');
+    evt.initCustomEvent(name, true, true, detail);
+    return evt;
+}
+
+
+/***/ }),
+/* 9 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (immutable) */ __webpack_exports__["a"] = querySelectorSlot;
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__matchesSelector_js__ = __webpack_require__(1);
+/*
+ *  @license
+ *    Copyright 2017 Brigham Young University
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+
+
+
+
+function querySelectorSlot(slot, selector) {
+    let roots = slot.assignedNodes({flatten: true})
+        .filter(n => n.nodeType === Node.ELEMENT_NODE);
+
+    for (let i = 0, len = roots.length; i < len; i++) {
+        let each = roots[i];
+        if (__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__matchesSelector_js__["a" /* default */])(each, selector)) {
+            return each;
+        }
+        let child = each.querySelector(selector);
+        if (child) {
+            return child;
+        }
+    }
+    return null;
+}
+
+
+
+/***/ }),
+/* 10 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (immutable) */ __webpack_exports__["a"] = applyTemplate;
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_hash_sum__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_hash_sum___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_hash_sum__);
+/*
+ *  @license
+ *    Copyright 2017 Brigham Young University
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+
+
+
+
+const TEMPLATE_RENDERED_CLASS = 'byu-component-rendered';
+
+function applyTemplate(element, elementName, template, callback) {
+    let sum = __WEBPACK_IMPORTED_MODULE_0_hash_sum___default()(template);
+
+    let elSettings = element.__byu_webCommunity_components = element.__byu_webCommunity_components || {};
+    if (elSettings.templateHash === sum) {
+        //Nothing has changed in the element.  Don't replace the DOM, don't fire the callback.
+        return;
+    }
+    elSettings.templateHash = sum;
+
+    if (window.ShadyCSS && !window.ShadyCSS.nativeShadow) {
+        applyTemplateShady(element, elementName, template, callback, sum);
+    } else {
+        applyTemplateNative(element, template, callback);
+    }
+}
+
+function applyTemplateShady(element, elementName, template, callback, sum) {
+    let templateId = '__byu-custom-element-template_' + elementName + '_' + sum;
+    let templateElement = document.head.querySelector('template#' + templateId);
+    if (!templateElement) {
+        templateElement = document.createElement('template');
+        templateElement.id = templateId;
+        templateElement.innerHTML = template;
+        document.head.appendChild(templateElement);
+        ShadyCSS.prepareTemplate(templateElement, elementName);
+    }
+    if (ShadyCSS.styleElement) {
+        ShadyCSS.styleElement(element);
+    } else if (ShadyCSS.applyStyle) {
+        ShadyCSS.applyStyle(element);
+    } else {
+        throw new Error('ShadyCSS is not properly defined: no styleElement or applyStyle!');
+    }
+    let imported = document.importNode(templateElement.content, true);
+    let shadow = element.shadowRoot;
+    //It'd be nice if we could just diff the DOM and replace what changed between templates, but that might lead to
+    // event listeners getting applied twice.  Easier to just clear out the shadow DOM and replace it.
+    while (shadow.firstChild) {
+        shadow.removeChild(shadow.firstChild);
+    }
+    shadow.appendChild(imported);
+    setTimeout(function() {
+        runAfterStamping(element, callback);
+    });
+}
+
+function applyTemplateNative(element, template, callback) {
+    element.shadowRoot.innerHTML = template;
+    runAfterStamping(element, callback);
+}
+
+function runAfterStamping(element, callback) {
+    element.classList.add(TEMPLATE_RENDERED_CLASS);
+    if (callback) {
+        callback();
+    }
+}
+
+
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(2)();
+// imports
+
+
+// module
+exports.push([module.i, "/*!\r\n *  @license\r\n *    Copyright 2017 Brigham Young University\r\n *\r\n *    Licensed under the Apache License, Version 2.0 (the \"License\");\r\n *    you may not use this file except in compliance with the License.\r\n *    You may obtain a copy of the License at\r\n *\r\n *        http://www.apache.org/licenses/LICENSE-2.0\r\n *\r\n *    Unless required by applicable law or agreed to in writing, software\r\n *    distributed under the License is distributed on an \"AS IS\" BASIS,\r\n *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\r\n *    See the License for the specific language governing permissions and\r\n *    limitations under the License.\r\n */\n/*!\r\n *  @license\r\n *    Copyright 2017 Brigham Young University\r\n *\r\n *    Licensed under the Apache License, Version 2.0 (the \"License\");\r\n *    you may not use this file except in compliance with the License.\r\n *    You may obtain a copy of the License at\r\n *\r\n *        http://www.apache.org/licenses/LICENSE-2.0\r\n *\r\n *    Unless required by applicable law or agreed to in writing, software\r\n *    distributed under the License is distributed on an \"AS IS\" BASIS,\r\n *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\r\n *    See the License for the specific language governing permissions and\r\n *    limitations under the License.\r\n */@media screen and (max-width:768px){:host>:last-child{border-bottom:1px solid #e5e5e5}}@media screen and (max-width:320px){:host>:last-child{border-bottom:1px solid #e5e5e5}}", ""]);
+
+// exports
+
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(2)();
+// imports
+
+
+// module
+exports.push([module.i, "/*!\r\n *  @license\r\n *    Copyright 2017 Brigham Young University\r\n *\r\n *    Licensed under the Apache License, Version 2.0 (the \"License\");\r\n *    you may not use this file except in compliance with the License.\r\n *    You may obtain a copy of the License at\r\n *\r\n *        http://www.apache.org/licenses/LICENSE-2.0\r\n *\r\n *    Unless required by applicable law or agreed to in writing, software\r\n *    distributed under the License is distributed on an \"AS IS\" BASIS,\r\n *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\r\n *    See the License for the specific language governing permissions and\r\n *    limitations under the License.\r\n */\n/*!\r\n *  @license\r\n *    Copyright 2017 Brigham Young University\r\n *\r\n *    Licensed under the Apache License, Version 2.0 (the \"License\");\r\n *    you may not use this file except in compliance with the License.\r\n *    You may obtain a copy of the License at\r\n *\r\n *        http://www.apache.org/licenses/LICENSE-2.0\r\n *\r\n *    Unless required by applicable law or agreed to in writing, software\r\n *    distributed under the License is distributed on an \"AS IS\" BASIS,\r\n *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\r\n *    See the License for the specific language governing permissions and\r\n *    limitations under the License.\r\n */.story-root{display:flex;margin:10px 0;max-height:200px}.story-link ::slotted(img){width:260px;height:160px}.region-right{margin:0 20px;padding:0;display:block}#title-slot-wrapper ::slotted(h3){margin-top:0!important;margin-bottom:0!important;line-height:23px;font-weight:500;font-size:20px}#title-slot-wrapper a{color:#002e5d;text-decoration:none}#title-slot-wrapper a:hover{color:#003da5}#description-slot-wrapper,p{font-weight:400;font-size:16px;max-height:55px;overflow:hidden;margin:0!important}@media screen and (max-width:768px) and (min-width:321px){.story-root{display:flex;padding:20px 0;margin:0;border-top:2px solid #e5e5e5;max-height:115px}#image-slot-wrapper{max-width:150px}#image-slot-wrapper ::slotted(img){width:150px;height:auto;margin:0}.region-right{margin:0 65px 0 20px;padding:0}#title-slot-wrapper ::slotted(h3){overflow:hidden;max-height:115px;margin:0}#description-slot-wrapper{display:none}}@media screen and (max-width:320px){.story-root{display:flex;padding:20px 0;margin:0;border-top:2px solid #e5e5e5;max-height:60px}#image-slot-wrapper{max-width:130px}#image-slot-wrapper ::slotted(img){width:90px;height:auto;margin:0 17px}.region-right{margin:0 20px 0 0;padding:0}#title-slot-wrapper ::slotted(h3){line-height:18px;font-size:16px;overflow:hidden;max-height:55px;margin:0}#description-slot-wrapper{display:none}}#title-slot-wrapper{color:var(--story-title-color,#002e5d);font-family:var(--story-title-font-family,\"Gotham A\",\"Gotham B\",Helvetica,sans-serif)}#description-slot-wrapper{font-family:var(--story-teaser-font-family,\"Gotham A\",\"Gotham B\",Helvetica,sans-serif);color:var(--story-teaser-color,#002e5d)}", ""]);
+
+// exports
+
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+function pad (hash, len) {
+  while (hash.length < len) {
+    hash = '0' + hash;
+  }
+  return hash;
+}
+
+function fold (hash, text) {
+  var i;
+  var chr;
+  var len;
+  if (text.length === 0) {
+    return hash;
+  }
+  for (i = 0, len = text.length; i < len; i++) {
+    chr = text.charCodeAt(i);
+    hash = ((hash << 5) - hash) + chr;
+    hash |= 0;
+  }
+  return hash < 0 ? hash * -2 : hash;
+}
+
+function foldObject (hash, o, seen) {
+  return Object.keys(o).sort().reduce(foldKey, hash);
+  function foldKey (hash, key) {
+    return foldValue(hash, o[key], key, seen);
+  }
+}
+
+function foldValue (input, value, key, seen) {
+  var hash = fold(fold(fold(input, key), toString(value)), typeof value);
+  if (value === null) {
+    return fold(hash, 'null');
+  }
+  if (value === undefined) {
+    return fold(hash, 'undefined');
+  }
+  if (typeof value === 'object') {
+    if (seen.indexOf(value) !== -1) {
+      return fold(hash, '[Circular]' + key);
+    }
+    seen.push(value);
+    return foldObject(hash, value, seen);
+  }
+  return fold(hash, value.toString());
+}
+
+function toString (o) {
+  return Object.prototype.toString.call(o);
+}
+
+function sum (o) {
+  return pad(foldValue(0, o, '', []).toString(16), 8);
+}
+
+module.exports = sum;
+
+
+/***/ }),
+/* 14 */
+/***/ (function(module, exports) {
+
+module.exports = "<style>$ {\n    require('./byu-news-hero.scss')\n  }</style> <div class=\"root\"> <div class=\"output\"></div> <div class=\"story-template-wrapper slot-container\"> <slot id=\"story-template\"> <template> <byu-hero-banner id=\"hero\" image-source=\"\" class=\"side-image\"> <span slot=\"headline\" class=\"headline\">This is the Headline</span> <span slot=\"intro-text\" class=\"intro-text\">This is the intro text. I'm going to add more words here so it's not so short, resulting in a longer piece of intro text.</span> <a slot=\"read-more\" class=\"read-more\">Read More</a> </byu-hero-banner> </template> </slot> </div> </div>";
+
+/***/ }),
+/* 15 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = "<style>" + __webpack_require__(11) + "</style> <div class=\"root\"> <div class=\"output\"></div> <div class=\"story-template-wrapper slot-container\"> <slot id=\"story-template\"> <template> <byu-story story-id=\"\" class=\"news-child\" teaser> <img src=\"xxxHTMLLINKxxx0.67159322373380980.4228888290539836xxx\" slot=\"story-image\" class=\"story-image\" alt=\"Story Image\"> <h3 slot=\"story-title\" class=\"story-title\"></h3> <p slot=\"story-teaser\" class=\"story-teaser\"></p> </byu-story> </template> </slot> </div> </div>";
+
+/***/ }),
+/* 16 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = "<style>" + __webpack_require__(12) + "</style> <div class=\"root story-root\"> <div id=\"image-slot-wrapper\"> <a class=\"story-link\" href=\"\"> <slot name=\"story-image\"></slot> </a> </div> <div class=\"region-right\"> <div id=\"title-slot-wrapper\"> <a class=\"story-link\" href=\"\"> <slot name=\"story-title\"></slot> </a> </div> <div id=\"description-slot-wrapper\"> <slot name=\"story-teaser\"></slot> </div> </div> </div>";
 
 /***/ })
 /******/ ]);

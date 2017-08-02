@@ -17,6 +17,7 @@
   -->
 
 <html lang="en" xmlns="http://www.w3.org/1999/html">
+
 <head>
   <meta charset="UTF-8">
   <link type="text/css" rel="stylesheet" href="//cloud.typography.com/75214/6517752/css/fonts.css" media="all" />
@@ -48,11 +49,18 @@
       box-sizing: border-box;
     }
 
-    a, p, span, h3, h4, h5, h6 {
+    a,
+    p,
+    span,
+    h3,
+    h4,
+    h5,
+    h6 {
       font-family: "Gotham A", "Gotham B", Helvetica, sans-serif;
     }
 
-    h1, h2 {
+    h1,
+    h2 {
       font-family: "Vitesse A", "Vitesse B", serif;
       font-weight: 500;
       color: #002e5d;
@@ -60,24 +68,33 @@
   </style>
 
 </head>
+
 <body>
 
-<byu-header>
-  <span slot="site-title">News Components</span>
-</byu-header>
+  <byu-header>
+    <span slot="site-title">News Components</span>
+  </byu-header>
 
-<div class="page-content">
-  <h2>Full BYU News Component</h2>
-  <byu-news categories="2996" tags="all" min-date="2017-04-01" max-date="2017-07-24" story-limit="3"></byu-news>
+  <div class="page-content">
+    <h2>Full BYU News Component</h2>
+    <byu-news categories="2996" tags="all" min-date="2017-04-01" max-date="2017-07-24" story-limit="3"></byu-news>
 
-  <h2>Only the BYU Story Component</h2>
-  <p>Still under development</p>
-  <!-- TODO: Fetch single story with ID.
+    <h2>Only the BYU Story Component</h2>
+    <p>Still under development</p>
+    <!-- TODO: Fetch single story with ID.
   <byu-story story-id="12345"></byu-story> -->
-</div>
 
-<byu-footer></byu-footer>
+    <h2>News Article Hero Banner</h2>
+
+    <link href="https://cdn.byu.edu/byu-hero-banner/latest/byu-hero-banner.min.css" rel="stylesheet" />
+    <script async src="https://cdn.byu.edu/byu-hero-banner/latest/byu-hero-banner.min.js"></script>
+
+    <byu-news-hero categories="2996" tags="all" min-date="2017-04-01" max-date="2017-07-24" story-limit="3"></byu-news-hero>
+
+  </div>
+
+  <byu-footer></byu-footer>
 
 </body>
-</html>
 
+</html>

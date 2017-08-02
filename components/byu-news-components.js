@@ -18,3 +18,4 @@
 
 import './byu-news/byu-news.js';
 import './byu-story/byu-story.js';
+import './byu-news-hero/byu-news-hero.js';

@@ -1,0 +1,40 @@
+<!--
+  ~  @license
+  ~    Copyright 2017 Brigham Young University
+  ~
+  ~    Licensed under the Apache License, Version 2.0 (the "License");
+  ~    you may not use this file except in compliance with the License.
+  ~    You may obtain a copy of the License at
+  ~
+  ~        http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~    Unless required by applicable law or agreed to in writing, software
+  ~    distributed under the License is distributed on an "AS IS" BASIS,
+  ~    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~    See the License for the specific language governing permissions and
+  ~    limitations under the License.
+  -->
+
+<style>
+  $ {
+    require('./byu-news-hero.scss')
+  }
+</style>
+
+<div class="root">
+  <div class="output"></div>
+  <div class="story-template-wrapper slot-container">
+    <!-- This is our default news template. If the consumer doesn't specify anything, we'll use this -->
+    <slot id="story-template">
+      <template>
+
+        <byu-hero-banner id="hero" image-source="" class="side-image">
+          <span slot="headline" class="headline">This is the Headline</span>
+          <span slot="intro-text" class="intro-text">This is the intro text. I'm going to add more words here so it's not so short, resulting in a longer piece of intro text.</span>
+          <a slot="read-more" class="read-more">Read More</a>
+        </byu-hero-banner>
+
+      </template>
+    </slot>
+  </div>
+</div>
