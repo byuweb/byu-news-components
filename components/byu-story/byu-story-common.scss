@@ -18,7 +18,7 @@
 @mixin storyRoot() {
   display: flex;
   margin: 10px 0;
-  max-height: 200px;
+  //max-height: 200px;
 }
 
 @mixin slottedImg() {
@@ -52,8 +52,8 @@
 @mixin descriptionSlotted() {
   font-weight: 400;
   font-size: 16px;
-  max-height: 55px;
-  overflow: hidden;
+  //max-height: 55px;
+  //overflow: hidden;
   margin: 0 !important;
 }
 
@@ -63,7 +63,7 @@
   padding: 20px 0;
   margin: 0;
   border-top: 2px solid #e5e5e5;
-  max-height: 115px;
+  //max-height: 115px;
 }
 
 @mixin imageWrapperTablet() {
@@ -82,8 +82,8 @@
 }
 
 @mixin h3SlottedTablet() {
-  overflow: hidden;
-  max-height: 115px;
+  //overflow: hidden;
+  //max-height: 115px;
   margin: 0;
 }
 
@@ -97,7 +97,7 @@
   padding: 20px 0;
   margin: 0;
   border-top: 2px solid #e5e5e5;
-  max-height: 60px;
+  //max-height: 60px;
 }
 
 @mixin imageWrapperMobile() {
@@ -118,8 +118,8 @@
 @mixin h3SlottedMobile() {
   line-height: 18px;
   font-size: 16px;
-  overflow: hidden;
-  max-height: 55px;
+  //overflow: hidden;
+  //max-height: 55px;
   margin: 0;
 }
 
