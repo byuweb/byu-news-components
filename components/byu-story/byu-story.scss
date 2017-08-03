@@ -33,12 +33,14 @@
 }
 
 #title-slot-wrapper {
-  ::slotted(h3) {
-    @include h3Slotted();
-  }
-
   a {
     @include linkDefault();
+  }
+}
+
+.story-link {
+  ::slotted(h3) {
+    @include h3Slotted();
   }
 }
 
@@ -58,7 +60,7 @@
     @include storyRootTablet();
   }
 
-  #image-slot-wrapper {
+  .story-link {
     @include imageWrapperTablet();
     ::slotted(img) {
       @include slottedImgTablet();
@@ -69,7 +71,7 @@
     @include regionRightTablet();
   }
 
-  #title-slot-wrapper {
+  .story-link {
     ::slotted(h3) {
       @include h3SlottedTablet();
     }
@@ -86,7 +88,7 @@
     @include storyRootMobile();
   }
 
-  #image-slot-wrapper {
+  .story-link {
     @include imageWrapperMobile();
     ::slotted(img) {
       @include slottedImgMobile();
@@ -97,7 +99,7 @@
     @include regionRightMobile();
   }
 
-  #title-slot-wrapper {
+  .story-link {
     ::slotted(h3) {
       @include h3SlottedMobile();
 
