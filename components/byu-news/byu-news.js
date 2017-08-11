@@ -30,7 +30,7 @@ const DEFAULT_CATEGORIES = 'all';
 const DEFAULT_TAGS = 'all';
 const DEFAULT_STORY_LIMIT = '-1'; // -1 for infinite
 
-const ENDPOINT = 'https://news-stg.byu.edu/api/';
+const ENDPOINT = 'https://news.byu.edu/api/';
 
 class ByuNews extends HTMLElement {
   constructor() {
