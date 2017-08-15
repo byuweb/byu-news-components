@@ -22,7 +22,7 @@ import * as util from 'byu-web-component-utils';
 const ATTR_STORY_ID = 'story-id';
 const ATTR_TEASER = 'teaser';
 
-const NEWS_SITE = 'https://news-dev.byu.edu/node/';
+const NEWS_SITE = 'https://news.byu.edu/node/';
 
 class ByuStory extends HTMLElement {
   constructor() {
