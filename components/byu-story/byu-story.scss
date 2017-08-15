@@ -53,6 +53,14 @@
   @include descriptionSlotted();
 }
 
+#category-slot-wrapper {
+  @include categorySlotted();
+}
+
+#date-slot-wrapper {
+  @include dateSlotted();
+}
+
 /* ----- STYLES/FEATURES ----- */
 
 .no-category {

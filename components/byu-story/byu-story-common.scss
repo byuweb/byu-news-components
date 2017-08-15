@@ -50,11 +50,23 @@
 }
 
 @mixin categorySlotted() {
-
+  font-size: 16px;
+  text-transform: uppercase;
+  line-height: normal;
+  display: block;
+  font-family: "Gotham A", "Gotham B", Helvetica, serif;
+  color: #171717;
+  font-weight: 200;
 }
 
 @mixin dateSlotted() {
-
+  font-size: 12px;
+  text-transform: uppercase;
+  line-height: normal;
+  display: block;
+  font-family: "Gotham A", "Gotham B", Helvetica, serif;
+  color: #171717;
+  font-weight: 200;
 }
 
 @mixin descriptionSlotted() {

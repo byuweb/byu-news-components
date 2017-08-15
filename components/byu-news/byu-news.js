@@ -187,6 +187,13 @@ function applyNews(component) {
         .setAttribute('src', stories[i].FeaturedImgUrl);
       element.querySelector('.story-title')
         .innerHTML = stories[i].Title;
+      element.querySelector('.story-category')
+        .innerHTML = stories[i].Categories;
+
+      let date = stories[i].DatePublished;
+      date = date.replace('-', ' ');
+      element.querySelector('.story-date')
+        .innerHTML = stories[i].DatePublished;
       let summary = stories[i].Summary;
       if (summary) {
         element.querySelector('.story-teaser')
