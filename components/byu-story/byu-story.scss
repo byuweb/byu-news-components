@@ -61,16 +61,6 @@
   @include dateSlotted();
 }
 
-/* ----- STYLES/FEATURES ----- */
-
-.no-category {
-  @include noDisplay();
-}
-
-.no-date {
-  @include noDisplay();
-}
-
 // ---------- TABLET ---------- //
 @media screen and (max-width: 768px) and (min-width: 321px) {
   .story-root {

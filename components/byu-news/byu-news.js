@@ -181,19 +181,26 @@ function applyNews(component) {
     }
     for (let i = 0; i < count; ++i) {
       let element = document.importNode(template.content, true);
-      element.querySelector('.news-child')
-        .setAttribute('story-id', stories[i].StoryId);
+      let byuStoryRoot = element.querySelector('.news-child');
+
+      if (!component.classList.contains('no-category')) {
+        element.querySelector('.story-category')
+          .innerHTML = stories[i].Categories;
+      }
+      if (!component.classList.contains('no-date')) {
+        let date = stories[i].DatePublished;
+        date = date.replace('-', '. ');
+        date = date.replace('-', ', ');
+        element.querySelector('.story-date')
+          .innerHTML = date;
+      }
+
+      byuStoryRoot.setAttribute('story-id', stories[i].StoryId);
       element.querySelector('.story-image')
         .setAttribute('src', stories[i].FeaturedImgUrl);
       element.querySelector('.story-title')
         .innerHTML = stories[i].Title;
-      element.querySelector('.story-category')
-        .innerHTML = stories[i].Categories;
 
-      let date = stories[i].DatePublished;
-      date = date.replace('-', ' ');
-      element.querySelector('.story-date')
-        .innerHTML = stories[i].DatePublished;
       let summary = stories[i].Summary;
       if (summary) {
         element.querySelector('.story-teaser')

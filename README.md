@@ -19,7 +19,7 @@ This is the component to use when you want to pull in a stream of stories and di
 NB: If you want the latest stories, just leave out the `min-date` and `max-date` attributes.
 
 ### Customize Children
-Customize the `byu-story` children of `byu-news` by using variable CSS. For example:
+Customize the `byu-story` children of `byu-news` by using variable CSS and classes. For example:
 
 ```css
 body {
@@ -29,9 +29,16 @@ body {
 }
 ```
 
+#### Variable CSS
+
 - `--story-title-color`: Changes the color of the story title. Default value is `#002E5D` (BYU Navy).
 - `--story-title-font-family`: Changes the font-family of the title. Default value is `"Gotham A", "Gotham B", Helvetica, sans-serif"`.
 - `--story-teaser-font-family`: Changes the font-family of the teaser. Default value is the same as `--story-title-font-family`.
+
+#### CSS Classes
+
+- `no-category`: Hides the category from the display.
+- `no-date`: Hides the date from the display.
 
 ## BYU Story
 _Still in Development. Currently only a child for the `byu-news` component._
