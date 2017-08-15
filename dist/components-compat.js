@@ -241,6 +241,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
   var ATTR_MIN_DATE = 'min-date';
   var ATTR_MAX_DATE = 'max-date';
   var ATTR_STORY_LIMIT = 'story-limit';
+  var ATTR_NO_CATEGORY = 'no-category';
+  var ATTR_NO_DATE = 'no-date';
 
   var DEFAULT_CATEGORIES = 'all';
   var DEFAULT_TAGS = 'all';
@@ -288,6 +290,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
           case ATTR_MIN_DATE:
           case ATTR_MAX_DATE:
           case ATTR_STORY_LIMIT:
+          case ATTR_NO_CATEGORY:
+          case ATTR_NO_DATE:
             applyNews(this);
             break;
         }
@@ -348,13 +352,33 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
         }
         return DEFAULT_STORY_LIMIT;
       }
+    }, {
+      key: 'noCategory',
+      set: function set(value) {
+        this.setAttribute(ATTR_NO_CATEGORY, '');
+      },
+      get: function get() {
+        if (this.hasAttribute(ATTR_NO_CATEGORY)) {
+          return this.getAttribute(ATTR_NO_CATEGORY);
+        }
+      }
+    }, {
+      key: 'noDate',
+      set: function set(value) {
+        this.setAttribute(ATTR_NO_DATE, '');
+      },
+      get: function get() {
+        if (this.hasAttribute(ATTR_NO_DATE)) {
+          return this.getAttribute(ATTR_NO_DATE);
+        }
+      }
 
       // END ATTRIBUTES
 
     }], [{
       key: 'observedAttributes',
       get: function get() {
-        return [ATTR_CATEGORIES, ATTR_TAGS, ATTR_MIN_DATE, ATTR_MAX_DATE, ATTR_STORY_LIMIT];
+        return [ATTR_CATEGORIES, ATTR_TAGS, ATTR_MIN_DATE, ATTR_MAX_DATE, ATTR_STORY_LIMIT, ATTR_NO_CATEGORY, ATTR_NO_DATE];
       }
     }]);
 
@@ -392,7 +416,9 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
       categories: component.categories,
       tags: component.tags,
       minDate: component.minDate,
-      maxDate: component.maxDate
+      maxDate: component.maxDate,
+      noCategory: component.noCategory,
+      noDate: component.noDate
     };
 
     var url = ENDPOINT + 'Stories.json?categories=' + data.categories + '&tags=' + data.tags + '&';
@@ -416,10 +442,10 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
         var element = document.importNode(template.content, true);
         var byuStoryRoot = element.querySelector('.news-child');
 
-        if (!component.classList.contains('no-category')) {
+        if (data.noCategory !== '') {
           element.querySelector('.story-category').innerHTML = stories[i].Categories;
         }
-        if (!component.classList.contains('no-date')) {
+        if (data.noDate !== '') {
           var date = stories[i].DatePublished;
           date = date.replace('-', '. ');
           date = date.replace('-', ', ');
@@ -855,7 +881,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 /* 12 */
 /***/function (module, exports, __webpack_require__) {
 
-  module.exports = "<style>" + __webpack_require__(9) + "</style> <div class=\"root\"> <div class=\"output\"></div> <div class=\"story-template-wrapper slot-container\"> <slot id=\"story-template\"> <template> <byu-story story-id=\"\" class=\"news-child\" teaser> <span slot=\"story-category\" class=\"story-category\"></span> <img src=\"xxxHTMLLINKxxx0.34799268908671490.8851242912888226xxx\" slot=\"story-image\" class=\"story-image\" alt=\"Story Image\"> <h3 slot=\"story-title\" class=\"story-title\"></h3> <p slot=\"story-teaser\" class=\"story-teaser\"></p> <span slot=\"story-date\" class=\"story-date\"></span> </byu-story> </template> </slot> </div> </div>";
+  module.exports = "<style>" + __webpack_require__(9) + "</style> <div class=\"root\"> <div class=\"output\"></div> <div class=\"story-template-wrapper slot-container\"> <slot id=\"story-template\"> <template> <byu-story story-id=\"\" class=\"news-child\" teaser> <span slot=\"story-category\" class=\"story-category\"></span> <img src=\"xxxHTMLLINKxxx0.68625909860312610.42124995992719283xxx\" slot=\"story-image\" class=\"story-image\" alt=\"Story Image\"> <h3 slot=\"story-title\" class=\"story-title\"></h3> <p slot=\"story-teaser\" class=\"story-teaser\"></p> <span slot=\"story-date\" class=\"story-date\"></span> </byu-story> </template> </slot> </div> </div>";
 
   /***/
 },
