@@ -50,24 +50,24 @@
 }
 
 @mixin categorySlotted() {
-  font-size: 16px;
+  font-size: 20px;
   padding-bottom: 8px;
   text-transform: uppercase;
   line-height: normal;
   display: block;
   font-family: "Gotham A", "Gotham B", Helvetica, serif;
   color: #171717;
-  font-weight: 200;
+  font-weight: 400;
 }
 
 @mixin dateSlotted() {
-  font-size: 12px;
+  font-size: 16px;
   text-transform: uppercase;
   line-height: normal;
   display: block;
   font-family: "Gotham A", "Gotham B", Helvetica, serif;
   color: #171717;
-  font-weight: 200;
+  font-weight: 400;
 }
 
 @mixin descriptionSlotted() {
@@ -101,8 +101,6 @@
 }
 
 @mixin h3SlottedTablet() {
-  //overflow: hidden;
-  //max-height: 115px;
   margin: 0;
 }
 
