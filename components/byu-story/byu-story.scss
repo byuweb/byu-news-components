@@ -21,7 +21,6 @@
  @include storyRoot();
 }
 
-//#image-slot-wrapper {
 .story-link {
   ::slotted(img) {
     @include slottedImg();
@@ -52,6 +51,14 @@
 
 #description-slot-wrapper, p {
   @include descriptionSlotted();
+}
+
+#category-slot-wrapper {
+  @include categorySlotted();
+}
+
+#date-slot-wrapper {
+  @include dateSlotted();
 }
 
 // ---------- TABLET ---------- //

@@ -241,6 +241,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
   var ATTR_MIN_DATE = 'min-date';
   var ATTR_MAX_DATE = 'max-date';
   var ATTR_STORY_LIMIT = 'story-limit';
+  var ATTR_NO_CATEGORY = 'no-category';
+  var ATTR_NO_DATE = 'no-date';
 
   var DEFAULT_CATEGORIES = 'all';
   var DEFAULT_TAGS = 'all';
@@ -288,6 +290,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
           case ATTR_MIN_DATE:
           case ATTR_MAX_DATE:
           case ATTR_STORY_LIMIT:
+          case ATTR_NO_CATEGORY:
+          case ATTR_NO_DATE:
             applyNews(this);
             break;
         }
@@ -348,13 +352,33 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
         }
         return DEFAULT_STORY_LIMIT;
       }
+    }, {
+      key: 'noCategory',
+      set: function set(value) {
+        this.setAttribute(ATTR_NO_CATEGORY, '');
+      },
+      get: function get() {
+        if (this.hasAttribute(ATTR_NO_CATEGORY)) {
+          return this.getAttribute(ATTR_NO_CATEGORY);
+        }
+      }
+    }, {
+      key: 'noDate',
+      set: function set(value) {
+        this.setAttribute(ATTR_NO_DATE, '');
+      },
+      get: function get() {
+        if (this.hasAttribute(ATTR_NO_DATE)) {
+          return this.getAttribute(ATTR_NO_DATE);
+        }
+      }
 
       // END ATTRIBUTES
 
     }], [{
       key: 'observedAttributes',
       get: function get() {
-        return [ATTR_CATEGORIES, ATTR_TAGS, ATTR_MIN_DATE, ATTR_MAX_DATE, ATTR_STORY_LIMIT];
+        return [ATTR_CATEGORIES, ATTR_TAGS, ATTR_MIN_DATE, ATTR_MAX_DATE, ATTR_STORY_LIMIT, ATTR_NO_CATEGORY, ATTR_NO_DATE];
       }
     }]);
 
@@ -392,7 +416,9 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
       categories: component.categories,
       tags: component.tags,
       minDate: component.minDate,
-      maxDate: component.maxDate
+      maxDate: component.maxDate,
+      noCategory: component.noCategory,
+      noDate: component.noDate
     };
 
     var url = ENDPOINT + 'Stories.json?categories=' + data.categories + '&tags=' + data.tags + '&';
@@ -414,9 +440,22 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
       }
       for (var i = 0; i < count; ++i) {
         var element = document.importNode(template.content, true);
-        element.querySelector('.news-child').setAttribute('story-id', stories[i].StoryId);
+        var byuStoryRoot = element.querySelector('.news-child');
+
+        if (data.noCategory !== '') {
+          element.querySelector('.story-category').innerHTML = stories[i].Categories;
+        }
+        if (data.noDate !== '') {
+          var date = stories[i].DatePublished;
+          date = date.replace('-', '. ');
+          date = date.replace('-', ', ');
+          element.querySelector('.story-date').innerHTML = date;
+        }
+
+        byuStoryRoot.setAttribute('story-id', stories[i].StoryId);
         element.querySelector('.story-image').setAttribute('src', stories[i].FeaturedImgUrl);
         element.querySelector('.story-title').innerHTML = stories[i].Title;
+
         var summary = stories[i].Summary;
         if (summary) {
           element.querySelector('.story-teaser').innerHTML = summary;
@@ -467,7 +506,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
   var ATTR_STORY_ID = 'story-id';
   var ATTR_TEASER = 'teaser';
 
-  var NEWS_SITE = 'https://news-dev.byu.edu/node/';
+  var NEWS_SITE = 'https://news.byu.edu/node/';
 
   var ByuStory = function (_HTMLElement2) {
     _inherits(ByuStory, _HTMLElement2);
@@ -768,7 +807,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 
   // module
-  exports.push([module.i, "/*!\n *  @license\n *    Copyright 2017 Brigham Young University\n *\n *    Licensed under the Apache License, Version 2.0 (the \"License\");\n *    you may not use this file except in compliance with the License.\n *    You may obtain a copy of the License at\n *\n *        http://www.apache.org/licenses/LICENSE-2.0\n *\n *    Unless required by applicable law or agreed to in writing, software\n *    distributed under the License is distributed on an \"AS IS\" BASIS,\n *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n *    See the License for the specific language governing permissions and\n *    limitations under the License.\n */\n/*!\n *  @license\n *    Copyright 2017 Brigham Young University\n *\n *    Licensed under the Apache License, Version 2.0 (the \"License\");\n *    you may not use this file except in compliance with the License.\n *    You may obtain a copy of the License at\n *\n *        http://www.apache.org/licenses/LICENSE-2.0\n *\n *    Unless required by applicable law or agreed to in writing, software\n *    distributed under the License is distributed on an \"AS IS\" BASIS,\n *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n *    See the License for the specific language governing permissions and\n *    limitations under the License.\n */.story-root{display:flex;margin:10px 0}.story-link ::slotted(img){width:260px;height:160px}.region-right{margin:0 20px;padding:0;display:block}#title-slot-wrapper a{color:#002e5d;text-decoration:none}.story-link ::slotted(h3){margin-top:0!important;margin-bottom:0!important;line-height:23px;font-weight:500;font-size:20px}#title-slot-wrapper a:hover{color:#003da5}#description-slot-wrapper,p{font-weight:400;font-size:16px;margin:0!important}@media screen and (max-width:768px) and (min-width:321px){.story-root{display:flex;padding:20px 0;margin:0;border-top:2px solid #e5e5e5}.story-link{max-width:150px}.story-link ::slotted(img){width:150px;height:auto;margin:0}.region-right{margin:0 65px 0 20px;padding:0}.story-link ::slotted(h3){margin:0}#description-slot-wrapper{display:none}}@media screen and (max-width:320px){.story-root{display:flex;padding:20px 0;margin:0;border-top:2px solid #e5e5e5}.story-link{max-width:130px}.story-link ::slotted(img){width:90px;height:auto;margin:0 17px}.region-right{margin:0 20px 0 0;padding:0}.story-link ::slotted(h3){line-height:18px;font-size:16px;margin:0}#description-slot-wrapper{display:none}}#title-slot-wrapper{color:var(--story-title-color,#002e5d);font-family:var(--story-title-font-family,\"Gotham A\",\"Gotham B\",Helvetica,sans-serif)}#description-slot-wrapper{font-family:var(--story-teaser-font-family,\"Gotham A\",\"Gotham B\",Helvetica,sans-serif);color:var(--story-teaser-color,#002e5d)}", ""]);
+  exports.push([module.i, "/*!\n *  @license\n *    Copyright 2017 Brigham Young University\n *\n *    Licensed under the Apache License, Version 2.0 (the \"License\");\n *    you may not use this file except in compliance with the License.\n *    You may obtain a copy of the License at\n *\n *        http://www.apache.org/licenses/LICENSE-2.0\n *\n *    Unless required by applicable law or agreed to in writing, software\n *    distributed under the License is distributed on an \"AS IS\" BASIS,\n *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n *    See the License for the specific language governing permissions and\n *    limitations under the License.\n */\n/*!\n *  @license\n *    Copyright 2017 Brigham Young University\n *\n *    Licensed under the Apache License, Version 2.0 (the \"License\");\n *    you may not use this file except in compliance with the License.\n *    You may obtain a copy of the License at\n *\n *        http://www.apache.org/licenses/LICENSE-2.0\n *\n *    Unless required by applicable law or agreed to in writing, software\n *    distributed under the License is distributed on an \"AS IS\" BASIS,\n *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n *    See the License for the specific language governing permissions and\n *    limitations under the License.\n */.story-root{display:flex;margin:10px 0}.story-link ::slotted(img){width:260px;height:160px}.region-right{margin:0 20px;padding:0;display:block}#title-slot-wrapper a{color:#002e5d;text-decoration:none}.story-link ::slotted(h3){margin-top:0!important;margin-bottom:0!important;line-height:23px;font-weight:500;font-size:20px}#title-slot-wrapper a:hover{color:#003da5}#description-slot-wrapper,p{font-weight:400;font-size:16px;margin:0!important}#category-slot-wrapper{font-size:16px;padding-bottom:8px}#category-slot-wrapper,#date-slot-wrapper{text-transform:uppercase;line-height:normal;display:block;font-family:Gotham A,Gotham B,Helvetica,serif;color:#171717;font-weight:200}#date-slot-wrapper{font-size:12px}@media screen and (max-width:768px) and (min-width:321px){.story-root{display:flex;padding:20px 0;margin:0;border-top:2px solid #e5e5e5}.story-link{max-width:150px}.story-link ::slotted(img){width:150px;height:auto;margin:0}.region-right{margin:0 65px 0 20px;padding:0}.story-link ::slotted(h3){margin:0}#description-slot-wrapper{display:none}}@media screen and (max-width:320px){.story-root{display:flex;padding:20px 0;margin:0;border-top:2px solid #e5e5e5}.story-link{max-width:130px}.story-link ::slotted(img){width:90px;height:auto;margin:0 17px}.region-right{margin:0 20px 0 0;padding:0}.story-link ::slotted(h3){line-height:18px;font-size:16px;margin:0}#description-slot-wrapper{display:none}}#title-slot-wrapper{color:var(--story-title-color,#002e5d);font-family:var(--story-title-font-family,\"Gotham A\",\"Gotham B\",Helvetica,sans-serif)}#description-slot-wrapper{font-family:var(--story-teaser-font-family,\"Gotham A\",\"Gotham B\",Helvetica,sans-serif);color:var(--story-teaser-color,#002e5d)}", ""]);
 
   // exports
 
@@ -842,14 +881,14 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 /* 12 */
 /***/function (module, exports, __webpack_require__) {
 
-  module.exports = "<style>" + __webpack_require__(9) + "</style> <div class=\"root\"> <div class=\"output\"></div> <div class=\"story-template-wrapper slot-container\"> <slot id=\"story-template\"> <template> <byu-story story-id=\"\" class=\"news-child\" teaser> <img src=\"xxxHTMLLINKxxx0.482439199615819940.9072933619753489xxx\" slot=\"story-image\" class=\"story-image\" alt=\"Story Image\"> <h3 slot=\"story-title\" class=\"story-title\"></h3> <p slot=\"story-teaser\" class=\"story-teaser\"></p> </byu-story> </template> </slot> </div> </div>";
+  module.exports = "<style>" + __webpack_require__(9) + "</style> <div class=\"root\"> <div class=\"output\"></div> <div class=\"story-template-wrapper slot-container\"> <slot id=\"story-template\"> <template> <byu-story story-id=\"\" class=\"news-child\" teaser> <span slot=\"story-category\" class=\"story-category\"></span> <img src=\"xxxHTMLLINKxxx0.68625909860312610.42124995992719283xxx\" slot=\"story-image\" class=\"story-image\" alt=\"Story Image\"> <h3 slot=\"story-title\" class=\"story-title\"></h3> <p slot=\"story-teaser\" class=\"story-teaser\"></p> <span slot=\"story-date\" class=\"story-date\"></span> </byu-story> </template> </slot> </div> </div>";
 
   /***/
 },
 /* 13 */
 /***/function (module, exports, __webpack_require__) {
 
-  module.exports = "<style>" + __webpack_require__(10) + "</style> <div class=\"root story-root\"> <div id=\"image-slot-wrapper\"> <a class=\"story-link\" href=\"\"> <slot name=\"story-image\"></slot> </a> </div> <div class=\"region-right\"> <div id=\"title-slot-wrapper\"> <a class=\"story-link\" href=\"\"> <slot name=\"story-title\"></slot> </a> </div> <div id=\"description-slot-wrapper\"> <slot name=\"story-teaser\"></slot> </div> </div> </div>";
+  module.exports = "<style>" + __webpack_require__(10) + "</style> <div class=\"root story-root\"> <div id=\"image-slot-wrapper\"> <a class=\"story-link\" href=\"\"> <slot name=\"story-image\"></slot> </a> </div> <div class=\"region-right\"> <div id=\"category-slot-wrapper\"> <slot name=\"story-category\"></slot> </div> <div id=\"title-slot-wrapper\"> <a class=\"story-link\" href=\"\"> <slot name=\"story-title\"></slot> </a> </div> <div id=\"description-slot-wrapper\"> <slot name=\"story-teaser\"></slot> </div> <div id=\"date-slot-wrapper\"> <slot name=\"story-date\"></slot> </div> </div> </div>";
 
   /***/
 },

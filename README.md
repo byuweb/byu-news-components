@@ -10,11 +10,13 @@ This is the component to use when you want to pull in a stream of stories and di
 <byu-news categories="all" tags="all" max-date="2017-07-01" min-date="2017-04-01" story-limit="3"></byu-news>
 ```
 ### Attributes
-- Categories: **Reqired**. The category ID's you want to consume, separated by '+'. If you want all categories, use the value `all`.
-- Tags: **Required**. The tag ID's you want to consume, seperated by '+'. If you want all tags, use the value `all`.
-- Max Date: The latest date a story should have been published.
-- Min Date: The earlies date a story should have been published.
-- Story Limit: The number of stories you want display.
+- `categories`: **Reqired**. The category ID's you want to consume, separated by '+'. If you want all categories, use the value `all`.
+- `tags`: **Required**. The tag ID's you want to consume, separated by '+'. If you want all tags, use the value `all`.
+- `max-date`: The latest date a story should have been published.
+- `min-date`: The earlies date a story should have been published.
+- `story-limit`: The number of stories you want display.
+- `no-category`: Use if you don't want the category to appear.
+- `no-date`: Use if you don't want the published date to appear.
 
 NB: If you want the latest stories, just leave out the `min-date` and `max-date` attributes.
 
@@ -28,6 +30,8 @@ body {
   --story-teaser-font-family: "Roboto", sans-serif;
 }
 ```
+
+#### Variable CSS
 
 - `--story-title-color`: Changes the color of the story title. Default value is `#002E5D` (BYU Navy).
 - `--story-title-font-family`: Changes the font-family of the title. Default value is `"Gotham A", "Gotham B", Helvetica, sans-serif"`.
