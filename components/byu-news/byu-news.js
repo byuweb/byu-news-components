@@ -25,6 +25,8 @@ const ATTR_TAGS = 'tags';
 const ATTR_MIN_DATE = 'min-date';
 const ATTR_MAX_DATE = 'max-date';
 const ATTR_STORY_LIMIT = 'story-limit';
+const ATTR_NO_CATEGORY = 'no-category';
+const ATTR_NO_DATE = 'no-date';
 
 const DEFAULT_CATEGORIES = 'all';
 const DEFAULT_TAGS = 'all';
@@ -54,7 +56,7 @@ class ByuNews extends HTMLElement {
   }
 
   static get observedAttributes() {
-    return [ATTR_CATEGORIES, ATTR_TAGS, ATTR_MIN_DATE, ATTR_MAX_DATE, ATTR_STORY_LIMIT];
+    return [ATTR_CATEGORIES, ATTR_TAGS, ATTR_MIN_DATE, ATTR_MAX_DATE, ATTR_STORY_LIMIT, ATTR_NO_CATEGORY, ATTR_NO_DATE];
   }
 
   attributeChangedCallback(attr, oldValue, newValue) {
@@ -64,6 +66,8 @@ class ByuNews extends HTMLElement {
       case ATTR_MIN_DATE:
       case ATTR_MAX_DATE:
       case ATTR_STORY_LIMIT:
+      case ATTR_NO_CATEGORY:
+      case ATTR_NO_DATE:
         applyNews(this);
         break;
     }
@@ -124,6 +128,26 @@ class ByuNews extends HTMLElement {
     return DEFAULT_STORY_LIMIT;
   }
 
+  set noCategory(value) {
+    this.setAttribute(ATTR_NO_CATEGORY, '');
+  }
+
+  get noCategory() {
+    if (this.hasAttribute(ATTR_NO_CATEGORY)) {
+      return this.getAttribute(ATTR_NO_CATEGORY);
+    }
+  }
+
+  set noDate(value) {
+    this.setAttribute(ATTR_NO_DATE, '');
+  }
+
+  get noDate() {
+    if (this.hasAttribute(ATTR_NO_DATE)) {
+      return this.getAttribute(ATTR_NO_DATE);
+    }
+  }
+
   // END ATTRIBUTES
 
 }
@@ -160,6 +184,8 @@ function applyNews(component) {
     tags: component.tags,
     minDate: component.minDate,
     maxDate: component.maxDate,
+    noCategory: component.noCategory,
+    noDate: component.noDate
   };
 
   let url = ENDPOINT + 'Stories.json?categories=' + data.categories + '&tags=' + data.tags + '&';
@@ -181,12 +207,26 @@ function applyNews(component) {
     }
     for (let i = 0; i < count; ++i) {
       let element = document.importNode(template.content, true);
-      element.querySelector('.news-child')
-        .setAttribute('story-id', stories[i].StoryId);
+      let byuStoryRoot = element.querySelector('.news-child');
+
+      if (data.noCategory !== '') {
+        element.querySelector('.story-category')
+          .innerHTML = stories[i].Categories;
+      }
+      if (data.noDate !== '') {
+        let date = stories[i].DatePublished;
+        date = date.replace('-', '. ');
+        date = date.replace('-', ', ');
+        element.querySelector('.story-date')
+          .innerHTML = date;
+      }
+
+      byuStoryRoot.setAttribute('story-id', stories[i].StoryId);
       element.querySelector('.story-image')
         .setAttribute('src', stories[i].FeaturedImgUrl);
       element.querySelector('.story-title')
         .innerHTML = stories[i].Title;
+
       let summary = convert(stories[i].Summary);
       if (summary) {
         element.querySelector('.story-teaser')

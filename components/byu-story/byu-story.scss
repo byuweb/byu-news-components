@@ -21,11 +21,18 @@
  @include storyRoot();
 }
 
-//#image-slot-wrapper {
 .story-link {
   ::slotted(img) {
     @include slottedImg();
   }
+}
+
+.story-image {
+  @include slottedImg();
+}
+
+.story-title {
+  @include h3Slotted();
 }
 
 .region-right {
@@ -54,6 +61,14 @@
   @include descriptionSlotted();
 }
 
+#category-slot-wrapper {
+  @include categorySlotted();
+}
+
+#date-slot-wrapper {
+  @include dateSlotted();
+}
+
 // ---------- TABLET ---------- //
 @media screen and (max-width: 768px) and (min-width: 481px) {
   .story-root {
@@ -65,6 +80,10 @@
     ::slotted(img) {
       @include slottedImgTablet();
     }
+  }
+
+  .story-image {
+    @include slottedImgTablet();
   }
 
   .region-right {

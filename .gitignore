@@ -2,5 +2,7 @@
 node_modules/
 # JetBrains IDE
 .idea
+# Mac
+.DS_Store
 
 npm-debug.log
