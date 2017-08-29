@@ -188,6 +188,8 @@ function applyNews(component) {
       element.querySelector('.story-title')
         .innerHTML = stories[i].Title;
       let summary = stories[i].Summary;
+      let parser = new DOMParser();
+      summary = parser.parseFromString(summary, 'text/html');
       if (summary) {
         element.querySelector('.story-teaser')
           .innerHTML = summary;
