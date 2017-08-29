@@ -418,6 +418,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
         element.querySelector('.story-image').setAttribute('src', stories[i].FeaturedImgUrl);
         element.querySelector('.story-title').innerHTML = stories[i].Title;
         var summary = stories[i].Summary;
+        var parser = new DOMParser();
+        summary = parser.parseFromString(summary, 'text/html');
         if (summary) {
           element.querySelector('.story-teaser').innerHTML = summary;
         }
@@ -842,7 +844,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 /* 12 */
 /***/function (module, exports, __webpack_require__) {
 
-  module.exports = "<style>" + __webpack_require__(9) + "</style> <div class=\"root\"> <div class=\"output\"></div> <div class=\"story-template-wrapper slot-container\"> <slot id=\"story-template\"> <template> <byu-story story-id=\"\" class=\"news-child\" teaser> <img src=\"xxxHTMLLINKxxx0.64644644928204390.7161845981369459xxx\" slot=\"story-image\" class=\"story-image\" alt=\"Story Image\"> <h3 slot=\"story-title\" class=\"story-title\"></h3> <p slot=\"story-teaser\" class=\"story-teaser\"></p> </byu-story> </template> </slot> </div> </div>";
+  module.exports = "<style>" + __webpack_require__(9) + "</style> <div class=\"root\"> <div class=\"output\"></div> <div class=\"story-template-wrapper slot-container\"> <slot id=\"story-template\"> <template> <byu-story story-id=\"\" class=\"news-child\" teaser> <img src=\"xxxHTMLLINKxxx0.374666918424009450.5985040526620207xxx\" slot=\"story-image\" class=\"story-image\" alt=\"Story Image\"> <h3 slot=\"story-title\" class=\"story-title\"></h3> <p slot=\"story-teaser\" class=\"story-teaser\"></p> </byu-story> </template> </slot> </div> </div>";
 
   /***/
 },
