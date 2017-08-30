@@ -389,9 +389,7 @@ function applyNews(component) {
         .setAttribute('src', stories[i].FeaturedImgUrl);
       element.querySelector('.story-title')
         .innerHTML = stories[i].Title;
-      let summary = stories[i].Summary;
-      let parser = new DOMParser();
-      summary = parser.parseFromString(summary, 'text/html');
+      let summary = convert(stories[i].Summary);
       if (summary) {
         element.querySelector('.story-teaser')
           .innerHTML = summary;
@@ -410,6 +408,23 @@ function setupSlotListeners(component) {
   slot.addEventListener('slotchange', () => {
     applyNews(component);
   }, false);
+}
+
+function convert(string) {
+  let multiple = {
+    '&amp;' : '&',
+    '&lt;' : '<',
+    '&gt;' : '>',
+    '&quot;' : '"',
+    '&apos;' : '`'
+  };
+  for(let char in multiple) {
+    let before = char;
+    let after= multiple[char];
+    let pattern = new RegExp(before, 'g');
+    string = string.replace(pattern,after);
+  }
+  return string;
 }
 
 
@@ -814,7 +829,7 @@ module.exports = sum;
 /* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = "<style>" + __webpack_require__(9) + "</style> <div class=\"root\"> <div class=\"output\"></div> <div class=\"story-template-wrapper slot-container\"> <slot id=\"story-template\"> <template> <byu-story story-id=\"\" class=\"news-child\" teaser> <img src=\"xxxHTMLLINKxxx0.374666918424009450.5985040526620207xxx\" slot=\"story-image\" class=\"story-image\" alt=\"Story Image\"> <h3 slot=\"story-title\" class=\"story-title\"></h3> <p slot=\"story-teaser\" class=\"story-teaser\"></p> </byu-story> </template> </slot> </div> </div>";
+module.exports = "<style>" + __webpack_require__(9) + "</style> <div class=\"root\"> <div class=\"output\"></div> <div class=\"story-template-wrapper slot-container\"> <slot id=\"story-template\"> <template> <byu-story story-id=\"\" class=\"news-child\" teaser> <img src=\"xxxHTMLLINKxxx0.81534017506782460.8387741957122783xxx\" slot=\"story-image\" class=\"story-image\" alt=\"Story Image\"> <h3 slot=\"story-title\" class=\"story-title\"></h3> <p slot=\"story-teaser\" class=\"story-teaser\"></p> </byu-story> </template> </slot> </div> </div>";
 
 /***/ }),
 /* 13 */
