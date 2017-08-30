@@ -187,9 +187,7 @@ function applyNews(component) {
         .setAttribute('src', stories[i].FeaturedImgUrl);
       element.querySelector('.story-title')
         .innerHTML = stories[i].Title;
-      let summary = stories[i].Summary;
-      let parser = new DOMParser();
-      summary = parser.parseFromString(summary, 'text/html');
+      let summary = convert(stories[i].Summary);
       if (summary) {
         element.querySelector('.story-teaser')
           .innerHTML = summary;
@@ -208,4 +206,21 @@ function setupSlotListeners(component) {
   slot.addEventListener('slotchange', () => {
     applyNews(component);
   }, false);
+}
+
+function convert(string) {
+  let multiple = {
+    '&amp;' : '&',
+    '&lt;' : '<',
+    '&gt;' : '>',
+    '&quot;' : '"',
+    '&apos;' : '`'
+  };
+  for(let char in multiple) {
+    let before = char;
+    let after= multiple[char];
+    let pattern = new RegExp(before, 'g');
+    string = string.replace(pattern,after);
+  }
+  return string;
 }
