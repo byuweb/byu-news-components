@@ -103,6 +103,9 @@
   #description-slot-wrapper {
     @include descriptionTablet();
   }
+  #date-slot-wrapper {
+    @include mobileDateSlotted();
+  }
 }
 
 // ---------- MOBILE ---------- //
@@ -131,6 +134,10 @@
 
   #description-slot-wrapper {
     @include descriptionMobile();
+  }
+
+  #date-slot-wrapper {
+    @include mobileDateSlotted();
   }
 }
 
