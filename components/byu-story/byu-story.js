@@ -116,6 +116,7 @@ function getStoryData(component) {
       }).then(story => {
         let storyLinks = component.shadowRoot.querySelectorAll('.story-link');
         storyLinks[0].setAttribute('href', NEWS_SITE + story[0].storyId);
+        storyLinks[1].setAttribute('href', NEWS_SITE + story[0].storyId);
 
         let storyImage = document.createElement("img");
         let replaceSlot = storyLinks[0].firstChild;
@@ -186,6 +187,64 @@ function getStoryData(component) {
     }
   }
   else {
-    // TODO: Get full story data
+    let url = ENDPOINT + 'Story.json?id=' + component.storyId;
+    fetch(url).then(response => {
+      if (response.ok) {
+        return response.json();
+      }
+      throw new Error('Network response was not OK.')
+    }).then(story => {
+      let storyLinks = component.shadowRoot.querySelectorAll('.story-link');
+      storyLinks[0].setAttribute('href', NEWS_SITE + story[0].storyId);
+      storyLinks[1].setAttribute('href', NEWS_SITE + story[0].storyId);
+
+      let storyImage = document.createElement("img");
+      let replaceSlot = storyLinks[0].firstChild;
+      storyImage.setAttribute('src', story[0].featuredImgUrl);
+      storyImage.setAttribute('class', 'story-image');
+      storyImage.setAttribute('alt', 'Story Image');
+      storyLinks[0].replaceChild(storyImage, replaceSlot);
+
+      let storyTitle = document.createElement("h3");
+      replaceSlot = storyLinks[1].firstChild;
+      storyTitle.setAttribute('class', 'story-title');
+      storyTitle.innerHTML = story[0].title;
+      storyLinks[1].replaceChild(storyTitle, replaceSlot);
+
+      if (component.noCategory !== '') {
+        let categoryWrapper = component.shadowRoot.querySelector('#category-slot-wrapper');
+
+        let storyCategory = document.createElement("span");
+        replaceSlot = categoryWrapper.firstChild;
+        storyCategory.setAttribute('class', 'story-category');
+        storyCategory.innerHTML = story[0].Category;
+        categoryWrapper.replaceChild(storyCategory, replaceSlot);
+      }
+
+      if (component.noDate !== '') {
+        let dateWrapper = component.shadowRoot.querySelector('#date-slot-wrapper');
+        let date = story[0].datePublished;
+        date = date.replace('-', '. ');
+        date = date.replace('-', ', ');
+
+        let storyDate = document.createElement("span");
+        replaceSlot = dateWrapper.firstChild;
+        storyDate.setAttribute('class', 'story-date');
+        storyDate.innerHTML = date;
+        dateWrapper.replaceChild(storyDate, replaceSlot);
+      }
+
+      let body = story[0].Body;
+      let descriptionWrapper = component.shadowRoot.querySelector('#description-slot-wrapper');
+
+      let storyDescription = document.createElement("p");
+      replaceSlot = descriptionWrapper.firstChild;
+
+      storyDescription.setAttribute('class', 'story-body');
+      storyDescription.innerHTML = body;
+      descriptionWrapper.replaceChild(storyDescription, replaceSlot);
+    }).catch(error => {
+      console.error('There was a problem: ' + error.message);
+    });
   }
 }

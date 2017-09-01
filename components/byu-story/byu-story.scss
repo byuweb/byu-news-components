@@ -51,6 +51,10 @@
   }
 }
 
+.story-body {
+  @include storyBody();
+}
+
 #title-slot-wrapper {
   a:hover {
     @include linkHover();
@@ -67,6 +71,10 @@
 
 #date-slot-wrapper {
   @include dateSlotted();
+}
+
+#image-slot-wrapper{
+  @include imageContainer();
 }
 
 // ---------- TABLET ---------- //

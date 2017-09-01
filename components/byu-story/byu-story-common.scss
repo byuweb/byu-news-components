@@ -21,9 +21,21 @@
   //max-height: 200px;
 }
 
+@mixin storyBody() {
+  white-space: pre-wrap;
+}
+
 @mixin slottedImg() {
+  /*width: 260px;
+  height: 160px;*/
   width: 260px;
   height: 160px;
+  object-fit: cover;
+  object-position: 50% 50%;
+}
+
+@mixin imageContainer() {
+  //overflow: hidden;
 }
 
 @mixin regionRight() {
