@@ -1,6 +1,6 @@
 {
   "name": "byu-news-components",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "engines": {
     "node": ">=6.10.0"
