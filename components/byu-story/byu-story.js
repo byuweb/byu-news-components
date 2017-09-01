@@ -169,8 +169,6 @@ function getStoryData(component) {
           teaser = teaser.replace(/\W*\s(\S)*$/, '...');
         }
 
-        // Adds the read more on the end of the teaser
-        teaser += ' <a href="' + NEWS_SITE + story[0].storyId + '">read more</a>';
         if (teaser) {
           let descriptionWrapper = component.shadowRoot.querySelector('#description-slot-wrapper');
 
