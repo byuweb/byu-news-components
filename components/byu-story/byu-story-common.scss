@@ -110,6 +110,17 @@
   font-weight: 200;
 }
 
+@mixin mobileDateSlotted() {
+  font-size: 12px;
+  text-transform: uppercase;
+  line-height: normal;
+  display: block;
+  font-family: "Gotham A", "Gotham B", Helvetica, serif;
+  color: #171717;
+  font-weight: 200;
+  padding-top: 4px;
+}
+
 @mixin descriptionSlotted() {
   font-weight: 400;
   font-size: 16px;
