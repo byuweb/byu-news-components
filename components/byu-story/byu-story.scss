@@ -73,10 +73,6 @@
   @include dateSlotted();
 }
 
-#image-slot-wrapper{
-  @include imageContainer();
-}
-
 // ---------- TABLET ---------- //
 @media screen and (max-width: 768px) and (min-width: 481px) {
   .story-root {
