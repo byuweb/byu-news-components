@@ -34,10 +34,6 @@
   object-position: 50% 50%;
 }
 
-@mixin imageContainer() {
-  //overflow: hidden;
-}
-
 @mixin regionRight() {
   margin: 0 20px;
   padding: 0;
