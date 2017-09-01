@@ -12,7 +12,7 @@
     "start": "gulp watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "Brigham Young University",
   "license": "Apache-2.0",
   "dependencies": {
     "byu-web-component-utils": "^0.4.2",
