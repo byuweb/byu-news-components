@@ -46,7 +46,7 @@
 }
 
 @mixin linkHover() {
-  color: #003da5;
+  color: #0057b8;
 }
 
 @mixin descriptionSlotted() {
@@ -72,7 +72,7 @@
 
 @mixin slottedImgTablet() {
   width: 150px;
-  height: auto;
+  height: 95px;
   margin: 0;
 }
 
@@ -82,8 +82,9 @@
 }
 
 @mixin h3SlottedTablet() {
-  //overflow: hidden;
-  //max-height: 115px;
+  line-height: 20px;
+  font-size: 17px;
+  letter-spacing: -.2px;
   margin: 0;
 }
 

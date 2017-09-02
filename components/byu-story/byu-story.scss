@@ -55,7 +55,7 @@
 }
 
 // ---------- TABLET ---------- //
-@media screen and (max-width: 768px) and (min-width: 321px) {
+@media screen and (max-width: 768px) and (min-width: 481px) {
   .story-root {
     @include storyRootTablet();
   }
@@ -83,7 +83,7 @@
 }
 
 // ---------- MOBILE ---------- //
-@media screen and (max-width: 320px) {
+@media screen and (max-width: 480px) {
   .story-root {
     @include storyRootMobile();
   }
