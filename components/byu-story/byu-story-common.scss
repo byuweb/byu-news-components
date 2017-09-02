@@ -46,7 +46,7 @@
 }
 
 @mixin linkHover() {
-  color: #003da5;
+  color: #0057b8;
 }
 
 @mixin descriptionSlotted() {
@@ -72,7 +72,7 @@
 
 @mixin slottedImgTablet() {
   width: 150px;
-  height: auto;
+  height: 95px;
   margin: 0;
 }
 
@@ -82,8 +82,9 @@
 }
 
 @mixin h3SlottedTablet() {
-  //overflow: hidden;
-  //max-height: 115px;
+  line-height: 20px;
+  font-size: 17px;
+  letter-spacing: -.2px;
   margin: 0;
 }
 
@@ -94,10 +95,10 @@
 // ---------- MOBILE ---------- //
 @mixin storyRootMobile() {
   display: flex;
-  padding: 20px 0;
+  padding: 26px 0;
   margin: 0;
-  border-top: 2px solid #e5e5e5;
-  //max-height: 60px;
+  border-top: 1px solid #e5e5e5;
+  max-height: 110px;
 }
 
 @mixin imageWrapperMobile() {
@@ -105,9 +106,9 @@
 }
 
 @mixin slottedImgMobile() {
-  width: 90px;
-  height: auto;
-  margin: 0 17px;
+  width: 92px;
+  height: 58px;
+  margin-right: 12px;
 }
 
 @mixin regionRightMobile() {
@@ -116,10 +117,9 @@
 }
 
 @mixin h3SlottedMobile() {
-  line-height: 18px;
-  font-size: 16px;
-  //overflow: hidden;
-  //max-height: 55px;
+  line-height: 17px;
+  font-size: 15px;
+  letter-spacing: -.2px;
   margin: 0;
 }
 
