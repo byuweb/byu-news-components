@@ -6,8 +6,8 @@
 These component are in the BYU CDN. You can include them on your website with these tags in the head:
 
 ```html
-<link type="text/css" rel="styleshet" href="https://cdn.byu.edu/byu-news-components/unstable/byu-news-components.min.css">
-<script async="" src="https://cdn.byu.edu/byu-news-components/unstable/byu-news-components.min.js"></script>
+<link type="text/css" rel="styleshet" href="https://cdn.byu.edu/byu-news-components/latest/byu-news-components.min.css">
+<script async="" src="https://cdn.byu.edu/byu-news-components/latest/byu-news-components.min.js"></script>
 ```
 
 # Components
