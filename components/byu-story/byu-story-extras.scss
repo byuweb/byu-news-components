@@ -18,10 +18,10 @@
 @import 'byu-story-common';
 
 // -------- VARIABLE CSS ------- //
-#title-slot-wrapper {
+#title-slot-wrapper h3 {
   @include storyTitleStyle();
 }
 
-#description-slot-wrapper {
+#description-slot-wrapper p {
   @include storyTeaserStyle();
 }
