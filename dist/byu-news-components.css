@@ -78,11 +78,11 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-#title-slot-wrapper {
+#title-slot-wrapper h3 {
   color: var(--story-title-color, #002e5d);
   font-family: var(--story-title-font-family, "Gotham A", "Gotham B", Helvetica, sans-serif); }
 
-#description-slot-wrapper {
+#description-slot-wrapper p {
   font-family: var(--story-teaser-font-family, "Gotham A", "Gotham B", Helvetica, sans-serif);
   color: var(--story-teaser-color, #002e5d); }
 
