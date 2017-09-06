@@ -82,6 +82,9 @@
   color: var(--story-title-color, #002e5d);
   font-family: var(--story-title-font-family, "Gotham A", "Gotham B", Helvetica, sans-serif); }
 
+#title-slot-wrapper h3:hover {
+  color: #003DA5; }
+
 #description-slot-wrapper p {
   font-family: var(--story-teaser-font-family, "Gotham A", "Gotham B", Helvetica, sans-serif);
   color: var(--story-teaser-color, #002e5d); }
