@@ -17,4 +17,15 @@
 
 @import 'byu-story-common';
 
+// -------- VARIABLE CSS ------- //
+#title-slot-wrapper h3 {
+  @include storyTitleStyle();
+}
 
+#title-slot-wrapper h3:hover {
+  @include linkHover();
+}
+
+#description-slot-wrapper p {
+  @include storyTeaserStyle();
+}
