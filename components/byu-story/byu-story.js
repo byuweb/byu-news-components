@@ -21,8 +21,8 @@ import * as util from 'byu-web-component-utils';
 
 const ATTR_STORY_ID = 'story-id';
 const ATTR_TEASER = 'teaser';
-const ATTR_NO_CATEGORY = 'no-category';
-const ATTR_NO_DATE = 'no-date';
+const ATTR_SHOW_CATEGORY = 'show-category';
+const ATTR_SHOW_DATE = 'show-date';
 
 const NEWS_SITE = 'https://news.byu.edu/node/';
 const ENDPOINT = 'https://news.byu.edu/api/';
@@ -68,23 +68,23 @@ class ByuStory extends HTMLElement {
     return this.hasAttribute(ATTR_TEASER);
   }
 
-  set noCategory(value) {
-    this.setAttribute(ATTR_NO_CATEGORY, '');
+  set showCategory(value) {
+    this.setAttribute(ATTR_SHOW_CATEGORY, '');
   }
 
-  get noCategory() {
-    if (this.hasAttribute(ATTR_NO_CATEGORY)) {
-      return this.getAttribute(ATTR_NO_CATEGORY);
+  get showCategory() {
+    if (this.hasAttribute(ATTR_SHOW_CATEGORY)) {
+      return this.getAttribute(ATTR_SHOW_CATEGORY);
     }
   }
 
-  set noDate(value) {
-    this.setAttribute(ATTR_NO_DATE, '');
+  set showDate(value) {
+    this.setAttribute(ATTR_SHOW_DATE, '');
   }
 
-  get noDate() {
-    if (this.hasAttribute(ATTR_NO_DATE)) {
-      return this.getAttribute(ATTR_NO_DATE);
+  get showDate() {
+    if (this.hasAttribute(ATTR_SHOW_DATE)) {
+      return this.getAttribute(ATTR_SHOW_DATE);
     }
   }
 }
@@ -130,7 +130,7 @@ function getStoryData(component) {
       storyTitle.innerHTML = story[0].title;
       storyLinks[1].replaceChild(storyTitle, replaceSlot);
 
-      if (component.noCategory !== '') {
+      if (component.showCategory == '') {
         let categoryWrapper = component.shadowRoot.querySelector('#category-slot-wrapper');
 
         let storyCategory = document.createElement("span");
@@ -140,7 +140,7 @@ function getStoryData(component) {
         categoryWrapper.replaceChild(storyCategory, replaceSlot);
       }
 
-      if (component.noDate !== '') {
+      if (component.showDate == '') {
         let dateWrapper = component.shadowRoot.querySelector('#date-slot-wrapper');
         let date = story[0].datePublished;
         date = date.replace('-', '. ');

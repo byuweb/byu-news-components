@@ -522,8 +522,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
   var ATTR_STORY_ID = 'story-id';
   var ATTR_TEASER = 'teaser';
-  var ATTR_NO_CATEGORY = 'no-category';
-  var ATTR_NO_DATE = 'no-date';
+  var ATTR_SHOW_CATEGORY = 'show-category';
+  var ATTR_SHOW_DATE = 'show-date';
 
   var NEWS_SITE = 'https://news.byu.edu/node/';
   var ENDPOINT = 'https://news.byu.edu/api/';
@@ -577,23 +577,23 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
         return this.hasAttribute(ATTR_TEASER);
       }
     }, {
-      key: 'noCategory',
+      key: 'showCategory',
       set: function set(value) {
-        this.setAttribute(ATTR_NO_CATEGORY, '');
+        this.setAttribute(ATTR_SHOW_CATEGORY, '');
       },
       get: function get() {
-        if (this.hasAttribute(ATTR_NO_CATEGORY)) {
-          return this.getAttribute(ATTR_NO_CATEGORY);
+        if (this.hasAttribute(ATTR_SHOW_CATEGORY)) {
+          return this.getAttribute(ATTR_SHOW_CATEGORY);
         }
       }
     }, {
-      key: 'noDate',
+      key: 'showDate',
       set: function set(value) {
-        this.setAttribute(ATTR_NO_DATE, '');
+        this.setAttribute(ATTR_SHOW_DATE, '');
       },
       get: function get() {
-        if (this.hasAttribute(ATTR_NO_DATE)) {
-          return this.getAttribute(ATTR_NO_DATE);
+        if (this.hasAttribute(ATTR_SHOW_DATE)) {
+          return this.getAttribute(ATTR_SHOW_DATE);
         }
       }
     }], [{
@@ -646,7 +646,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
         storyTitle.innerHTML = story[0].title;
         storyLinks[1].replaceChild(storyTitle, replaceSlot);
 
-        if (component.noCategory !== '') {
+        if (component.showCategory == '') {
           var categoryWrapper = component.shadowRoot.querySelector('#category-slot-wrapper');
 
           var storyCategory = document.createElement("span");
@@ -656,7 +656,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
           categoryWrapper.replaceChild(storyCategory, replaceSlot);
         }
 
-        if (component.noDate !== '') {
+        if (component.showDate == '') {
           var dateWrapper = component.shadowRoot.querySelector('#date-slot-wrapper');
           var date = story[0].datePublished;
           date = date.replace('-', '. ');
@@ -911,7 +911,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 
   // module
-  exports.push([module.i, "/*!\r\n *  @license\r\n *    Copyright 2017 Brigham Young University\r\n *\r\n *    Licensed under the Apache License, Version 2.0 (the \"License\");\r\n *    you may not use this file except in compliance with the License.\r\n *    You may obtain a copy of the License at\r\n *\r\n *        http://www.apache.org/licenses/LICENSE-2.0\r\n *\r\n *    Unless required by applicable law or agreed to in writing, software\r\n *    distributed under the License is distributed on an \"AS IS\" BASIS,\r\n *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\r\n *    See the License for the specific language governing permissions and\r\n *    limitations under the License.\r\n */\n/*!\r\n *  @license\r\n *    Copyright 2017 Brigham Young University\r\n *\r\n *    Licensed under the Apache License, Version 2.0 (the \"License\");\r\n *    you may not use this file except in compliance with the License.\r\n *    You may obtain a copy of the License at\r\n *\r\n *        http://www.apache.org/licenses/LICENSE-2.0\r\n *\r\n *    Unless required by applicable law or agreed to in writing, software\r\n *    distributed under the License is distributed on an \"AS IS\" BASIS,\r\n *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\r\n *    See the License for the specific language governing permissions and\r\n *    limitations under the License.\r\n */@media screen and (max-width:768px){:host>:last-child{border-bottom:1px solid #e5e5e5}}@media screen and (max-width:320px){:host>:last-child{border-bottom:1px solid #e5e5e5}}", ""]);
+  exports.push([module.i, "/*!\n *  @license\n *    Copyright 2017 Brigham Young University\n *\n *    Licensed under the Apache License, Version 2.0 (the \"License\");\n *    you may not use this file except in compliance with the License.\n *    You may obtain a copy of the License at\n *\n *        http://www.apache.org/licenses/LICENSE-2.0\n *\n *    Unless required by applicable law or agreed to in writing, software\n *    distributed under the License is distributed on an \"AS IS\" BASIS,\n *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n *    See the License for the specific language governing permissions and\n *    limitations under the License.\n */\n/*!\n *  @license\n *    Copyright 2017 Brigham Young University\n *\n *    Licensed under the Apache License, Version 2.0 (the \"License\");\n *    you may not use this file except in compliance with the License.\n *    You may obtain a copy of the License at\n *\n *        http://www.apache.org/licenses/LICENSE-2.0\n *\n *    Unless required by applicable law or agreed to in writing, software\n *    distributed under the License is distributed on an \"AS IS\" BASIS,\n *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n *    See the License for the specific language governing permissions and\n *    limitations under the License.\n */@media screen and (max-width:768px){:host>:last-child{border-bottom:1px solid #e5e5e5}}@media screen and (max-width:320px){:host>:last-child{border-bottom:1px solid #e5e5e5}}", ""]);
 
   // exports
 
@@ -1000,7 +1000,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 /* 12 */
 /***/function (module, exports, __webpack_require__) {
 
-  module.exports = "<style>" + __webpack_require__(9) + "</style> <div class=\"root\"> <div class=\"output\"></div> <div class=\"story-template-wrapper slot-container\"> <slot id=\"story-template\"> <template> <byu-story story-id=\"\" class=\"news-child\" teaser> <span slot=\"story-category\" class=\"story-category\"></span> <img src=\"xxxHTMLLINKxxx0.86831205322289050.05227289344691588xxx\" slot=\"story-image\" class=\"story-image\" alt=\"Story Image\"> <h3 slot=\"story-title\" class=\"story-title\"></h3> <p slot=\"story-teaser\" class=\"story-teaser\"></p> <span slot=\"story-date\" class=\"story-date\"></span> </byu-story> </template> </slot> </div> </div>";
+  module.exports = "<style>" + __webpack_require__(9) + "</style> <div class=\"root\"> <div class=\"output\"></div> <div class=\"story-template-wrapper slot-container\"> <slot id=\"story-template\"> <template> <byu-story story-id=\"\" class=\"news-child\" teaser> <span slot=\"story-category\" class=\"story-category\"></span> <img src=\"xxxHTMLLINKxxx0.47656472950441950.2802787413154946xxx\" slot=\"story-image\" class=\"story-image\" alt=\"Story Image\"> <h3 slot=\"story-title\" class=\"story-title\"></h3> <p slot=\"story-teaser\" class=\"story-teaser\"></p> <span slot=\"story-date\" class=\"story-date\"></span> </byu-story> </template> </slot> </div> </div>";
 
   /***/
 },
