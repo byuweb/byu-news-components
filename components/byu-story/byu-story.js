@@ -42,11 +42,13 @@ class ByuStory extends HTMLElement {
   }
 
   static get observedAttribute() {
-    return [ATTR_STORY_ID, ATTR_TEASER];
+    return [ATTR_STORY_ID, ATTR_TEASER, ATTR_SHOW_CATEGORY, ATTR_SHOW_DATE];
   }
 
   attributeChangedCallback(attr, oldValue, newValue) {
     switch (attr) {
+      case ATTR_SHOW_CATEGORY:
+      case ATTR_SHOW_DATE:
       case ATTR_STORY_ID:
       case ATTR_TEASER:
         getStoryData(this);

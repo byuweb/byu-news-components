@@ -25,8 +25,8 @@ const ATTR_TAGS = 'tags';
 const ATTR_MIN_DATE = 'min-date';
 const ATTR_MAX_DATE = 'max-date';
 const ATTR_STORY_LIMIT = 'story-limit';
-const ATTR_NO_CATEGORY = 'no-category';
-const ATTR_NO_DATE = 'no-date';
+const ATTR_SHOW_CATEGORY = 'show-category';
+const ATTR_SHOW_DATE = 'show-date';
 
 const DEFAULT_CATEGORIES = 'all';
 const DEFAULT_TAGS = 'all';
@@ -56,7 +56,7 @@ class ByuNews extends HTMLElement {
   }
 
   static get observedAttributes() {
-    return [ATTR_CATEGORIES, ATTR_TAGS, ATTR_MIN_DATE, ATTR_MAX_DATE, ATTR_STORY_LIMIT, ATTR_NO_CATEGORY, ATTR_NO_DATE];
+    return [ATTR_CATEGORIES, ATTR_TAGS, ATTR_MIN_DATE, ATTR_MAX_DATE, ATTR_STORY_LIMIT, ATTR_SHOW_CATEGORY, ATTR_SHOW_DATE];
   }
 
   attributeChangedCallback(attr, oldValue, newValue) {
@@ -66,8 +66,8 @@ class ByuNews extends HTMLElement {
       case ATTR_MIN_DATE:
       case ATTR_MAX_DATE:
       case ATTR_STORY_LIMIT:
-      case ATTR_NO_CATEGORY:
-      case ATTR_NO_DATE:
+      case ATTR_SHOW_CATEGORY:
+      case ATTR_SHOW_DATE:
         applyNews(this);
         break;
     }
@@ -128,23 +128,23 @@ class ByuNews extends HTMLElement {
     return DEFAULT_STORY_LIMIT;
   }
 
-  set noCategory(value) {
-    this.setAttribute(ATTR_NO_CATEGORY, '');
+  set showCategory(value) {
+    this.setAttribute(ATTR_SHOW_CATEGORY, '');
   }
 
-  get noCategory() {
-    if (this.hasAttribute(ATTR_NO_CATEGORY)) {
-      return this.getAttribute(ATTR_NO_CATEGORY);
+  get showCategory() {
+    if (this.hasAttribute(ATTR_SHOW_CATEGORY)) {
+      return this.getAttribute(ATTR_SHOW_CATEGORY);
     }
   }
 
-  set noDate(value) {
-    this.setAttribute(ATTR_NO_DATE, '');
+  set showDate(value) {
+    this.setAttribute(ATTR_SHOW_DATE, '');
   }
 
-  get noDate() {
-    if (this.hasAttribute(ATTR_NO_DATE)) {
-      return this.getAttribute(ATTR_NO_DATE);
+  get showDate() {
+    if (this.hasAttribute(ATTR_SHOW_DATE)) {
+      return this.getAttribute(ATTR_SHOW_DATE);
     }
   }
 
@@ -184,8 +184,8 @@ function applyNews(component) {
     tags: component.tags,
     minDate: component.minDate,
     maxDate: component.maxDate,
-    noCategory: component.noCategory,
-    noDate: component.noDate
+    showCategory: component.showCategory,
+    showDate: component.showDate
   };
 
   let url = ENDPOINT + 'Stories.json?categories=' + data.categories + '&tags=' + data.tags + '&';
@@ -209,11 +209,11 @@ function applyNews(component) {
       let element = document.importNode(template.content, true);
       let byuStoryRoot = element.querySelector('.news-child');
 
-      if (data.noCategory !== '') {
+      if (data.showCategory == '') {
         element.querySelector('.story-category')
           .innerHTML = stories[i].Categories;
       }
-      if (data.noDate !== '') {
+      if (data.showDate == '') {
         let date = stories[i].DatePublished;
         date = date.replace('-', '. ');
         date = date.replace('-', ', ');
