@@ -21,11 +21,18 @@
  @include storyRoot();
 }
 
-//#image-slot-wrapper {
 .story-link {
   ::slotted(img) {
     @include slottedImg();
   }
+}
+
+.story-image {
+  @include slottedImg();
+}
+
+.story-title {
+  @include h3Slotted();
 }
 
 .region-right {
@@ -44,6 +51,10 @@
   }
 }
 
+.story-body {
+  @include storyBody();
+}
+
 #title-slot-wrapper {
   a:hover {
     @include linkHover();
@@ -52,6 +63,14 @@
 
 #description-slot-wrapper, p {
   @include descriptionSlotted();
+}
+
+#category-slot-wrapper {
+  @include categorySlotted();
+}
+
+#date-slot-wrapper {
+  @include dateSlotted();
 }
 
 // ---------- TABLET ---------- //
@@ -67,6 +86,10 @@
     }
   }
 
+  .story-image {
+    @include slottedImgTablet();
+  }
+
   .region-right {
     @include regionRightTablet();
   }
@@ -79,6 +102,9 @@
 
   #description-slot-wrapper {
     @include descriptionTablet();
+  }
+  #date-slot-wrapper {
+    @include mobileDateSlotted();
   }
 }
 
@@ -108,6 +134,10 @@
 
   #description-slot-wrapper {
     @include descriptionMobile();
+  }
+
+  #date-slot-wrapper {
+    @include mobileDateSlotted();
   }
 }
 
