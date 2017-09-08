@@ -101,8 +101,15 @@
   }
 
   #description-slot-wrapper {
-    @include descriptionTablet();
+    ::slotted(.story-teaser) {
+      @include descriptionMobile();
+    }
   }
+
+  .story-teaser {
+    @include descriptionMobile();
+  }
+
   #date-slot-wrapper {
     @include mobileDateSlotted();
   }
@@ -121,6 +128,10 @@
     }
   }
 
+  .story-image {
+    @include slottedImgMobile();
+  }
+
   .region-right {
     @include regionRightMobile();
   }
@@ -130,9 +141,19 @@
       @include h3SlottedMobile();
 
     }
+
+    .story-title {
+      @include h3SlottedMobile();
+    }
   }
 
   #description-slot-wrapper {
+    ::slotted(.story-teaser) {
+      @include descriptionMobile();
+    }
+  }
+
+  .story-teaser {
     @include descriptionMobile();
   }
 
