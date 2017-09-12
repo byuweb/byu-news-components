@@ -973,7 +973,7 @@ module.exports = sum;
 /* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = "<style>" + __webpack_require__(9) + "</style> <div class=\"root\"> <div class=\"output\"></div> <div class=\"story-template-wrapper slot-container\"> <slot id=\"story-template\"> <template> <byu-story story-id=\"\" class=\"news-child\" teaser> <span slot=\"story-category\" class=\"story-category\"></span> <img src=\"xxxHTMLLINKxxx0.33206691123190680.3294771528093061xxx\" slot=\"story-image\" class=\"story-image\" alt=\"Story Image\"> <h3 slot=\"story-title\" class=\"story-title\"></h3> <p slot=\"story-teaser\" class=\"story-teaser\"></p> <span slot=\"story-date\" class=\"story-date\"></span> </byu-story> </template> </slot> </div> </div>";
+module.exports = "<style>" + __webpack_require__(9) + "</style> <div class=\"root\"> <div class=\"output\"></div> <div class=\"story-template-wrapper slot-container\"> <slot id=\"story-template\"> <template> <byu-story story-id=\"\" class=\"news-child\" teaser> <span slot=\"story-category\" class=\"story-category\"></span> <img src=\"xxxHTMLLINKxxx0.253794540819099130.6111466818838471xxx\" slot=\"story-image\" class=\"story-image\" alt=\"Story Image\"> <h3 slot=\"story-title\" class=\"story-title\"></h3> <p slot=\"story-teaser\" class=\"story-teaser\"></p> <span slot=\"story-date\" class=\"story-date\"></span> </byu-story> </template> </slot> </div> </div>";
 
 /***/ }),
 /* 13 */
