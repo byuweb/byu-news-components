@@ -1,6 +1,6 @@
 # BYU News Components
 
-> Web components to consume the BYU News API.
+> Web components to consume the BYU News API. A new release will be published the last Friday of each month.
 
 # CDN Integration
 These component are in the BYU CDN. You can include them on your website with these tags in the head:
