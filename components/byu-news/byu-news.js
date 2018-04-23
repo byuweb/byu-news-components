@@ -188,7 +188,7 @@ function applyNews(component) {
     showDate: component.showDate
   };
 
-  let url = ENDPOINT + 'Stories.json?categories=' + data.categories + '&tags=' + data.tags + '&';
+  let url = ENDPOINT + 'Stories?_format=json&categories=' + data.categories + '&tags=' + data.tags + '&';
   if (data['minDate']) {
     url += 'published[min]=' + data.minDate + '&';
   }
