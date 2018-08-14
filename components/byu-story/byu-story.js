@@ -108,7 +108,7 @@ function getStoryData(component) {
     }
   }
   else {
-    let url = ENDPOINT + 'Story.json?id=' + component.storyId;
+    let url = ENDPOINT + 'Story?_format=json&id=' + component.storyId;
     fetch(url).then(response => {
       if (response.ok) {
         return response.json();
@@ -121,7 +121,7 @@ function getStoryData(component) {
 
       let storyImage = document.createElement("img");
       let replaceSlot = storyLinks[0].firstChild;
-      storyImage.setAttribute('src', story[0].featuredImgUrl);
+      storyImage.setAttribute('src', story[0].FeaturedImgUrl);
       storyImage.setAttribute('class', 'story-image');
       storyImage.setAttribute('alt', 'Story Image');
       storyLinks[0].replaceChild(storyImage, replaceSlot);
@@ -129,7 +129,7 @@ function getStoryData(component) {
       let storyTitle = document.createElement("h3");
       replaceSlot = storyLinks[1].firstChild;
       storyTitle.setAttribute('class', 'story-title');
-      storyTitle.innerHTML = story[0].title;
+      storyTitle.innerHTML = story[0].Title;
       storyLinks[1].replaceChild(storyTitle, replaceSlot);
 
       if (component.showCategory == '') {
