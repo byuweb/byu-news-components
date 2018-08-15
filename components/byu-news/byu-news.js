@@ -228,7 +228,11 @@ function applyNews(component) {
         .innerHTML = stories[i].Title;
 
       let summary = convert(stories[i].Summary);
-      if (summary) {
+      if (summary !== '') {
+        element.querySelector('.story-teaser')
+          .innerHTML = summary;
+      } else {
+        let summary = convert(stories[i].SummaryDeprecated);
         element.querySelector('.story-teaser')
           .innerHTML = summary;
       }
