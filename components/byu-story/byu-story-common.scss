@@ -63,7 +63,7 @@
   text-transform: uppercase;
   line-height: normal;
   display: block;
-  font-family: "Gotham A", "Gotham B", Helvetica, serif;
+  font-family: "Ringside Narrow A", "Ringside Narrow B", Helvetica, serif;
   color: #171717;
   font-weight: 200;
 }
@@ -73,7 +73,7 @@
   text-transform: uppercase;
   line-height: normal;
   display: block;
-  font-family: "Gotham A", "Gotham B", Helvetica, serif;
+  font-family: "Ringside Narrow A", "Ringside Narrow B", Helvetica, serif;
   color: #171717;
   font-weight: 200;
 }
@@ -83,7 +83,7 @@
   text-transform: uppercase;
   line-height: normal;
   display: block;
-  font-family: "Gotham A", "Gotham B", Helvetica, serif;
+  font-family: "Ringside Narrow A", "Ringside Narrow B", Helvetica, serif;
   color: #171717;
   font-weight: 200;
   padding-top: 4px;
@@ -95,7 +95,7 @@
   text-transform: uppercase;
   line-height: normal;
   display: block;
-  font-family: "Gotham A", "Gotham B", Helvetica, serif;
+  font-family: "Ringside Narrow A", "Ringside Narrow B", Helvetica, serif;
   color: #171717;
   font-weight: 200;
 }
@@ -105,7 +105,7 @@
   text-transform: uppercase;
   line-height: normal;
   display: block;
-  font-family: "Gotham A", "Gotham B", Helvetica, serif;
+  font-family: "Ringside Narrow A", "Ringside Narrow B", Helvetica, serif;
   color: #171717;
   font-weight: 200;
 }
@@ -115,7 +115,7 @@
   text-transform: uppercase;
   line-height: normal;
   display: block;
-  font-family: "Gotham A", "Gotham B", Helvetica, serif;
+  font-family: "Ringside Narrow A", "Ringside Narrow B", Helvetica, serif;
   color: #171717;
   font-weight: 200;
   padding-top: 4px;
@@ -202,11 +202,11 @@
 @mixin storyTitleStyle() {
   color: var(--story-title-color, #002e5d);
   font-family: var(--story-title-font-family,
-      ("Gotham A", "Gotham B", Helvetica, sans-serif));
+      ("Ringside Narrow A", "Ringside Narrow B", Helvetica, sans-serif));
 }
 
 @mixin storyTeaserStyle() {
   font-family: var(--story-teaser-font-family,
-      ("Gotham A", "Gotham B", Helvetica, sans-serif));
+      ("Ringside Narrow A", "Ringside Narrow B", Helvetica, sans-serif));
   color: var(--story-teaser-color, #002e5d);
 }
