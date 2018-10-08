@@ -54,7 +54,7 @@
 }
 
 @mixin linkHover() {
-  color: #003DA5;
+  color: #0057B8;
 }
 
 @mixin categorySlotted() {
@@ -63,8 +63,8 @@
   text-transform: uppercase;
   line-height: normal;
   display: block;
-  font-family: "Ringside Narrow A", "Ringside Narrow B", Helvetica, serif;
-  color: #171717;
+  font-family: "HCo Ringside Narrow SSm", Arial Narrow, Arial, sans-serif;
+  color: #141414;
   font-weight: 200;
 }
 
@@ -73,8 +73,8 @@
   text-transform: uppercase;
   line-height: normal;
   display: block;
-  font-family: "Ringside Narrow A", "Ringside Narrow B", Helvetica, serif;
-  color: #171717;
+  font-family: "HCo Ringside Narrow SSm", Arial Narrow, Arial, sans-serif;
+  color: #141414;
   font-weight: 200;
 }
 
@@ -83,8 +83,8 @@
   text-transform: uppercase;
   line-height: normal;
   display: block;
-  font-family: "Ringside Narrow A", "Ringside Narrow B", Helvetica, serif;
-  color: #171717;
+  font-family: "HCo Ringside Narrow SSm", Arial Narrow, Arial, sans-serif;
+  color: #141414;
   font-weight: 200;
   padding-top: 4px;
 }
@@ -95,8 +95,8 @@
   text-transform: uppercase;
   line-height: normal;
   display: block;
-  font-family: "Ringside Narrow A", "Ringside Narrow B", Helvetica, serif;
-  color: #171717;
+  font-family: "HCo Ringside Narrow SSm", Arial Narrow, Arial, sans-serif;
+  color: #141414;
   font-weight: 200;
 }
 
@@ -105,8 +105,8 @@
   text-transform: uppercase;
   line-height: normal;
   display: block;
-  font-family: "Ringside Narrow A", "Ringside Narrow B", Helvetica, serif;
-  color: #171717;
+  font-family: "HCo Ringside Narrow SSm", Arial Narrow, Arial, sans-serif;
+  color: #141414;
   font-weight: 200;
 }
 
@@ -115,8 +115,8 @@
   text-transform: uppercase;
   line-height: normal;
   display: block;
-  font-family: "Ringside Narrow A", "Ringside Narrow B", Helvetica, serif;
-  color: #171717;
+  font-family: "HCo Ringside Narrow SSm", Arial Narrow, Arial, sans-serif;
+  color: #141414;
   font-weight: 200;
   padding-top: 4px;
 }
@@ -202,11 +202,11 @@
 @mixin storyTitleStyle() {
   color: var(--story-title-color, #002e5d);
   font-family: var(--story-title-font-family,
-      ("Ringside Narrow A", "Ringside Narrow B", Helvetica, sans-serif));
+      ("HCo Ringside Narrow SSm", Arial Narrow, Arial, sans-serif));
 }
 
 @mixin storyTeaserStyle() {
   font-family: var(--story-teaser-font-family,
-      ("Ringside Narrow A", "Ringside Narrow B", Helvetica, sans-serif));
+      ("HCo Ringside Narrow SSm", Arial Narrow, Arial, sans-serif));
   color: var(--story-teaser-color, #002e5d);
 }
