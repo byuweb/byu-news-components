@@ -4,5 +4,7 @@ node_modules/
 .idea
 # Mac
 .DS_Store
+# generated files
+dist
 
 npm-debug.log
