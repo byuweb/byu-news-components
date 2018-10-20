@@ -39,7 +39,7 @@
   @include regionRight();
 }
 
-#title-slot-wrapper {
+.title-slot-wrapper {
   a {
     @include linkDefault();
   }
@@ -55,21 +55,21 @@
   @include storyBody();
 }
 
-#title-slot-wrapper {
+.title-slot-wrapper {
   a:hover {
     @include linkHover();
   }
 }
 
-#description-slot-wrapper, p {
+.description-slot-wrapper, p {
   @include descriptionSlotted();
 }
 
-#category-slot-wrapper {
+.category-slot-wrapper {
   @include categorySlotted();
 }
 
-#date-slot-wrapper {
+.date-slot-wrapper {
   @include dateSlotted();
 }
 
@@ -100,7 +100,7 @@
     }
   }
 
-  #description-slot-wrapper {
+  .description-slot-wrapper {
     ::slotted(.story-teaser) {
       @include descriptionMobile();
     }
@@ -110,7 +110,7 @@
     @include descriptionMobile();
   }
 
-  #date-slot-wrapper {
+  .date-slot-wrapper {
     @include mobileDateSlotted();
   }
 }
@@ -147,7 +147,7 @@
     }
   }
 
-  #description-slot-wrapper {
+  .description-slot-wrapper {
     ::slotted(.story-teaser) {
       @include descriptionMobile();
     }
@@ -157,16 +157,16 @@
     @include descriptionMobile();
   }
 
-  #date-slot-wrapper {
+  .date-slot-wrapper {
     @include mobileDateSlotted();
   }
 }
 
 // -------- VARIABLE CSS ------- //
-#title-slot-wrapper, #title-slot-wrapper h3 {
+.title-slot-wrapper, .title-slot-wrapper h3 {
   @include storyTitleStyle();
 }
 
-#description-slot-wrapper, #description-slot-wrapper p {
+.description-slot-wrapper, .description-slot-wrapper p {
   @include storyTeaserStyle();
 }

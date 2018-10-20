@@ -133,7 +133,7 @@ function getStoryData(component) {
       storyLinks[1].replaceChild(storyTitle, replaceSlot);
 
       if (component.showCategory == '') {
-        let categoryWrapper = component.shadowRoot.querySelector('#category-slot-wrapper');
+        let categoryWrapper = component.shadowRoot.querySelector('.category-slot-wrapper');
 
         let storyCategory = document.createElement("span");
         replaceSlot = categoryWrapper.firstChild;
@@ -143,7 +143,7 @@ function getStoryData(component) {
       }
 
       if (component.showDate == '') {
-        let dateWrapper = component.shadowRoot.querySelector('#date-slot-wrapper');
+        let dateWrapper = component.shadowRoot.querySelector('.date-slot-wrapper');
         let date = story[0].datePublished;
         date = date.replace('-', '. ');
         date = date.replace('-', ', ');
@@ -170,7 +170,7 @@ function getStoryData(component) {
           teaser = teaser.replace(/\W*\s(\S)*$/, '...');
         }
 
-        let descriptionWrapper = component.shadowRoot.querySelector('#description-slot-wrapper');
+        let descriptionWrapper = component.shadowRoot.querySelector('.description-slot-wrapper');
 
         let storyDescription = document.createElement("p");
         replaceSlot = descriptionWrapper.firstChild;
@@ -181,7 +181,7 @@ function getStoryData(component) {
       }
       else {
         let body = story[0].Body;
-        let descriptionWrapper = component.shadowRoot.querySelector('#description-slot-wrapper');
+        let descriptionWrapper = component.shadowRoot.querySelector('.description-slot-wrapper');
 
         let storyDescription = document.createElement("p");
         replaceSlot = descriptionWrapper.firstChild;
