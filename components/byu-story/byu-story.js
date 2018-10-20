@@ -106,6 +106,11 @@ function getStoryData(component) {
     for (let i = 0; i < links.length; i++) {
       links[i].setAttribute('href', NEWS_SITE + component.storyId);
     }
+
+    if (component.showCategory != '') {
+      // Remove the category element if it is unused
+      component.shadowRoot.querySelector('#category-slot-wrapper').remove();
+    }
   }
   else {
     let url = ENDPOINT + 'Story?_format=json&id=' + component.storyId;
@@ -132,14 +137,16 @@ function getStoryData(component) {
       storyTitle.innerHTML = story[0].Title;
       storyLinks[1].replaceChild(storyTitle, replaceSlot);
 
+      let categoryWrapper = component.shadowRoot.querySelector('#category-slot-wrapper');
       if (component.showCategory == '') {
-        let categoryWrapper = component.shadowRoot.querySelector('#category-slot-wrapper');
-
         let storyCategory = document.createElement("span");
         replaceSlot = categoryWrapper.firstChild;
         storyCategory.setAttribute('class', 'story-category');
         storyCategory.innerHTML = story[0].Category;
         categoryWrapper.replaceChild(storyCategory, replaceSlot);
+      } else {
+        // Remove the category element if it is unused
+        categoryWrapper.remove();
       }
 
       if (component.showDate == '') {
