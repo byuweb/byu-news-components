@@ -89,38 +89,6 @@
   padding-top: 4px;
 }
 
-@mixin categorySlotted() {
-  font-size: 16px;
-  padding-bottom: 8px;
-  text-transform: uppercase;
-  line-height: normal;
-  display: block;
-  font-family: "HCo Ringside Narrow SSm", Arial Narrow, Arial, sans-serif;
-  color: #141414;
-  font-weight: 200;
-}
-
-@mixin dateSlotted() {
-  font-size: 12px;
-  text-transform: uppercase;
-  line-height: normal;
-  display: block;
-  font-family: "HCo Ringside Narrow SSm", Arial Narrow, Arial, sans-serif;
-  color: #141414;
-  font-weight: 200;
-}
-
-@mixin mobileDateSlotted() {
-  font-size: 12px;
-  text-transform: uppercase;
-  line-height: normal;
-  display: block;
-  font-family: "HCo Ringside Narrow SSm", Arial Narrow, Arial, sans-serif;
-  color: #141414;
-  font-weight: 200;
-  padding-top: 4px;
-}
-
 @mixin descriptionSlotted() {
   font-weight: 400;
   font-size: 16px;
